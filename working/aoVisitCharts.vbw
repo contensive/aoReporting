@@ -1,0 +1,12 @@
+WeeklyVisitClass = 0, 0, 0, 0, C
+DailyVisitClass = 0, 0, 0, 0, C
+CommonClass = 23, 23, 632, 610, Z
+MonthlyVisitClass = 0, 0, 0, 0, C
+DailyViewingsClass = 0, 0, 0, 0, C
+WeeklyViewingsClass = 0, 0, 0, 0, C
+MonthlyViewingsClass = 0, 0, 0, 0, C
+PVChartClass = 0, 0, 0, 0, C
+VChartClass = 0, 0, 0, 0, C
+DurationVisitClass = 0, 0, 0, 0, C
+DurationViewClass = 0, 0, 0, 0, C
+VisitChartModule = 0, 0, 0, 0, C
