@@ -7,9 +7,7 @@ Imports Contensive.BaseClasses
 
 Namespace Contensive.Addons.VisitCharts.Views
     '
-    '====================================================================================================
-    '
-    Public Class MonthlyViewingsClass
+    Public Class DailyVisitsChartClass
         Inherits AddonBaseClass
         '
         '=====================================================================================
@@ -41,14 +39,15 @@ Namespace Contensive.Addons.VisitCharts.Views
         '    Dim dblDate As Double
         '    Dim cmn As New CommonClass
         '    dblDate = CDbl(Date)
-        '    CS = Main.OpenCSContent("Visit Summary", "(TimeDuration=24) AND (DateNumber>=" & dblDate - 90 & ") AND (DateNumber<=" & dblDate & ")", , , , , "DateNumber,TimeNumber,PagesViewed")
+        '    CS = Main.OpenCSContent("Visit Summary", "(TimeDuration=1) AND (DateNumber=" & dblDate & ")", "TimeNumber desc", , , , "DateNumber,TimeNumber,Visits")
         '    If Main.CSOK(CS) Then
-        '        Stream = cmn.GetChart(Main, CS, "monthly-visits", False, "100%", "400px")
+        '        Stream = cmn.GetChart(Main, CS, "daily-visits", True)
         '    Else
         '        Stream = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
         '    End If
         '    Call Main.CloseCS(CS)
         '    GetContent = Stream
         'End Function
+
     End Class
 End Namespace

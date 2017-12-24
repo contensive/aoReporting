@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="windows-1252"?>
-<Collection name="Visit Charts" guid="{D5B7BA7F-6B78-4625-8B23-232AC6574130}" system="Yes" updatable="Yes" blockNavigatorNode="No">
+<Collection name="Visit Charts" guid="{D5B7BA7F-6B78-4625-8B23-232AC6574130}" system="No" updatable="Yes" blockNavigatorNode="No">
 	<HelpLink></HelpLink>
 	<Help></Help>
 	<Addon name="Daily Viewings Chart" guid="{23458D36-1DAF-4B28-99BD-E82702FF02E1}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.DailyViewingsClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DailyViewingsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -38,11 +38,11 @@
 		<Styles></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Addon name="Daily Visit Chart" guid="{AEA7D5D7-5105-4433-9728-41F021C47877}" type="Report">
+	<Addon name="Daily Visits Chart" guid="{AEA7D5D7-5105-4433-9728-41F021C47877}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.DailyVisitClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DailyVisitsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -77,8 +77,8 @@
 	<Addon name="Monthly Viewings Chart" guid="{60E25AA4-40EF-4BFB-964D-504FF77FC45E}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.MonthlyViewingsClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.MonthlyViewingsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -110,11 +110,11 @@
 		<Styles></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Addon name="Monthly Visit Chart" guid="{D23D6049-3826-4C57-AF90-DF0244425B06}" type="Report">
+	<Addon name="Monthly Visits Chart" guid="{D23D6049-3826-4C57-AF90-DF0244425B06}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.MonthlyVisitClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.MonthlyVisitsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -146,11 +146,11 @@
 		<Styles></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Addon name="Page View Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Add-on">
+	<Addon name="Page Views Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Add-on">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.DurationViewClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.PageViewsClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 Chart Height=400
 Days to Display=365
@@ -191,8 +191,8 @@ Daily or Hourly=Daily[Daily|Hourly]
 	<Addon name="Visit Chart" guid="{097C0307-4A12-4B95-B328-4B637F6E26D4}" type="Add-on">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.DurationVisitClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DurationVisitClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Duration
 Target Div
 Rate=Daily[Daily|Hourly]]]></ArgumentList>
@@ -225,7 +225,6 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[
-
 .summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
 .summaryValue{font-weight:bold; color:#000000; font-size:16px;}
 .summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
@@ -237,8 +236,8 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 	<Addon name="Weekly Viewings Chart" guid="{4E1F9094-58E8-470E-A75C-83D86DE92693}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.WeeklyViewingsClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.WeeklyViewingsClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -273,8 +272,8 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 	<Addon name="Weekly Visit Chart" guid="{C68A71F0-254E-4A21-8BE7-906CF621DA64}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID><![CDATA[aoVisitCharts.WeeklyVisitClass]]></ActiveXProgramID>
-		<DotNetClass></DotNetClass>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.WeeklyVisitClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -306,6 +305,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Styles></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Resource name="icongoogle.png" type="content" path="upload/dashboard" />
-	<Resource name="aovisitcharts.dll" type="executable" path="" />
+	<Resource name="visitcharts.dll" type="executable" path="" />
+	<Resource name="Amazon.ElastiCacheCluster.dll" type="executable" path="" />
+	<Resource name="Enyim.Caching.dll" type="executable" path="" />
 </Collection>

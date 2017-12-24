@@ -9,7 +9,7 @@ Namespace Contensive.Addons.VisitCharts.Views
     '
     '====================================================================================================
     '
-    Public Class WeeklyClass
+    Public Class WeeklyVisitClass
         Inherits AddonBaseClass
         '
         '====================================================================================================

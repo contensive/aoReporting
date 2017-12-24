@@ -14,98 +14,50 @@ Namespace Contensive.Addons.VisitCharts.Views
         '
         '=====================================================================================
         Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
-            Dim result As String = ""
+            Dim result As New StringBuilder()
             Dim sw As New Stopwatch : sw.Start()
             Try
-                '
-                ' -- initialize application. If authentication needed and not login page, pass true
                 Using ac As New applicationController(CP, False)
-                    '
-                    ' -- your code
-                    result = getContent(ac)
+                    Dim Width As String = ac.cp.Doc.GetText("Chart Width", "100%")
+                    Dim Height As String = ac.cp.Doc.GetText("Chart Height", "400px")
+                    Dim Rate As String = ac.cp.Doc.GetText("Daily or Hourly", "hourly")
+                    Dim intRate As Integer = 24
+                    Dim AllowHourly As Boolean = False
+                    If Rate.ToLower() = "hourly" Then
+                        intRate = 1
+                        AllowHourly = True
+                    End If
+                    Dim Duration As Integer = ac.cp.Doc.GetInteger("Days to Display", "365")
+                    Dim DivName As String = ac.cp.Doc.GetText("Target Div", "")
+                    If DivName = "" Then
+                        DivName = ac.cp.Doc.GetText("TargetDiv", "durationChart")
+                    End If
+                    Dim DateEnd As Date = Now()
+                    Dim DateStart As Date = DateEnd.AddDays(-Duration)
+                    Dim cacheName As String = "DurationVisit-" & Width & "-" & Height & "-" & DivName & "-" & CStr(AllowHourly) & "-" & intRate & "-" & Duration
+                    Dim cacheValue As String = ac.cp.Cache.Read(cacheName)
+                    If (String.IsNullOrEmpty(cacheValue)) Then
+                        If IsDate(DateStart) And IsDate(DateEnd) Then
+                            Dim dblDateStart As Double = DateStart.ToOADate()
+                            Dim dblDateEnd As Double = DateEnd.ToOADate()
+                            Dim criteria As String = "(TimeDuration=" & intRate & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<=" & dblDateEnd & ")"
+                            Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "DateNumber, TimeNumber")
+                            If (visitSummaryList.Count = 0) Then
+                                result.Append("<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>")
+                            Else
+                                result.Append(Models.chartViewModel.GetChart2(ac, visitSummaryList, DivName, True, Width, Height, AllowHourly))
+                                result.Append(GetSummary2(ac, visitSummaryList, AllowHourly))
+                            End If
+                            ac.cp.Cache.Save(cacheName, cacheValue)
+                        Else
+                            result.Append("<span class=""ccError"">Please enter a valid Start and End Date to view the Visit Chart.</span>")
+                        End If
+                    Else
+                        result.Append(cacheValue)
+                    End If
                 End Using
             Catch ex As Exception
                 CP.Site.ErrorReport(ex)
-            End Try
-            Return result
-        End Function
-        '
-        '====================================================================================================
-        '
-        Public Function getContent(ac As applicationController) As String
-            Dim result As New StringBuilder()
-
-            Try
-                Dim Stream As String
-                Dim dblDateStart As Double
-                Dim dblDateEnd As Double
-                Dim DateStart As Date
-                Dim DateEnd As Date
-                Dim Duration As Integer
-                Dim DivName As String
-                Dim Rate As String
-                Dim intRate As Integer
-                Dim AllowHourly As Boolean
-                Dim Width As String
-                Dim Height As String
-                Dim cacheName As String
-                '
-                Width = ac.cp.Doc.GetText("Chart Width")
-                If Width = "" Then
-                    Width = "100%"
-                End If
-                '
-                Height = ac.cp.Doc.GetText("Chart Height")
-                If Height = "" Then
-                    Height = "400px"
-                ElseIf InStr(1, Height, "%") <> 0 Then
-                    Height = "400px"
-                End If
-                '
-                Rate = ac.cp.Doc.GetText("Daily or Hourly")
-                If Rate = "Hourly" Then
-                    intRate = 1
-                    AllowHourly = True
-                Else
-                    intRate = 24
-                End If
-                '
-                Duration = ac.cp.Doc.GetInteger(("Days to Display"))
-                If Duration = 0 Then
-                    Duration = 365
-                End If
-                '
-                DivName = ac.cp.Doc.GetText("Target Div")
-                If DivName = "" Then
-                    DivName = ac.cp.Doc.GetText("TargetDiv")
-                    If DivName = "" Then
-                        DivName = "durationChart"
-                    End If
-                End If
-
-                DateEnd = Now()
-                DateStart = DateEnd.AddDays(-Duration)
-                '
-                cacheName = "DurationVisit-" & Width & "-" & Height & "-" & DivName & "-" & CStr(AllowHourly) & "-" & intRate & "-" & Duration
-                Stream = ac.cp.Cache.Read(cacheName)
-                If (String.IsNullOrEmpty(Stream)) Then
-                    If IsDate(DateStart) And IsDate(DateEnd) Then
-                        dblDateStart = DateStart.ToOADate()
-                        dblDateEnd = DateEnd.ToOADate()
-                        Dim criteria As String = "(TimeDuration=" & intRate & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<=" & dblDateEnd & ")"
-                        Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "DateNumber, TimeNumber")
-                        If (visitSummaryList.Count = 0) Then
-                            result.Append("<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>")
-                        Else
-                            result.Append(Models.chartViewModel.GetChart2(ac, visitSummaryList, DivName, True, Width, Height, AllowHourly))
-                            result.Append(GetSummary2(ac, visitSummaryList, AllowHourly))
-                        End If
-                    Else
-                        result.Append("<span class=""ccError"">Please enter a valid Start and End Date to view the Visit Chart.</span>")
-                    End If
-                End If
-            Catch ex As Exception
-                ac.cp.Site.ErrorReport(ex)
             End Try
             Return result.ToString()
         End Function
