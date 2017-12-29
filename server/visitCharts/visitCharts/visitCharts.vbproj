@@ -87,12 +87,12 @@
     <Compile Include="constants.vb" />
     <Compile Include="Controllers\applicationController.vb" />
     <Compile Include="Controllers\cacheController.vb" />
-    <Compile Include="Views\DailyViewingClass.vb" />
-    <Compile Include="Views\DailyVisitClass.vb" />
+    <Compile Include="Views\xDailyViewingClass.vb" />
+    <Compile Include="Views\DailyVisitsChartClass.vb" />
     <Compile Include="Views\DailyViewingsChartClass.vb" />
     <Compile Include="Views\DurationVisitClass.vb" />
-    <Compile Include="Views\MonthlyViewingsClass.vb" />
-    <Compile Include="Views\MonthlyVisitClass.vb" />
+    <Compile Include="Views\MonthlyViewingsChartClass.vb" />
+    <Compile Include="Views\MonthlyVisitChartClass.vb" />
     <Compile Include="Views\PageViewsClass.vb" />
     <Compile Include="Views\VisitsClass.vb" />
     <Compile Include="Views\WeeklyClass.vb" />

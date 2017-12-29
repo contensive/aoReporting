@@ -80,32 +80,16 @@ Namespace Contensive.Addons.VisitCharts.Models
         Friend Shared Function GetChart2(ae As Controllers.applicationController, visitSummaryList As List(Of Models.visitSummaryModel), Div As String, isVisitData As Boolean, Optional Width As String = "100%", Optional Height As String = "400px", Optional AllowHourly As Boolean = False) As String
             Dim result As New StringBuilder
             Try
-                Dim Stream As String
-                Dim Value As String
-                Dim Pointer As Integer
-                Dim nrmDate As Date
-                Dim dblDate As Double
-                Dim dblTime As Double
-                Dim Caption As String
-                Dim Ptr As Integer
-                Dim Max As Integer
-                Dim TimeNumber As Double
-                Dim DateNumber As Double
-                Dim PlotDate As Date
-                Dim PlotValue As Double
                 If Width = "" Then
                     Width = "100%"
                 End If
                 If Height = "" Then
                     Height = "400px"
                 End If
+                Dim Caption As String = "Page Views"
                 If isVisitData Then
                     Caption = "Visits"
-                Else
-                    Caption = "Page Views"
                 End If
-                Max = visitSummaryList.Count
-                Stream = vbCrLf & vbCrLf
                 result.Append("<script type='text/javascript'>" & vbCrLf)
                 result.Append("google.load('visualization', '1', {'packages':['annotatedtimeline']});" & vbCrLf)
                 result.Append("google.setOnLoadCallback(drawChart);" & vbCrLf)
@@ -113,18 +97,19 @@ Namespace Contensive.Addons.VisitCharts.Models
                 result.Append("var data = new google.visualization.DataTable();" & vbCrLf)
                 result.Append("data.addColumn('date', 'Date');" & vbCrLf)
                 result.Append("data.addColumn('number', '" & Caption & "');" & vbCrLf)
-                result.Append("data.addRows(" & (Max + 1) & ");" & vbCrLf)
+                result.Append("data.addRows(" & (visitSummaryList.Count + 1) & ");" & vbCrLf)
                 '
                 ' Plot what we got
                 '
+                Dim Ptr As Integer = 0
                 For Each visitSummary In visitSummaryList
-                    DateNumber = Int(visitSummary.DateNumber + 0.5)
-                    TimeNumber = Int(visitSummary.TimeNumber + 0.5)
+                    Dim DateNumber As Double = Int(visitSummary.DateNumber + 0.5)
+                    Dim TimeNumber As Double = Int(visitSummary.TimeNumber + 0.5)
+                    Dim PlotValue As Double = visitSummary.PagesViewed
                     If isVisitData Then
                         PlotValue = visitSummary.Visits
-                    Else
-                        PlotValue = visitSummary.PagesViewed
                     End If
+                    Dim PlotDate As Date
                     If (TimeNumber <> 0) And (AllowHourly) Then
                         PlotDate = Date.FromOADate(DateNumber + (TimeNumber / 24.0!))
                     Else
@@ -132,6 +117,7 @@ Namespace Contensive.Addons.VisitCharts.Models
                     End If
                     result.Append("data.setValue(" & Ptr & ", 0, new Date(" & Year(PlotDate) & "," & Month(PlotDate) - 1 & "," & Day(PlotDate) & "," & DatePart("H", PlotDate) & ",00,00));" & vbCrLf)
                     result.Append("data.setValue(" & Ptr & ", 1, " & PlotValue & ");" & vbCrLf)
+                    Ptr += 1
                 Next
                 result.Append("var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('" & Div & "'));" & vbCrLf)
                 result.Append("chart.draw(data, {displayAnnotations: false});" & vbCrLf)
