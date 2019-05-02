@@ -1,4 +1,4 @@
-aoVisitCharts
+aiReporting
 =============
 
-Contensive Visit Charts Addon
+Basic Reporting
