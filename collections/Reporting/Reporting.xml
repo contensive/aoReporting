@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="windows-1252"?>
-<Collection name="Visit Charts" guid="{D5B7BA7F-6B78-4625-8B23-232AC6574130}" system="No" updatable="Yes" blockNavigatorNode="No">
+<Collection name="Reporting" guid="{D5B7BA7F-6B78-4625-8B23-232AC6574130}" system="No" updatable="Yes" blockNavigatorNode="No">
 	<HelpLink></HelpLink>
 	<Help></Help>
 	<Addon name="Daily Viewings Chart" guid="{23458D36-1DAF-4B28-99BD-E82702FF02E1}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DailyViewingsChartClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.DailyViewingsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -42,7 +42,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DailyVisitsChartClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.DailyVisitsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -78,7 +78,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.MonthlyViewingsChartClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.MonthlyViewingsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -114,7 +114,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.MonthlyVisitsChartClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.MonthlyVisitsChartClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -150,7 +150,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.PageViewsClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.PageViewsClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 Chart Height=400
 Days to Display=365
@@ -192,7 +192,7 @@ Daily or Hourly=Daily[Daily|Hourly]
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.DurationVisitClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.DurationVisitClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Duration
 Target Div
 Rate=Daily[Daily|Hourly]]]></ArgumentList>
@@ -237,7 +237,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.WeeklyViewingsClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.WeeklyViewingsClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -273,7 +273,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.VisitCharts.Views.WeeklyVisitClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.WeeklyVisitClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -305,7 +305,9 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Styles></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Resource name="visitcharts.dll" type="executable" path="" />
-	<Resource name="Amazon.ElastiCacheCluster.dll" type="executable" path="" />
-	<Resource name="Enyim.Caching.dll" type="executable" path="" />
+	<Addon name="Download Log Report" guid="{6B3D54CD-782A-4B47-903D-86CEDE4E50A5}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.ReportLibraryFileDownloadLogClass]]></DotNetClass>
+		<BlockEditTools>Yes</BlockEditTools>
+	</Addon>
+	<Resource name="reporting.dll" type="executable" path="" />
 </Collection>
