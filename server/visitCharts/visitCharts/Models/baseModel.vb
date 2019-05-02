@@ -8,7 +8,7 @@ Imports System.Text
 Imports Contensive.BaseClasses
 Imports System.Reflection
 
-Namespace Contensive.Addons.VisitCharts.Models
+Namespace Models
     Public MustInherit Class baseModel
         '
         '====================================================================================================

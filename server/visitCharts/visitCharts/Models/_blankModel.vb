@@ -7,7 +7,7 @@ Imports System.Collections.Generic
 Imports System.Text
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Addons.VisitCharts.Models
+Namespace Models
     Public Class _blankModel
         Inherits baseModel
         Implements ICloneable

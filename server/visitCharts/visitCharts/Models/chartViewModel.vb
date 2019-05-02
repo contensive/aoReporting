@@ -5,16 +5,16 @@ Option Strict On
 Imports System.Collections.Generic
 Imports System.Text
 Imports Contensive.BaseClasses
-Imports Contensive.Addons.VisitCharts.Models
-Imports Contensive.Addons.VisitCharts.Views
-Imports Contensive.Addons.VisitCharts.Controllers
+Imports Contensive.Addons.Reporting.Models
+Imports Contensive.Addons.Reporting.Views
+Imports Contensive.Addons.Reporting.Controllers
 
-Namespace Contensive.Addons.VisitCharts.Models
-    Public NotInheritable Class chartViewModel
+Namespace Models
+    Public NotInheritable Class ChartViewModel
         '
         '====================================================================================================
         '
-        Public Shared Function GetChart(ae As Controllers.applicationController, visitSummaryList As List(Of Models.visitSummaryModel), Div As String, isVisitData As Boolean, Optional Width As String = "100%", Optional Height As String = "400px", Optional AllowHourly As Boolean = False) As String
+        Public Shared Function getChart(ae As Controllers.applicationController, visitSummaryList As List(Of Models.visitSummaryModel), Div As String, isVisitData As Boolean, Optional Width As String = "100%", Optional Height As String = "400px", Optional AllowHourly As Boolean = False) As String
             Dim result As New StringBuilder
             Try
                 If Width = "" Then
@@ -39,7 +39,7 @@ Namespace Contensive.Addons.VisitCharts.Models
                 result.Append("data.addRows(" & visitSummaryList.Count & ");" & vbCrLf)
                 '
                 Dim Pointer As Integer = 0
-                For Each viewSummary As Contensive.Addons.VisitCharts.Models.visitSummaryModel In visitSummaryList
+                For Each viewSummary As Contensive.Addons.Reporting.Models.visitSummaryModel In visitSummaryList
                     Dim Value As String = String.Empty
                     Dim nrmDate As Date
                     If (viewSummary.TimeNumber <> 0) And (AllowHourly) Then

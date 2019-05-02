@@ -2,10 +2,10 @@
 Option Strict On
 Option Explicit On
 
-Imports Contensive.Addons.VisitCharts.Controllers
+Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Addons.VisitCharts.Views
+Namespace Views
     Public Class DailyViewingsChartClass
         Inherits AddonBaseClass
         '
@@ -36,7 +36,7 @@ Namespace Contensive.Addons.VisitCharts.Views
                     If (visitSummaryList.Count = 0) Then
                         result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
                     Else
-                        result = Models.chartViewModel.GetChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
+                        result = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
                     End If
                 End Using
             Catch ex As Exception

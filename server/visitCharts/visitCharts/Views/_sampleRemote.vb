@@ -2,10 +2,10 @@
 Option Explicit On
 Option Strict On
 
-Imports Contensive.Addons.VisitCharts.Controllers
+Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
 '
-Namespace Contensive.Addons.VisitCharts.Views
+Namespace Views
     '
     Public Class getProjectListNoDetailsClass
         Inherits AddonBaseClass

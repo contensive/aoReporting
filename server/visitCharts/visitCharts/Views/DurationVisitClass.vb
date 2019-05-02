@@ -2,10 +2,10 @@ Option Strict On
 Option Explicit On
 
 Imports System.Text
-Imports Contensive.Addons.VisitCharts.Controllers
+Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Addons.VisitCharts.Views
+Namespace Views
     '
     '====================================================================================================
     '
@@ -45,7 +45,7 @@ Namespace Contensive.Addons.VisitCharts.Views
                             If (visitSummaryList.Count = 0) Then
                                 result.Append("<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>")
                             Else
-                                result.Append(Models.chartViewModel.GetChart2(ac, visitSummaryList, DivName, True, Width, Height, AllowHourly))
+                                result.Append(Models.ChartViewModel.GetChart2(ac, visitSummaryList, DivName, True, Width, Height, AllowHourly))
                                 result.Append(GetSummary2(ac, visitSummaryList, AllowHourly))
                             End If
                             ac.cp.Cache.Save(cacheName, cacheValue)

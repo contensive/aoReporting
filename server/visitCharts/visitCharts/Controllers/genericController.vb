@@ -5,11 +5,11 @@ Option Strict On
 'Imports System.Collections.Generic
 'Imports System.Text
 'Imports Contensive.BaseClasses
-'Imports Contensive.Addons.VisitCharts.Models
-'Imports Contensive.Addons.VisitCharts.Views
-'Imports Contensive.Addons.VisitCharts.Controllers
+'Imports Contensive.Addons.Reporting.Models
+'Imports Contensive.Addons.Reporting.Views
+'Imports Contensive.Addons.Reporting.Controllers
 
-Namespace Contensive.Addons.VisitCharts.Controllers
+Namespace Controllers
     Public NotInheritable Class genericController
         Private Sub New()
         End Sub
