@@ -59,5 +59,19 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to select f.name, count(*) 
+        '''from cclibrarydownloadlog l 
+        '''left join cclibraryfiles f on f.id=l.fileId
+        '''where (l.dateadded &lt; {dateTo})
+        '''and (l.dateadded &gt; {dateFrom})
+        '''group by f.id, f.name.
+        '''</summary>
+        Friend ReadOnly Property sqlReportLibraryFileDownload() As String
+            Get
+                Return ResourceManager.GetString("sqlReportLibraryFileDownload", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

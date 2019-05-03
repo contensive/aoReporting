@@ -1,0 +1,6 @@
+﻿select f.name, count(*) as cnt
+from cclibrarydownloadlog l 
+left join cclibraryfiles f on f.id=l.fileId
+where (l.dateadded < {dateTo})
+and (l.dateadded > {dateFrom})
+group by f.id, f.name

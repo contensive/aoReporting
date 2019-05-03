@@ -120,23 +120,9 @@ Public Module constants
     Public Const buttonAddItem As String = " Add Item "
     Public Const buttonRemoveFromAccount As String = "Remove From Account"
     '
-    Public Const formIdAccountDetails As Integer = 11
-    Public Const formIdReportMin As Integer = 40
-    Public Const formIdReportList As Integer = 40
-    Public Const formIdInvoicePreview As Integer = 41
-    Public Const formIdReportOrders As Integer = 42
-    Public Const formIdStatementPreview As Integer = 43
-    Public Const formIdReportAging As Integer = 44
-    Public Const formIdReportActivity As Integer = 45
-    Public Const formIdReportPrintQueue As Integer = 46
-    Public Const formIdReportTopBuyers As Integer = 47
-    Public Const formIdReportTopCategoryBuyers As Integer = 48
-    Public Const formIdReportItemPurchase As Integer = 49
-    Public Const formIdReportGLAccountSummary As Integer = 50
-    Public Const formIdReportItemCategoryPurchase As Integer = 51
-    Public Const formIdReportDuesDeferment As Integer = 52
-    Public Const formIdReportSuspendedCertifications As Integer = 53
-    Public Const formIdreportMax As Integer = 59
+    ' -- if there are multiple forms to an addon, use these values to multiple between them
+    Public Const formIdDefault As Integer = 1
+    Public Const formIdreportMax As Integer = 1
     '
     Public Const rnSrcFeatureGuid As String = "srcFeatureGuid"
     Public Const rnDstFeatureGuid As String = "dstFeatureGuid"
