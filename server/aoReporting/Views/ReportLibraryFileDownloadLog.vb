@@ -22,7 +22,8 @@ Namespace Views
                 Dim thisFormid As Integer = formIdDefault
                 ' -- the Refresh Query String orinally sent to the page
                 ' -- this query string will refresh the entire page
-                Dim frameRqs As String = CP.Doc.GetText(rnFrameRqs)
+                Dim frameRqs As String = CP.Doc.RefreshQueryString()
+                ' Dim frameRqs As String = CP.Doc.GetText(rnFrameRqs)
                 ' -- dst form is the one to be presented next, can be forced if src form is missing
                 Dim dstFormId As Integer = CP.Doc.GetInteger("dstFormId")
                 ' -- src form is the form being submitted
@@ -30,6 +31,11 @@ Namespace Views
                 If srcFormId > 0 Then
                     dstFormId = processForm(CP, srcFormId, frameRqs, rightNow)
                 End If
+                '
+                ' -- workaround for a formset that only has one form.
+                If (dstFormId = 0) Then dstFormId = formIdDefault
+                '
+                ' -- get the next form
                 returnHtml = getForm(CP, dstFormId, frameRqs, rightNow)
             Catch ex As Exception
                 CP.Site.ErrorReport(ex, "Exception in adminAccountsClass.execute()")
@@ -52,7 +58,7 @@ Namespace Views
                 Dim button As String = cp.Doc.GetText(rnButton)
                 Select Case button
                     Case buttonCancel
-                        nextFormId = formIdDefault
+                        cp.Response.Redirect("?")
                     Case Else
                         '
                         ' -- the default action
@@ -78,6 +84,7 @@ Namespace Views
             Dim result As String = ""
             Dim hint As String = "1"
             Try
+                '
                 Dim orderBy As String = ""
                 Dim rqs As String = cp.Utils.ModifyQueryString(frameRqs, rnDstFormId, dstFormId.ToString())
                 Dim qs As String = ""
@@ -88,7 +95,8 @@ Namespace Views
                     .name = "Library File Download Report",
                     .guid = "{90F40ED5-17F5-4C2C-8D87-2FCF2B68B743}",
                     .refreshQueryString = rqs,
-                    .addCsvDownloadCurrentPage = True
+                    .addCsvDownloadCurrentPage = True,
+                    .isOuterContainer = True
                 }
                 report.addFormButton(buttonCancel)
                 report.addFormButton(ButtonRefresh)
@@ -163,8 +171,16 @@ Namespace Views
                 '
                 hint = "run query"
                 Dim sql As String = My.Resources.sqlReportLibraryFileDownload
-                sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(filterFromDate))
-                sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate))
+                If (filterFromDate = Date.MinValue) Then
+                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(New Date(1990, 1, 1)))
+                Else
+                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(filterFromDate))
+                End If
+                If (filterToDate = Date.MinValue) Then
+                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(Now.AddDays(1)))
+                Else
+                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate))
+                End If
                 Dim cs As CPCSBaseClass = cp.CSNew
                 cs.OpenSQL(sql)
                 qsBase = frameRqs
@@ -189,6 +205,7 @@ Namespace Views
                 report.description = captionWithFilter
                 result = report.getHtml(cp)
                 result = cp.Html.div(result, , , "abReportTopBuyers")
+                cp.Doc.AddHeadStyle(report.styleSheet)
             Catch ex As Exception
                 cp.Site.ErrorReport(ex)
             End Try
