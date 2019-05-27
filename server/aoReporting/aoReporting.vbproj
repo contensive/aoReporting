@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="constants.vb" />
     <Compile Include="Controllers\applicationController.vb" />
+    <Compile Include="Views\ReportEmailDrop.vb" />
     <Compile Include="Views\xDailyViewingClass.vb" />
     <Compile Include="Views\DailyVisitsChartClass.vb" />
     <Compile Include="Views\DailyViewingsChartClass.vb" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\modelData.txt" />
+    <Content Include="Resources\sqlReportEmailDrop.txt" />
     <Content Include="Resources\sqlReportLibraryFileDownload.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
@@ -157,9 +159,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>iisreset
-del "C:\ProgramData\Contensive\AddonAssemblyBypass\*.*" /q
-copy "$(TargetDir)*.dll" "C:\ProgramData\Contensive\AddonAssemblyBypass"
+    <PostBuildEvent>
 
 </PostBuildEvent>
   </PropertyGroup>

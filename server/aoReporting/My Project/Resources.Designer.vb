@@ -61,12 +61,29 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to select f.name, count(*) 
+        '''  Looks up a localized string similar to 
+        '''select d.id, d.name, e.id, e.name
+        ''',(select count(*) from ccemaillog where (logtype=1)and(EmailDropID=d.id)) as Sent
+        ''',(select count(*) from ccemaillog where (logtype=2)and(EmailDropID=d.id)) as Opened
+        ''',(select count(*) from ccemaillog where (logtype=3)and(EmailDropID=d.id)) as Clicked
+        ''' from ccemaildrops d 
+        ''' left join ccemail e on e.id=d.EmailID
+        ''' order by d.id desc.
+        '''</summary>
+        Friend ReadOnly Property sqlReportEmailDrop() As String
+            Get
+                Return ResourceManager.GetString("sqlReportEmailDrop", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to select f.name, count(*) as cnt
         '''from cclibrarydownloadlog l 
         '''left join cclibraryfiles f on f.id=l.fileId
         '''where (l.dateadded &lt; {dateTo})
         '''and (l.dateadded &gt; {dateFrom})
-        '''group by f.id, f.name.
+        '''group by f.id, f.name
+        '''order by cnt desc.
         '''</summary>
         Friend ReadOnly Property sqlReportLibraryFileDownload() As String
             Get
