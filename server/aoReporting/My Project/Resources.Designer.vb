@@ -62,12 +62,14 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to 
-        '''select d.id, d.name, e.id, e.name
+        '''select d.id as dropId, d.name as dropName, e.id as emailId, e.name as emailName, d.DateAdded as dropDate
         ''',(select count(*) from ccemaillog where (logtype=1)and(EmailDropID=d.id)) as Sent
         ''',(select count(*) from ccemaillog where (logtype=2)and(EmailDropID=d.id)) as Opened
         ''',(select count(*) from ccemaillog where (logtype=3)and(EmailDropID=d.id)) as Clicked
         ''' from ccemaildrops d 
         ''' left join ccemail e on e.id=d.EmailID
+        ''' where (d.dateadded &lt; {dateTo})
+        ''' and (d.dateadded &gt; {dateFrom})
         ''' order by d.id desc.
         '''</summary>
         Friend ReadOnly Property sqlReportEmailDrop() As String

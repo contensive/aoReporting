@@ -214,13 +214,13 @@ Namespace Views
                 hint = "set filter text"
                 report.htmlLeftOfTable = "" _
                     & cr & "<h3 class=""abFilterHead"">Filters</h3>" _
-                    & cr & "<div class=""abFilterRow""><label for""abFilterFromDate"">From</label>" & cp.Html.InputText("filterFromDate", filterFromDateString, , , , "abFilterDate", "abFilterFromDate") & "<a href=""#"" id=""abFilterFromDateClear"">X</a></div>" _
-                    & cr & "<div class=""abFilterRow""><label for""abFilterToDate"">To</label>" & cp.Html.InputText("filterToDate", filterToDateString, , , , "abFilterDate", "abFilterToDate") & "<a href=""#"" id=""abFilterToDateClear"">X</a></div>" _
+                    & cr & "<div class=""abFilterRow""><label for""abFilterFromDate"">From</label>" & cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") & "<a href=""#"" id=""abFilterFromDateClear"">X</a></div>" _
+                    & cr & "<div class=""abFilterRow""><label for""abFilterToDate"">To</label>" & cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") & "<a href=""#"" id=""abFilterToDateClear"">X</a></div>" _
                     & ""
                 hint = "output body"
                 report.description = captionWithFilter
                 result = report.getHtml(cp)
-                result = cp.Html.div(result, , , "abReportEmailDrop")
+                result = cp.Html.div(result, "", "abReportEmailDrop")
                 cp.Doc.AddHeadStyle(report.styleSheet)
             Catch ex As Exception
                 cp.Site.ErrorReport(ex)
