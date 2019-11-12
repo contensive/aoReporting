@@ -22,7 +22,7 @@ Namespace Views
                     If Rate.ToLower = "hourly" Then
                         durationHours = 1
                     End If
-                    Dim DurationDays As Integer = ac.cp.Doc.GetInteger("Duration", "365")
+                    Dim DurationDays As Integer = ac.cp.Doc.GetInteger("Duration", 365)
                     Dim DivName As String = ac.cp.Doc.GetText("TargetDiv")
                     If DivName = "" Then
                         DivName = "PageViewChart"

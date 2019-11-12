@@ -107,7 +107,7 @@ Namespace Views
                 Dim filterFromDate As Date
                 Dim filterFromDateString As String
                 Dim filterFromDateStringTest As String = cp.Doc.GetText("filterFromDate")
-                Dim userFilterFromDateString As String = cp.User.GetProperty(userPropertyFromDate)
+                Dim userFilterFromDateString As String = cp.User.GetText(userPropertyFromDate)
                 If (Not String.IsNullOrEmpty(filterFromDateStringTest)) Then
                     filterFromDate = genericController.encodeMinDate(cp.Doc.GetDate("filterFromDate"))
                 ElseIf (Not String.IsNullOrEmpty(userFilterFromDateString)) Then
@@ -127,7 +127,7 @@ Namespace Views
                 Dim filterToDate As Date
                 Dim filterToDateString As String
                 Dim filterToDateStringTest As String = cp.Doc.GetText("filterToDate")
-                Dim userFilterToDateString As String = cp.User.GetProperty(userPropertyToDate)
+                Dim userFilterToDateString As String = cp.User.GetText(userPropertyToDate)
                 If (Not String.IsNullOrEmpty(filterToDateStringTest)) Then
                     filterToDate = genericController.encodeMinDate(cp.Doc.GetDate("filterToDate"))
                 ElseIf (Not String.IsNullOrEmpty(userFilterToDateString)) Then

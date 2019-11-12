@@ -27,7 +27,7 @@ Namespace Views
                         intRate = 1
                         AllowHourly = True
                     End If
-                    Dim Duration As Integer = ac.cp.Doc.GetInteger("Duration", "365")
+                    Dim Duration As Integer = ac.cp.Doc.GetInteger("Duration", 365)
                     Dim DivName As String = ac.cp.Doc.GetText("Target Div", "")
                     If DivName = "" Then
                         DivName = ac.cp.Doc.GetText("TargetDiv", "durationChart")
@@ -35,7 +35,7 @@ Namespace Views
                     Dim DateEnd As Date = Now().Date
                     Dim DateStart As Date = DateEnd.AddDays(-Duration).Date
                     Dim cacheName As String = "DurationVisit-" & Width & "-" & Height & "-" & DivName & "-" & CStr(AllowHourly) & "-" & intRate & "-" & Duration
-                    Dim cacheValue As String = ac.cp.Cache.Read(cacheName)
+                    Dim cacheValue As String = ac.cp.Cache.GetText(cacheName)
                     If (String.IsNullOrEmpty(cacheValue)) Then
                         If IsDate(DateStart) And IsDate(DateEnd) Then
                             Dim intDateStart As Integer = CP.Utils.EncodeInteger(DateStart.ToOADate())
@@ -46,9 +46,9 @@ Namespace Views
                                 result.Append("<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>")
                             Else
                                 result.Append(Models.ChartViewModel.GetChart2(ac, visitSummaryList, DivName, True, Width, Height, AllowHourly))
-                                result.Append(GetSummary2(ac, visitSummaryList, AllowHourly))
+                                result.Append(getSummary2(ac, visitSummaryList, AllowHourly))
                             End If
-                            ac.cp.Cache.Save(cacheName, cacheValue)
+                            ac.cp.Cache.Store(cacheName, cacheValue)
                         Else
                             result.Append("<span class=""ccError"">Please enter a valid Start and End Date to view the Visit Chart.</span>")
                         End If
@@ -64,7 +64,7 @@ Namespace Views
         '
         '====================================================================================================
         '
-        Public Function GetSummary2(ac As applicationController, visitSummaryList As List(Of Models.visitSummaryModel), IsHourlyChart As Boolean) As String
+        Public Function getSummary2(ac As applicationController, visitSummaryList As List(Of Models.visitSummaryModel), IsHourlyChart As Boolean) As String
             Dim result As New StringBuilder
             Try
                 Dim Visits As Double

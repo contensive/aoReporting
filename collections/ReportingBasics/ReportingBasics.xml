@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="windows-1252"?>
-<Collection name="Reporting Basics" guid="{d5b7ba7f-6b78-4625-8b23-232ac6574130}" system="No" updatable="No" blockNavigatorNode="No">
+<Collection name="Reporting Basics" guid="{d5b7ba7f-6b78-4625-8b23-232ac6574130}" system="No" updatable="No" blockNavigatorNode="No" onInstallAddonGuid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
 	<HelpLink></HelpLink>
 	<Help></Help>
+	<Addon name="Reporting Basics Install" guid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.OnInstallClass]]></DotNetClass>
+	</Addon>
 	<Addon name="Daily Viewings Chart" guid="{23458D36-1DAF-4B28-99BD-E82702FF02E1}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
