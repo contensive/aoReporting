@@ -5,6 +5,7 @@ Option Explicit On
 Imports adminFramework
 Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports System.Web
 
 Namespace Views
 
@@ -200,13 +201,17 @@ Namespace Views
                 cs.OpenSQL(sql)
                 qsBase = frameRqs
                 Dim rowPtr As Integer = 1
+
                 Do While (cs.OK)
+                    Dim emaildropid As Integer = cs.GetInteger("dropid")
+                    Dim openedHref As String = "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>"
+                    Dim fullOpened As String = openedHref & cs.GetInteger("opened").ToString() & "</a>"
                     report.addRow()
                     report.setCell(rowPtr.ToString())
                     report.setCell(cs.GetDate("dropDate").ToString())
                     report.setCell(cs.GetText("emailName"))
                     report.setCell(cs.GetInteger("sent").ToString())
-                    report.setCell(cs.GetInteger("opened").ToString())
+                    report.setCell(fullOpened)
                     report.setCell(cs.GetInteger("clicked").ToString())
                     rowPtr += 1
                     cs.GoNext()

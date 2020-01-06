@@ -69,7 +69,7 @@
       <HintPath>..\packages\Contensive.PortalApi.5.1.191020.5\lib\net461\adminFramework.dll</HintPath>
     </Reference>
     <Reference Include="CPBase, Version=4.1.2.0, Culture=neutral, PublicKeyToken=10b3c53389b845fb, processorArchitecture=MSIL">
-      <HintPath>..\packages\Contensive.CPBaseClass.5.19.1108.4\lib\net472\CPBase.dll</HintPath>
+      <HintPath>..\packages\Contensive.CPBaseClass.5.2001.3.8\lib\net472\CPBase.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -88,6 +88,7 @@
     <Compile Include="constants.vb" />
     <Compile Include="Controllers\applicationController.vb" />
     <Compile Include="Views\ReportEmailDrop.vb" />
+    <Compile Include="Views\ReportEmailOpened.vb" />
     <Compile Include="Views\xDailyViewingClass.vb" />
     <Compile Include="Views\DailyVisitsChartClass.vb" />
     <Compile Include="Views\DailyViewingsChartClass.vb" />
