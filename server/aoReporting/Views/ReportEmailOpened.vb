@@ -33,6 +33,8 @@ Namespace Views
                 If srcFormId > 0 Then
                     dstFormId = processForm(CP, srcFormId, frameRqs, rightNow)
                 End If
+
+                dstFormId = processForm(CP, srcFormId, frameRqs, rightNow)
                 '
                 ' -- workaround for a formset that only has one form.
                 If (dstFormId = 0) Then dstFormId = formIdDefault
@@ -61,10 +63,6 @@ Namespace Views
                 Select Case button
                     Case buttonCancel
                         cp.Response.Redirect("?addonguid=%7BA10B5F49-3147-4E32-9DCF-76D65CCFF9F1%7D")
-                    Case Else
-                        '
-                        ' -- the default action
-                        nextFormId = formIdDefault
                 End Select
                 Return nextFormId
             Catch ex As Exception
@@ -101,8 +99,6 @@ Namespace Views
                     .isOuterContainer = True
                 }
                 report.addFormButton(buttonCancel)
-                report.addFormButton(ButtonRefresh)
-
                 '
                 hint = "setup columns"
                 report.columnCaption = "Row"
@@ -118,22 +114,8 @@ Namespace Views
                 report.columnCaption = "Opened By"
                 report.columnCaptionClass = "afwTextAlignLeft"
                 report.columnCellClass = "afwTextAlignLeft"
-                '
-                'report.addColumn()
-                'report.columnCaption = "Sent"
-                'report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                'report.columnCellClass = "afwTextAlignRight"
-                '
-                'report.addColumn()
-                'report.columnCaption = "Opened"
-                'report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                'report.columnCellClass = "afwTextAlignRight"
-                '
-                'report.addColumn()
-                'report.columnCaption = "Clicked"
-                'report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                'report.columnCellClass = "afwTextAlignRight"
-                '
+
+
                 Dim emailName As String = ""
                 Dim emailNameSql As String = "select e.name from ccEmailDrops left join ccemail e on e.id = ccEmaildrops.EmailID where ccemaildrops.id=" & emaildropid
                 Dim csName As CPCSBaseClass = cp.CSNew()
@@ -142,7 +124,7 @@ Namespace Views
                 End If
 
                 hint = "run query"
-                Dim sql As String = "select m.name from ccEmailLog left join ccMembers m on m.id = ccemaillog.memberid where (logtype=2) and ccemaillog.EmailDropID=" & emaildropid & " order by m.name desc"
+                Dim sql As String = "select distinct m.name, m.email from ccEmailLog left join ccMembers m on m.id = ccemaillog.memberid where (logtype=2) and (m.name is not null) and ccemaillog.EmailDropID=" & emaildropid & " order by m.name asc"
                 Dim cs As CPCSBaseClass = cp.CSNew
                 cs.OpenSQL(sql)
 
@@ -152,7 +134,12 @@ Namespace Views
                     report.addRow()
                     report.setCell(rowPtr.ToString())
                     report.setCell(emailName)
-                    report.setCell(cs.GetText("name"))
+                    'Dim toaddr As String = cs.GetText("toaddress")
+                    'toaddr = toaddr.Replace(">", " ")
+                    'toaddr = toaddr.Replace("<", "<br>Email:")
+                    'toaddr = toaddr.Replace("""", " ")
+                    'toaddr = toaddr.Insert(0, "Name:")
+                    report.setCell("Name: " & cs.GetText("name") & "<br>" & "Email: " & cs.GetText("email"))
                     rowPtr += 1
                     cs.GoNext()
                 Loop
