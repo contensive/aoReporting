@@ -29,7 +29,7 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -69,7 +69,7 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -133,7 +133,7 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -450,7 +450,7 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -490,7 +490,7 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -523,7 +523,7 @@ Daily or Hourly=Daily[Daily|Hourly]
 		<HelpLink></HelpLink>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
 		<InIframe>No</InIframe>
-		<BlockEditTools>No</BlockEditTools>
+		<BlockEditTools>yes</BlockEditTools>
 		<FormXML></FormXML>
 		<IsInline>No</IsInline>
 		<JavascriptInHead></JavascriptInHead>
@@ -533,7 +533,7 @@ Daily or Hourly=Daily[Daily|Hourly]
 		<!-- deprecated --><JavascriptBodyEnd></JavascriptBodyEnd>
 		<!-- deprecated --><JavascriptOnLoad></JavascriptOnLoad>
 		<Content>No</Content>
-		<Template>Yes</Template>
+		<Template>No</Template>
 		<Email>No</Email>
 		<Admin>Yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
@@ -566,7 +566,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<HelpLink></HelpLink>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
 		<InIframe>No</InIframe>
-		<BlockEditTools>No</BlockEditTools>
+		<BlockEditTools>Yes</BlockEditTools>
 		<FormXML></FormXML>
 		<IsInline>No</IsInline>
 		<JavascriptInHead></JavascriptInHead>
@@ -576,7 +576,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<!-- deprecated --><JavascriptBodyEnd></JavascriptBodyEnd>
 		<!-- deprecated --><JavascriptOnLoad></JavascriptOnLoad>
 		<Content>No</Content>
-		<Template>Yes</Template>
+		<Template>No</Template>
 		<Email>No</Email>
 		<Admin>Yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
@@ -626,7 +626,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>Yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -666,7 +666,7 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>No</Admin>
+		<Admin>Yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
