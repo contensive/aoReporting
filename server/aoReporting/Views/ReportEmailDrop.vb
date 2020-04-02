@@ -162,7 +162,7 @@ Namespace Views
                 '
                 report.addColumn()
                 report.columnCaption = "Drop Date"
-                report.columnCaptionClass = "afwWidth100px afwTextAlignLeft"
+                report.columnCaptionClass = "afwWidth200px afwTextAlignLeft"
                 report.columnCellClass = "afwTextAlignLeft"
                 '
                 report.addColumn()
