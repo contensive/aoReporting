@@ -10,7 +10,7 @@ Option Strict On
 Namespace Views
 
     '
-    Public Class ReportEmailOpened
+    Public Class EmailOpenedReportClass
         Inherits AddonBaseClass
         '
         '=====================================================================================

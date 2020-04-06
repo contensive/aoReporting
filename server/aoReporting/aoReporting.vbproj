@@ -87,8 +87,9 @@
   <ItemGroup>
     <Compile Include="constants.vb" />
     <Compile Include="Controllers\applicationController.vb" />
-    <Compile Include="Views\ReportEmailDrop.vb" />
-    <Compile Include="Views\ReportEmailOpened.vb" />
+    <Compile Include="Views\EmailDropReportClass.vb" />
+    <Compile Include="Views\EmailClickedReportClass.vb" />
+    <Compile Include="Views\EmailOpenedReportClass.vb" />
     <Compile Include="Views\xDailyViewingClass.vb" />
     <Compile Include="Views\DailyVisitsChartClass.vb" />
     <Compile Include="Views\DailyViewingsChartClass.vb" />
@@ -101,7 +102,7 @@
     <Compile Include="Views\WeeklyViewingsClass.vb" />
     <Compile Include="Models\chartViewModel.vb" />
     <Compile Include="Models\personModel.vb" />
-    <Compile Include="Views\ReportLibraryFileDownloadLog.vb" />
+    <Compile Include="Views\LibraryFileDownloadReportClass.vb" />
     <Compile Include="Views\OnInstallClass.vb" />
     <Compile Include="Views\_sampleAddon.vb" />
     <Compile Include="Models\visitSummaryModel.vb" />

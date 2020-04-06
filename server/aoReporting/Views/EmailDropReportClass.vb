@@ -10,7 +10,7 @@ Imports System.Web
 Namespace Views
 
     '
-    Public Class ReportEmailDropClass
+    Public Class EmailDropReportClass
         Inherits AddonBaseClass
         '
         '=====================================================================================
@@ -91,7 +91,7 @@ Namespace Views
                 Dim qs As String = ""
                 Dim qsBase As String = ""
                 '
-                Dim report = New reportListClass(cp) With {
+                Dim report = New ReportListClass(cp) With {
                     .title = "Email Drop Report",
                     .name = "Email Drop Report",
                     .guid = "{B4B660A5-E9D9-4FEC-A6A6-AD4EB557DBF9}",
@@ -144,7 +144,7 @@ Namespace Views
                 End If
                 '
                 ' -- create caption with filter text
-                Dim captionWithFilter As String = "Email Drops"
+                Dim captionWithFilter As String = "This report summarizes data from the Email Log and Email Drops and includes emails sent from all Group Emails"
                 If filterFromDateString <> "" And filterToDateString <> "" Then
                     captionWithFilter &= ", between " & filterFromDateString & " and " & filterToDateString & " inclusive"
                 ElseIf filterFromDateString <> "" Then
@@ -204,15 +204,15 @@ Namespace Views
 
                 Do While (cs.OK)
                     Dim emaildropid As Integer = cs.GetInteger("dropid")
-                    Dim openedHref As String = "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>"
-                    Dim fullOpened As String = openedHref & cs.GetInteger("opened").ToString() & "</a>"
+                    Dim openedCount As String = If(cs.GetInteger("opened").Equals(0), "0", "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("opened").ToString() & "</a>")
+                    Dim clickedCount As String = If(cs.GetInteger("clicked").Equals(0), "0", "<a href=""?addonguid=%7B29271653-BDE3-4DC1-8058-D54E53F1D06B%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("clicked").ToString() & "</a>")
                     report.addRow()
                     report.setCell(rowPtr.ToString())
                     report.setCell(cs.GetDate("dropDate").ToString())
                     report.setCell(cs.GetText("emailName"))
                     report.setCell(cs.GetInteger("sent").ToString())
-                    report.setCell(fullOpened)
-                    report.setCell(cs.GetInteger("clicked").ToString())
+                    report.setCell(openedCount)
+                    report.setCell(clickedCount)
                     rowPtr += 1
                     cs.GoNext()
                 Loop

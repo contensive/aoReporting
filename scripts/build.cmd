@@ -39,7 +39,7 @@ rem ==============================================================
 rem
 echo build 
 rem
-cd ..\source
+cd ..\server
 "%msbuildLocation%msbuild.exe" %solutionName%
 if errorlevel 1 (
    echo failure building
@@ -47,8 +47,6 @@ if errorlevel 1 (
    exit /b %errorlevel%
 )
 cd ..\scripts
-
-rem pause
 
 rem ==============================================================
 rem
@@ -69,4 +67,3 @@ del "%collectionName%.zip" /Q
 "c:\program files\7-zip\7z.exe" a "%collectionName%.zip"
 xcopy "%collectionName%.zip" "%deploymentFolderRoot%%deploymentNumber%" /Y
 cd ..\..\scripts
-

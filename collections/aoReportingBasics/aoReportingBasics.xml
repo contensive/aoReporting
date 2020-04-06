@@ -89,7 +89,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.ReportLibraryFileDownloadLogClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.LibraryFileDownloadReportClass]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -103,28 +103,28 @@
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<IsInline>No</IsInline>
 		<JavascriptInHead><![CDATA[jQuery(document).ready(function(){
-	//    
-	// date pickers
-	jQuery(function() {
-		jQuery( "#abFilterFromDate" ).datepicker({
-			changeMonth: true,
-			changeYear: true
+			//    
+			// date pickers
+			jQuery(function() {
+				jQuery( "#abFilterFromDate" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+			});
+			jQuery(function() {
+				jQuery( "#abFilterToDate" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+			});
+			jQuery("#afw").on("click","#abFilterFromDateClear", function(){
+				jQuery('#abFilterFromDate').val(" ");
+			});
+			jQuery("#afw").on("click","#abFilterToDateClear", function(){
+				jQuery('#abFilterToDate').val(" ");
+			});
 		});
-	});
-	jQuery(function() {
-		jQuery( "#abFilterToDate" ).datepicker({
-			changeMonth: true,
-			changeYear: true
-		});
-	});
-	jQuery("#afw").on("click","#abFilterFromDateClear", function(){
-		jQuery('#abFilterFromDate').val(" ");
-	});
-	jQuery("#afw").on("click","#abFilterToDateClear", function(){
-		jQuery('#abFilterToDate').val(" ");
-	});
-});
-]]></JavascriptInHead>
+		]]></JavascriptInHead>
 		<javascriptForceHead>No</javascriptForceHead>
 		<JSHeadScriptSrc></JSHeadScriptSrc>
 		<!-- deprecated --><JSBodyScriptSrc></JSBodyScriptSrc>
@@ -146,286 +146,371 @@
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[
-/*
-* Filters
-*/
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+			/*
+			* Filters
+			*/
+			.abFilterHead 
+			{
+			}
+			.abFilterCaption
+			{
+			}
+			.abFilterRow input.abFilterDate
+			{
+				width: 80px;
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+			.abFilterRow input.abFilterNumber
+			{
+				width: 90px;
+				margin: 4px 4px 0 4px;
+				text-align: right;
+			}
+			.abFilterRow input.abFilterText
+			{
+				width: 123px;
+				margin: 4px 4px 0 10px;
+			}
+			.abFilterRow select
+			{
+				width: 140px;
+				margin: 4px 4px 0 10px;
+			}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+			.abFilterRow label
+			{
+				width: 30px;
+				display: inline-block;
+				margin: 0 0 0 10px;
+				text-align: right;
+				overflow: hidden;
+			}
+			.abFilterHead 
+			{
+			}
+			.abFilterCaption
+			{
+			}
+			.abFilterRow input.abFilterDate
+			{
+				width: 80px;
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+			.abFilterRow input.abFilterNumber
+			{
+				width: 90px;
+				margin: 4px 4px 0 4px;
+				text-align: right;
+			}
+			.abFilterRow input.abFilterText
+			{
+				width: 123px;
+				margin: 4px 4px 0 10px;
+			}
+			.abFilterRow select
+			{
+				width: 140px;
+				margin: 4px 4px 0 10px;
+			}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
+			.abFilterRow label
+			{
+				width: 30px;
+				display: inline-block;
+				margin: 0 0 0 10px;
+				text-align: right;
+				overflow: hidden;
+			}
 
 		]]></Styles>
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
 	<Addon name="Email Drop Report" guid="{A10B5F49-3147-4E32-9DCF-76D65CCFF9F1}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.ReportEmailDropClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailDropReportClass]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<JavascriptInHead><![CDATA[jQuery(document).ready(function(){
-	//    
-	// date pickers
-	jQuery(function() {
-		jQuery( "#abFilterFromDate" ).datepicker({
-			changeMonth: true,
-			changeYear: true
-		});
-	});
-	jQuery(function() {
-		jQuery( "#abFilterToDate" ).datepicker({
-			changeMonth: true,
-			changeYear: true
-		});
-	});
-	jQuery("#afw").on("click","#abFilterFromDateClear", function(){
-		jQuery('#abFilterFromDate').val(" ");
-	});
-	jQuery("#afw").on("click","#abFilterToDateClear", function(){
-		jQuery('#abFilterToDate').val(" ");
-	});
-});
-]]></JavascriptInHead>
+				//    
+				// date pickers
+				jQuery(function() {
+					jQuery( "#abFilterFromDate" ).datepicker({
+						changeMonth: true,
+						changeYear: true
+					});
+				});
+				jQuery(function() {
+					jQuery( "#abFilterToDate" ).datepicker({
+						changeMonth: true,
+						changeYear: true
+					});
+				});
+				jQuery("#afw").on("click","#abFilterFromDateClear", function(){
+					jQuery('#abFilterFromDate').val(" ");
+				});
+				jQuery("#afw").on("click","#abFilterToDateClear", function(){
+					jQuery('#abFilterToDate').val(" ");
+				});
+			});
+			]]></JavascriptInHead>
 		<Styles><![CDATA[
-/*
-* Filters
-*/
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+			/*
+			* Filters
+			*/
+			.abFilterHead 
+			{
+			}
+			.abFilterCaption
+			{
+			}
+			.abFilterRow input.abFilterDate
+			{
+				width: 80px;
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+			.abFilterRow input.abFilterNumber
+			{
+				width: 90px;
+				margin: 4px 4px 0 4px;
+				text-align: right;
+			}
+			.abFilterRow input.abFilterText
+			{
+				width: 123px;
+				margin: 4px 4px 0 10px;
+			}
+			.abFilterRow select
+			{
+				width: 140px;
+				margin: 4px 4px 0 10px;
+			}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+			.abFilterRow label
+			{
+				width: 30px;
+				display: inline-block;
+				margin: 0 0 0 10px;
+				text-align: right;
+				overflow: hidden;
+			}
+			.abFilterHead 
+			{
+			}
+			.abFilterCaption
+			{
+			}
+			.abFilterRow input.abFilterDate
+			{
+				width: 80px;
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+			.abFilterRow input.abFilterNumber
+			{
+				width: 90px;
+				margin: 4px 4px 0 4px;
+				text-align: right;
+			}
+			.abFilterRow input.abFilterText
+			{
+				width: 123px;
+				margin: 4px 4px 0 10px;
+			}
+			.abFilterRow select
+			{
+				width: 140px;
+				margin: 4px 4px 0 10px;
+			}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
+			.abFilterRow label
+			{
+				width: 30px;
+				display: inline-block;
+				margin: 0 0 0 10px;
+				text-align: right;
+				overflow: hidden;
+			}
 
 		]]></Styles>
 	</Addon>
-	
 	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.ReportEmailOpened]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailOpenedReportClass]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<JavascriptInHead></JavascriptInHead>
 		<Styles><![CDATA[
-/*
-* Filters
-*/
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+		/*
+		* Filters
+		*/
+		.abFilterHead 
+		{
+		}
+		.abFilterCaption
+		{
+		}
+		.abFilterRow input.abFilterDate
+		{
+			width: 80px;
+			margin: 4px 4px 0 4px;
+			text-align: left;
+		}
+		.abFilterRow input.abFilterNumber
+		{
+			width: 90px;
+			margin: 4px 4px 0 4px;
+			text-align: right;
+		}
+		.abFilterRow input.abFilterText
+		{
+			width: 123px;
+			margin: 4px 4px 0 10px;
+		}
+		.abFilterRow select
+		{
+			width: 140px;
+			margin: 4px 4px 0 10px;
+		}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
-.abFilterHead 
-{
-}
-.abFilterCaption
-{
-}
-.abFilterRow input.abFilterDate
-{
-	width: 80px;
-	margin: 4px 4px 0 4px;
-	text-align: left;
-}
-.abFilterRow input.abFilterNumber
-{
-	width: 90px;
-	margin: 4px 4px 0 4px;
-	text-align: right;
-}
-.abFilterRow input.abFilterText
-{
-	width: 123px;
-	margin: 4px 4px 0 10px;
-}
-.abFilterRow select
-{
-	width: 140px;
-	margin: 4px 4px 0 10px;
-}
+		.abFilterRow label
+		{
+			width: 30px;
+			display: inline-block;
+			margin: 0 0 0 10px;
+			text-align: right;
+			overflow: hidden;
+		}
+		.abFilterHead 
+		{
+		}
+		.abFilterCaption
+		{
+		}
+		.abFilterRow input.abFilterDate
+		{
+			width: 80px;
+			margin: 4px 4px 0 4px;
+			text-align: left;
+		}
+		.abFilterRow input.abFilterNumber
+		{
+			width: 90px;
+			margin: 4px 4px 0 4px;
+			text-align: right;
+		}
+		.abFilterRow input.abFilterText
+		{
+			width: 123px;
+			margin: 4px 4px 0 10px;
+		}
+		.abFilterRow select
+		{
+			width: 140px;
+			margin: 4px 4px 0 10px;
+		}
 
-.abFilterRow label
-{
-	width: 30px;
-	display: inline-block;
-	margin: 0 0 0 10px;
-	text-align: right;
-	overflow: hidden;
-}
+		.abFilterRow label
+		{
+			width: 30px;
+			display: inline-block;
+			margin: 0 0 0 10px;
+			text-align: right;
+			overflow: hidden;
+		}
 
-		]]></Styles>
+				]]></Styles>
 	</Addon>
-	
+	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}">
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailClickedReportClass]]></DotNetClass>
+		<BlockEditTools>Yes</BlockEditTools>
+		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
+		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
+		<JavascriptInHead></JavascriptInHead>
+		<Styles><![CDATA[
+		/*
+		* Filters
+		*/
+		.abFilterHead 
+		{
+		}
+		.abFilterCaption
+		{
+		}
+		.abFilterRow input.abFilterDate
+		{
+			width: 80px;
+			margin: 4px 4px 0 4px;
+			text-align: left;
+		}
+		.abFilterRow input.abFilterNumber
+		{
+			width: 90px;
+			margin: 4px 4px 0 4px;
+			text-align: right;
+		}
+		.abFilterRow input.abFilterText
+		{
+			width: 123px;
+			margin: 4px 4px 0 10px;
+		}
+		.abFilterRow select
+		{
+			width: 140px;
+			margin: 4px 4px 0 10px;
+		}
+
+		.abFilterRow label
+		{
+			width: 30px;
+			display: inline-block;
+			margin: 0 0 0 10px;
+			text-align: right;
+			overflow: hidden;
+		}
+		.abFilterHead 
+		{
+		}
+		.abFilterCaption
+		{
+		}
+		.abFilterRow input.abFilterDate
+		{
+			width: 80px;
+			margin: 4px 4px 0 4px;
+			text-align: left;
+		}
+		.abFilterRow input.abFilterNumber
+		{
+			width: 90px;
+			margin: 4px 4px 0 4px;
+			text-align: right;
+		}
+		.abFilterRow input.abFilterText
+		{
+			width: 123px;
+			margin: 4px 4px 0 10px;
+		}
+		.abFilterRow select
+		{
+			width: 140px;
+			margin: 4px 4px 0 10px;
+		}
+
+		.abFilterRow label
+		{
+			width: 30px;
+			display: inline-block;
+			margin: 0 0 0 10px;
+			text-align: right;
+			overflow: hidden;
+		}
+
+				]]></Styles>
+	</Addon>
 	<Addon name="Monthly Viewings Chart" guid="{60E25AA4-40EF-4BFB-964D-504FF77FC45E}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
@@ -512,11 +597,11 @@
 		<ActiveXProgramID></ActiveXProgramID>
 		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.PageViewsClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
-Chart Height=400
-Days to Display=365
-Target Div=durationChart
-Daily or Hourly=Daily[Daily|Hourly]
-]]></ArgumentList>
+			Chart Height=400
+			Days to Display=365
+			Target Div=durationChart
+			Daily or Hourly=Daily[Daily|Hourly]
+			]]></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
 		<Help></Help>
@@ -558,8 +643,8 @@ Daily or Hourly=Daily[Daily|Hourly]
 		<ActiveXProgramID></ActiveXProgramID>
 		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.DurationVisitClass]]></DotNetClass>
 		<ArgumentList><![CDATA[Duration
-Target Div
-Rate=Daily[Daily|Hourly]]]></ArgumentList>
+			Target Div
+			Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
 		<Help></Help>
@@ -593,12 +678,12 @@ Rate=Daily[Daily|Hourly]]]></ArgumentList>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[
 
-.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
-.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
-.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
-.summaryCell{text-align:top;}
-.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
-]]></Styles>
+		.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
+		.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
+		.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
+		.summaryCell{text-align:top;}
+		.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
+		]]></Styles>
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
 	</Addon>

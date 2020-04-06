@@ -9,7 +9,7 @@ Imports Contensive.BaseClasses
 Namespace Views
 
     '
-    Public Class ReportLibraryFileDownloadLogClass
+    Public Class LibraryFileDownloadReportClass
         Inherits AddonBaseClass
         '
         '=====================================================================================
@@ -90,7 +90,7 @@ Namespace Views
                 Dim qs As String = ""
                 Dim qsBase As String = ""
                 '
-                Dim report = New reportListClass(cp) With {
+                Dim report = New ReportListClass(cp) With {
                     .title = "Library File Download Report",
                     .name = "Library File Download Report",
                     .guid = "{90F40ED5-17F5-4C2C-8D87-2FCF2B68B743}",
