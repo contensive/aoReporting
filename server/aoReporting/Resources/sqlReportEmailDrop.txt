@@ -7,4 +7,5 @@ select d.id as dropId, d.name as dropName, e.id as emailId, e.name as emailName,
  left join ccemail e on e.id=d.EmailID
  where (d.dateadded < {dateTo})
  and (d.dateadded > {dateFrom})
+ and (e.id is not null)
  order by d.id desc

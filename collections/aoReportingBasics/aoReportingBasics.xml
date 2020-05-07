@@ -337,7 +337,7 @@
 
 		]]></Styles>
 	</Addon>
-	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}">
+	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailOpenedReportClass]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
@@ -424,7 +424,7 @@
 
 				]]></Styles>
 	</Addon>
-	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}">
+	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailClickedReportClass]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
@@ -591,7 +591,7 @@
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Addon name="Page Views Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Add-on">
+	<Addon name="Page Views Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
@@ -637,7 +637,7 @@
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Addon name="Visit Chart" guid="{097C0307-4A12-4B95-B328-4B637F6E26D4}" type="Add-on">
+	<Addon name="Visit Chart" guid="{097C0307-4A12-4B95-B328-4B637F6E26D4}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
