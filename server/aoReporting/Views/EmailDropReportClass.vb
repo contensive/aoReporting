@@ -85,12 +85,9 @@ Namespace Views
             Dim result As String = ""
             Dim hint As String = "1"
             Try
-                '
-                Dim orderBy As String = ""
                 Dim rqs As String = cp.Utils.ModifyQueryString(frameRqs, rnDstFormId, dstFormId.ToString())
-                Dim qs As String = ""
-                Dim qsBase As String = ""
                 '
+                ' -- initialize report
                 Dim report = New ReportListClass(cp) With {
                     .title = "Email Drop Report",
                     .name = "Email Drop Report",
@@ -99,8 +96,13 @@ Namespace Views
                     .addCsvDownloadCurrentPage = True,
                     .isOuterContainer = True
                 }
+                cp.Doc.AddHeadStyle(report.styleSheet)
+                '
+                ' -- add buttons
                 report.addFormButton(buttonCancel)
                 report.addFormButton(ButtonRefresh)
+                '
+                ' -- add src view
                 report.addFormHidden(rnSrcFormId, dstFormId.ToString())
                 '
                 ' -- filterDateFrom
@@ -134,7 +136,7 @@ Namespace Views
                 ElseIf (Not String.IsNullOrEmpty(userFilterToDateString)) Then
                     filterFromDate = genericController.encodeMinDate(cp.Utils.EncodeDate(userFilterFromDateString))
                 Else
-                    filterToDate = Today.AddDays(-30)
+                    filterToDate = Today
                 End If
                 cp.User.SetProperty(userPropertyToDate, filterToDate.ToString())
                 If filterToDate = Date.MinValue Then
@@ -152,8 +154,8 @@ Namespace Views
                 ElseIf filterToDateString <> "" Then
                     captionWithFilter &= ", on or before " & filterToDateString
                 End If
-                '
                 captionWithFilter &= "."
+                report.description = captionWithFilter
                 '
                 hint = "setup columns"
                 report.columnCaption = "Row"
@@ -185,7 +187,7 @@ Namespace Views
                 report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
                 report.columnCellClass = "afwTextAlignRight"
                 '
-                hint = "run query"
+                ' -- run query and fill rows
                 Dim sql As String = My.Resources.sqlReportEmailDrop
                 If (filterFromDate = Date.MinValue) Then
                     sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(New Date(1990, 1, 1)))
@@ -197,36 +199,33 @@ Namespace Views
                 Else
                     sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate))
                 End If
-                Dim cs As CPCSBaseClass = cp.CSNew
-                cs.OpenSQL(sql)
-                qsBase = frameRqs
-                Dim rowPtr As Integer = 1
-
-                Do While (cs.OK)
-                    Dim emaildropid As Integer = cs.GetInteger("dropid")
-                    Dim openedCount As String = If(cs.GetInteger("opened").Equals(0), "0", "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("opened").ToString() & "</a>")
-                    Dim clickedCount As String = If(cs.GetInteger("clicked").Equals(0), "0", "<a href=""?addonguid=%7B29271653-BDE3-4DC1-8058-D54E53F1D06B%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("clicked").ToString() & "</a>")
-                    report.addRow()
-                    report.setCell(rowPtr.ToString())
-                    report.setCell(cs.GetDate("dropDate").ToString())
-                    report.setCell(cs.GetText("emailName"))
-                    report.setCell(cs.GetInteger("sent").ToString())
-                    report.setCell(openedCount)
-                    report.setCell(clickedCount)
-                    rowPtr += 1
-                    cs.GoNext()
-                Loop
-                hint = "set filter text"
+                Using cs As CPCSBaseClass = cp.CSNew
+                    If (cs.OpenSQL(sql)) Then
+                        Dim rowPtr As Integer = 1
+                        Do
+                            Dim emaildropid As Integer = cs.GetInteger("dropid")
+                            Dim openedCount As String = If(cs.GetInteger("opened").Equals(0), "0", "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("opened").ToString() & "</a>")
+                            Dim clickedCount As String = If(cs.GetInteger("clicked").Equals(0), "0", "<a href=""?addonguid=%7B29271653-BDE3-4DC1-8058-D54E53F1D06B%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("clicked").ToString() & "</a>")
+                            report.addRow()
+                            report.setCell(rowPtr.ToString())
+                            report.setCell(cs.GetDate("dropDate").ToString())
+                            report.setCell(cs.GetText("emailName"))
+                            report.setCell(cs.GetInteger("sent").ToString())
+                            report.setCell(openedCount)
+                            report.setCell(clickedCount)
+                            rowPtr += 1
+                            cs.GoNext()
+                        Loop While (cs.OK)
+                    End If
+                End Using
+                '
+                ' -- filters
                 report.htmlLeftOfTable = "" _
                     & cr & "<h3 class=""abFilterHead"">Filters</h3>" _
                     & cr & "<div class=""abFilterRow""><label for""abFilterFromDate"">From</label>" & cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") & "<a href=""#"" id=""abFilterFromDateClear"">X</a></div>" _
                     & cr & "<div class=""abFilterRow""><label for""abFilterToDate"">To</label>" & cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") & "<a href=""#"" id=""abFilterToDateClear"">X</a></div>" _
                     & ""
-                hint = "output body"
-                report.description = captionWithFilter
-                result = report.getHtml(cp)
-                result = cp.Html.div(result, "", "abReportEmailDrop")
-                cp.Doc.AddHeadStyle(report.styleSheet)
+                result = cp.Html.div(report.getHtml(cp), "", "abReportEmailDrop")
             Catch ex As Exception
                 cp.Site.ErrorReport(ex)
             End Try

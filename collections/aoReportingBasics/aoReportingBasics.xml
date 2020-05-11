@@ -248,10 +248,10 @@
 						changeYear: true
 					});
 				});
-				jQuery("#afw").on("click","#abFilterFromDateClear", function(){
+				jQuery("body").on("click","#abFilterFromDateClear", function(){
 					jQuery('#abFilterFromDate').val(" ");
 				});
-				jQuery("#afw").on("click","#abFilterToDateClear", function(){
+				jQuery("body").on("click","#abFilterToDateClear", function(){
 					jQuery('#abFilterToDate').val(" ");
 				});
 			});
