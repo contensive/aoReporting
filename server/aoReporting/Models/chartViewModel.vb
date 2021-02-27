@@ -1,13 +1,5 @@
 ﻿
-Option Explicit On
-Option Strict On
-
-Imports System.Collections.Generic
 Imports System.Text
-Imports Contensive.BaseClasses
-Imports Contensive.Addons.Reporting.Models
-Imports Contensive.Addons.Reporting.Views
-Imports Contensive.Addons.Reporting.Controllers
 
 Namespace Models
     Public NotInheritable Class ChartViewModel
