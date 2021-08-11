@@ -1,8 +1,9 @@
-﻿using Contensive.BaseClasses;
+﻿using Contensive.Addons.Reporting.Processor.Addons.Housekeep;
+using Contensive.BaseClasses;
 using System;
 using System.Xml;
 
-namespace Contensive.Processor.Addons.Housekeeping {
+namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
     /// <summary>
     /// Housekeep this content
     /// </summary>
@@ -38,7 +39,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
                 cp.Log.Info("Housekeep, viewingsummary");
                 DateTime datePtr = default;
                 using (CPCSBaseClass csData = cp.CSNew()) {
-                    if (!csData.Open(HouseKeepClass.getSQLSelect("ccviewingsummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber Desc", "", 1))) {
+                    if (!csData.OpenSQL(HousekeepController.getSQLSelect("ccviewingsummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber Desc", "", 1))) {
                         datePtr = env.oldestVisitSummaryWeCareAbout;
                     }
                     else {
@@ -46,7 +47,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
                     }
                 }
                 if (datePtr < env.oldestVisitSummaryWeCareAbout) { datePtr = env.oldestVisitSummaryWeCareAbout; }
-                pageViewSummary(cp, datePtr, env.yesterday, env.oldestVisitSummaryWeCareAbout);
+                pageViewSummary(cp, datePtr, env.yesterday, 24, env.oldestVisitSummaryWeCareAbout);
             }
             catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
@@ -59,7 +60,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
 
 
 
-        
+
         //====================================================================================================
         /// <summary>
         /// Summarize the page views, excludes non-cookie visits, excludes administrator and developer visits, excludes authenticated users with ExcludeFromReporting
@@ -90,9 +91,9 @@ namespace Contensive.Processor.Addons.Housekeeping {
                         hint = 2;
                         //
                         hinttxt = ", HourDuration [" + HourDuration + "], PeriodDatePtr [" + PeriodDatePtr + "], PeriodDatePtr.AddHours(HourDuration / 2.0) [" + PeriodDatePtr.AddHours(HourDuration / 2.0) + "]";
-                        int DateNumber = encodeInteger((PeriodDatePtr - default(DateTime)).TotalDays);
+                        int DateNumber = HousekeepController.encodeInteger((PeriodDatePtr - default(DateTime)).TotalDays);
                         // encodeInteger(PeriodDatePtr.AddHours(HourDuration / 2.0).ToOADate());
-                        int TimeNumber = encodeInteger(PeriodDatePtr.TimeOfDay.TotalHours);
+                        int TimeNumber = HousekeepController.encodeInteger(PeriodDatePtr.TimeOfDay.TotalHours);
                         DateTime DateStart = default;
                         DateStart = PeriodDatePtr.Date;
                         DateTime DateEnd = default;
@@ -113,39 +114,39 @@ namespace Contensive.Processor.Addons.Housekeeping {
                         // then use the title to distinguish a page. The problem with this is the current system puts the
                         // visit number and page number in the name. if we select on district name, they will all be.
                         //
-                        using (var csPages = new CsModel(core)) {
+                        using (CPCSBaseClass csPages = cp.CSNew()) {
                             string sql = "select distinct recordid,pagetitle from ccviewings h"
                                 + " where (h.recordid<>0)"
-                                + " and(h.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (h.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
+                                + " and(h.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                                + " and (h.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
                                 + " and((h.ExcludeFromAnalytics is null)or(h.ExcludeFromAnalytics=0))"
                                 + "order by recordid";
                             hint = 3;
-                            if (!csPages.openSql(sql)) {
+                            if (!csPages.OpenSQL(sql)) {
                                 //
                                 // no hits found - add or update a single record for this day so we know it has been calculated
-                                csPages.open("Page View Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")and(pageid=" + PageId + ")and(pagetitle=" + DbController.encodeSQLText(PageTitle) + ")");
-                                if (!csPages.ok()) {
-                                    csPages.close();
-                                    csPages.insert("Page View Summary");
+                                csPages.Open("Page View Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")and(pageid=" + PageId + ")and(pagetitle=" + cp.Db.EncodeSQLText(PageTitle) + ")");
+                                if (!csPages.OK()) {
+                                    csPages.Close();
+                                    csPages.Insert("Page View Summary");
                                 }
                                 //
-                                if (csPages.ok()) {
-                                    csPages.set("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageTitle);
-                                    csPages.set("DateNumber", DateNumber);
-                                    csPages.set("TimeNumber", TimeNumber);
-                                    csPages.set("TimeDuration", HourDuration);
-                                    csPages.set("PageViews", PageViews);
-                                    csPages.set("PageID", PageId);
-                                    csPages.set("PageTitle", PageTitle);
-                                    csPages.set("AuthenticatedPageViews", AuthenticatedPageViews);
-                                    csPages.set("NoCookiePageViews", NoCookiePageViews);
+                                if (csPages.OK()) {
+                                    csPages.SetField("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageTitle);
+                                    csPages.SetField("DateNumber", DateNumber);
+                                    csPages.SetField("TimeNumber", TimeNumber);
+                                    csPages.SetField("TimeDuration", HourDuration);
+                                    csPages.SetField("PageViews", PageViews);
+                                    csPages.SetField("PageID", PageId);
+                                    csPages.SetField("PageTitle", PageTitle);
+                                    csPages.SetField("AuthenticatedPageViews", AuthenticatedPageViews);
+                                    csPages.SetField("NoCookiePageViews", NoCookiePageViews);
                                     {
-                                        csPages.set("MobilePageViews", MobilePageViews);
-                                        csPages.set("BotPageViews", BotPageViews);
+                                        csPages.SetField("MobilePageViews", MobilePageViews);
+                                        csPages.SetField("BotPageViews", BotPageViews);
                                     }
                                 }
-                                csPages.close();
+                                csPages.Close();
                                 hint = 4;
                             }
                             else {
@@ -153,136 +154,135 @@ namespace Contensive.Processor.Addons.Housekeeping {
                                 //
                                 // add an entry for each page hit on this day
                                 //
-                                while (csPages.ok()) {
-                                    PageId = csPages.getInteger("recordid");
-                                    PageTitle = csPages.getText("pagetitle");
+                                while (csPages.OK()) {
+                                    PageId = csPages.GetInteger("recordid");
+                                    PageTitle = csPages.GetText("pagetitle");
                                     string baseCriteria = ""
                                         + " (h.recordid=" + PageId + ")"
                                         + " "
-                                        + " and(h.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                        + " and(h.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
+                                        + " and(h.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                                        + " and(h.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
                                         + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
                                         + " and((h.ExcludeFromAnalytics is null)or(h.ExcludeFromAnalytics=0))"
                                         + "";
                                     if (!string.IsNullOrEmpty(PageTitle)) {
-                                        baseCriteria = baseCriteria + "and(h.pagetitle=" + DbController.encodeSQLText(PageTitle) + ")";
+                                        baseCriteria = baseCriteria + "and(h.pagetitle=" + cp.Db.EncodeSQLText(PageTitle) + ")";
                                     }
                                     hint = 6;
                                     //
                                     // Total Page Views
-                                    using (var csPageViews = new CsModel(core)) {
+                                    using (CPCSBaseClass csPageViews = cp.CSNew()) {
                                         sql = "select count(h.id) as cnt"
                                             + " from ccviewings h left join ccvisits v on h.visitid=v.id"
                                             + " where " + baseCriteria + " and (v.CookieSupport<>0)"
                                             + "";
-                                        csPageViews.openSql(sql);
-                                        if (csPageViews.ok()) {
-                                            PageViews = csPageViews.getInteger("cnt");
+                                        csPageViews.OpenSQL(sql);
+                                        if (csPageViews.OK()) {
+                                            PageViews = csPageViews.GetInteger("cnt");
                                         }
                                     }
                                     //
                                     // Authenticated Visits
                                     //
-                                    using (var csAuthPages = new CsModel(core)) {
+                                    using (CPCSBaseClass csAuthPages = cp.CSNew()) {
                                         sql = "select count(h.id) as cnt"
                                             + " from ccviewings h left join ccvisits v on h.visitid=v.id"
                                             + " where " + baseCriteria + " and(v.CookieSupport<>0)"
                                             + " and(v.visitAuthenticated<>0)"
                                             + "";
-                                        csAuthPages.openSql(sql);
-                                        if (csAuthPages.ok()) {
-                                            AuthenticatedPageViews = csAuthPages.getInteger("cnt");
+                                        csAuthPages.OpenSQL(sql);
+                                        if (csAuthPages.OK()) {
+                                            AuthenticatedPageViews = csAuthPages.GetInteger("cnt");
                                         }
                                     }
                                     //
                                     // No Cookie Page Views
                                     //
-                                    using (var csNoCookie = new CsModel(core)) {
+                                    using (CPCSBaseClass csNoCookie = cp.CSNew()) {
                                         sql = "select count(h.id) as NoCookiePageViews"
                                             + " from ccviewings h left join ccvisits v on h.visitid=v.id"
                                             + " where " + baseCriteria + " and((v.CookieSupport=0)or(v.CookieSupport is null))"
                                             + "";
-                                        csNoCookie.openSql(sql);
-                                        if (csNoCookie.ok()) {
-                                            NoCookiePageViews = csNoCookie.getInteger("NoCookiePageViews");
+                                        csNoCookie.OpenSQL(sql);
+                                        if (csNoCookie.OK()) {
+                                            NoCookiePageViews = csNoCookie.GetInteger("NoCookiePageViews");
                                         }
                                     }
                                     //
                                     //
                                     // Mobile Visits
-                                    using (var csMobileVisits = new CsModel(core)) {
+                                    using (CPCSBaseClass csMobileVisits = cp.CSNew()) {
                                         sql = "select count(h.id) as cnt"
                                             + " from ccviewings h left join ccvisits v on h.visitid=v.id"
                                             + " where " + baseCriteria + " and(v.CookieSupport<>0)"
                                             + " and(v.mobile<>0)"
                                             + "";
-                                        csMobileVisits.openSql(sql);
-                                        if (csMobileVisits.ok()) {
-                                            MobilePageViews = csMobileVisits.getInteger("cnt");
+                                        csMobileVisits.OpenSQL(sql);
+                                        if (csMobileVisits.OK()) {
+                                            MobilePageViews = csMobileVisits.GetInteger("cnt");
                                         }
                                     }
                                     //
                                     // Bot Visits
-                                    using (var csBotVisits = new CsModel(core)) {
+                                    using (CPCSBaseClass csBotVisits =  cp.CSNew()) {
                                         sql = "select count(h.id) as cnt"
                                             + " from ccviewings h left join ccvisits v on h.visitid=v.id"
                                             + " where " + baseCriteria + " and(v.CookieSupport<>0)"
                                             + " and(v.bot<>0)"
                                             + "";
-                                        csBotVisits.openSql(sql);
-                                        if (csBotVisits.ok()) {
-                                            BotPageViews = csBotVisits.getInteger("cnt");
+                                        csBotVisits.OpenSQL(sql);
+                                        if (csBotVisits.OK()) {
+                                            BotPageViews = csBotVisits.GetInteger("cnt");
                                         }
                                     }
                                     //
                                     // Add or update the Visit Summary Record
                                     //
-                                    using (var csPVS = new CsModel(core)) {
-                                        if (!csPVS.open("Page View Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")and(pageid=" + PageId + ")and(pagetitle=" + DbController.encodeSQLText(PageTitle) + ")")) {
-                                            csPVS.insert("Page View Summary");
+                                    using (CPCSBaseClass csPVS = cp.CSNew()) {
+                                        if (!csPVS.Open("Page View Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")and(pageid=" + PageId + ")and(pagetitle=" + cp.Db.EncodeSQLText(PageTitle) + ")")) {
+                                            csPVS.Insert("Page View Summary");
                                         }
                                         //
-                                        if (csPVS.ok()) {
+                                        if (csPVS.OK()) {
                                             hint = 11;
                                             string PageName = "";
                                             if (string.IsNullOrEmpty(PageTitle)) {
-                                                PageName = MetadataController.getRecordName(core, "page content", PageId);
-                                                csPVS.set("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageName);
-                                                csPVS.set("PageTitle", PageName);
+                                                PageName = HousekeepController.getRecordName(cp, "page content", PageId);
+                                                csPVS.SetField("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageName);
+                                                csPVS.SetField("PageTitle", PageName);
                                             }
                                             else {
-                                                csPVS.set("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageTitle);
-                                                csPVS.set("PageTitle", PageTitle);
+                                                csPVS.SetField("name", HourDuration + " hr summary for " + DateTime.MinValue.AddDays(DateNumber) + " " + TimeNumber + ":00, " + PageTitle);
+                                                csPVS.SetField("PageTitle", PageTitle);
                                             }
-                                            csPVS.set("DateNumber", DateNumber);
-                                            csPVS.set("TimeNumber", TimeNumber);
-                                            csPVS.set("TimeDuration", HourDuration);
-                                            csPVS.set("PageViews", PageViews);
-                                            csPVS.set("PageID", PageId);
-                                            csPVS.set("AuthenticatedPageViews", AuthenticatedPageViews);
-                                            csPVS.set("NoCookiePageViews", NoCookiePageViews);
+                                            csPVS.SetField("DateNumber", DateNumber);
+                                            csPVS.SetField("TimeNumber", TimeNumber);
+                                            csPVS.SetField("TimeDuration", HourDuration);
+                                            csPVS.SetField("PageViews", PageViews);
+                                            csPVS.SetField("PageID", PageId);
+                                            csPVS.SetField("AuthenticatedPageViews", AuthenticatedPageViews);
+                                            csPVS.SetField("NoCookiePageViews", NoCookiePageViews);
                                             hint = 12;
                                             {
-                                                csPVS.set("MobilePageViews", MobilePageViews);
-                                                csPVS.set("BotPageViews", BotPageViews);
+                                                csPVS.SetField("MobilePageViews", MobilePageViews);
+                                                csPVS.SetField("BotPageViews", BotPageViews);
                                             }
                                         }
                                     }
-                                    csPages.goNext();
+                                    csPages.GoNext();
                                 }
                             }
                         }
                         PeriodDatePtr = PeriodDatePtr.AddHours(HourDuration);
                     }
                 }
-                //
                 return;
             }
             catch (Exception ex) {
-            CP.Site.errorReport( ex, "hint [" + hint + "]");
+                cp.Site.ErrorReport(ex, "hint [" + hint + "]");
             }
         }
-        //
-       
+        
+
     }
 }

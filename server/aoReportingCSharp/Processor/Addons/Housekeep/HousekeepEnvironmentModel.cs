@@ -1,7 +1,7 @@
 ﻿using Contensive.BaseClasses;
 using System;
 //
-namespace Contensive.Processor.Addons.Housekeeping {
+namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
     //
     //====================================================================================================
     /// <summary>
@@ -37,7 +37,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
         /// <summary>
         /// the last time housekeep was run
         /// </summary>
-        public DateTime lastCheckDateTime { get { return cp.Site.GetDate("housekeep, last check", default); } }
+        public DateTime lastCheckDateTime { get { return cp.Site.GetDate("housekeep, last check", DateTime.Now); } }
         //
         //====================================================================================================
         /// <summary>
@@ -55,7 +55,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
         /// <summary>
         /// 90 days ago
         /// </summary>
-        public DateTime aLittleWhileAgo { get { return core.dateTimeNowMockable.AddDays(-90).Date; } }
+        public DateTime aLittleWhileAgo { get { return DateTime.Now.AddDays(-90).Date; } }
         //
         //====================================================================================================
         /// <summary>
@@ -63,7 +63,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
         /// </summary>
         public DateTime oldestVisitSummaryWeCareAbout {
             get {
-                DateTime oldestVisitSummaryWeCareAbout = core.dateTimeNowMockable.Date.AddDays(-30);
+                DateTime oldestVisitSummaryWeCareAbout = DateTime.Now.Date.AddDays(-30);
                 if (oldestVisitSummaryWeCareAbout < visitArchiveDate) {
                     oldestVisitSummaryWeCareAbout = visitArchiveDate;
                 }
@@ -137,12 +137,6 @@ namespace Contensive.Processor.Addons.Housekeeping {
                 return emailDropArchiveAgeDays;
             }
         }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// How many days the email log stores the email body (large data)
-        /// </summary>
-        public int emailLogBodyRetainDays { get { return GenericController.encodeInteger(cp.Site.GetText("EmailLogBodyRetainDays", "7")); } }
         //
         //====================================================================================================
         /// <summary>

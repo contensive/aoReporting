@@ -1,13 +1,11 @@
-﻿
-using Contensive.BaseClasses;
-using Contensive.Processor.Controllers;
+﻿using Contensive.BaseClasses;
 using System;
 //
-namespace Contensive.Processor.Addons.Housekeeping {
+namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
     /// <summary>
     /// support for housekeeping functions for reporting
     /// </summary>
-    public class HouseKeepClass : AddonBaseClass {
+    public class ReportingHouseKeepClass : AddonBaseClass {
         //
         //====================================================================================================
         /// <summary>
@@ -20,10 +18,9 @@ namespace Contensive.Processor.Addons.Housekeeping {
                 //
                 cp.Log.Info("Housekeep");
                 //
-                var env = new HouseKeepEnvironmentModel(core);
-                int TimeoutSave = core.db.sqlCommandTimeout;
-                core.db.sqlCommandTimeout = 1800;
-
+                var env = new HouseKeepEnvironmentModel(cp);
+                int TimeoutSave = cp.Db.SQLTimeout;
+                cp.Db.SQLTimeout = 1800;
 
 
                 // -- hourly tasks
@@ -41,10 +38,7 @@ namespace Contensive.Processor.Addons.Housekeeping {
 
 
 
-                //
-                // -- daily tasks
-                HousekeepDailyTasksClass.executeDailyTasks(core, env);
-                core.db.sqlCommandTimeout = TimeoutSave;
+                cp.Db.SQLTimeout = TimeoutSave;
                 return "";
             }
             catch (Exception ex) {
@@ -52,29 +46,6 @@ namespace Contensive.Processor.Addons.Housekeeping {
                 cp.Site.LogAlarm("Housekeep, exception, ex [" + ex + "]");
                 throw;
             }
-        }
-
-
-        //========================================================================
-        /// <summary>
-        /// Return an sql select based on the arguments
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="fieldList"></param>
-        /// <param name="where"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="groupBy"></param>
-        /// <param name="recordLimit"></param>
-        /// <returns></returns>
-        public static string getSQLSelect(string from, string fieldList, string where, string orderBy, string groupBy, int recordLimit) {
-            string sql = "select";
-            if (recordLimit != 0) { sql += " top " + recordLimit; }
-            sql += (string.IsNullOrWhiteSpace(fieldList)) ? " *" : " " + fieldList;
-            sql += " from " + from;
-            if (!string.IsNullOrWhiteSpace(where)) { sql += " where " + where; }
-            if (!string.IsNullOrWhiteSpace(orderBy)) { sql += " order by " + orderBy; }
-            if (!string.IsNullOrWhiteSpace(groupBy)) { sql += " group by " + groupBy; }
-            return sql;
         }
     }
 }

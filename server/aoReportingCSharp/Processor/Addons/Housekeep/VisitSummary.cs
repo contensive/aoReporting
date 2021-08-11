@@ -1,7 +1,7 @@
 ﻿using Contensive.BaseClasses;
 using System;
 
-namespace Contensive.Processor.Addons.Housekeeping {
+namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
     /// <summary>
     /// Housekeep this content
     /// </summary>

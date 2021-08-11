@@ -45,6 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Processor\Addons\Housekeep\housekeepClass.cs" />
+    <Compile Include="Processor\Addons\Housekeep\HousekeepController.cs" />
+    <Compile Include="Processor\Addons\Housekeep\HousekeepEnvironmentModel.cs" />
+    <Compile Include="Processor\Addons\Housekeep\ViewingSummaryClass.cs" />
+    <Compile Include="Processor\Addons\Housekeep\VisitSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
