@@ -23,7 +23,6 @@ Namespace Models
         Public Property AuthenticatedVisits As Integer
         Public Property AveTimeOnSite As Integer
         Public Property BotVisits As Integer
-        Public Property ContentCategoryID As Integer
         Public Property DateNumber As Integer
         Public Property MobileVisits As Integer
         Public Property NewVisitorVisits As Integer

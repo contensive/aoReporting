@@ -10,7 +10,7 @@ Namespace Models
             Dim result As New StringBuilder
             Try
                 If Width = "" Then
-                    Width = "100%"
+                    Width = "75%"
                 End If
                 If Height = "" Then
                     Height = "400px"

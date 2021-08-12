@@ -42,112 +42,113 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 //
                 //bool newHour = (DateTime.Now.Hour != env.lastCheckDateTime.Hour);
                 //if (env.forceHousekeep || newHour) {
+                //
+                // Set NextSummaryStartDate based on the last time we ran hourly summarization
+                //
+                DateTime LastTimeSummaryWasRun = env.visitArchiveDate;
+                cp.Db.SQLTimeout = 180;
+                using (CPCSBaseClass csData = cp.CSNew()) {
+                    if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisitSummary", "DateAdded", "(timeduration=1)and(Dateadded>" + cp.Db.EncodeSQLDate(env.visitArchiveDate) + ")", "id Desc", "", 1))) {
+                        LastTimeSummaryWasRun = csData.GetDate("DateAdded");
+                        cp.Log.Info("Update hourly visit summary, last time summary was run was [" + LastTimeSummaryWasRun + "]");
+                    }
+                    else {
+                        cp.Log.Info("Update hourly visit summary, no hourly summaries were found, set start to [" + LastTimeSummaryWasRun + "]");
+                    }
+                }
+                DateTime NextSummaryStartDate = LastTimeSummaryWasRun;
+                //
+                // Each hourly entry includes visits that started during that hour, but we do not know when they finished (maybe during last hour)
+                //   Find the oldest starttime of all the visits with endtimes after the LastTimeSummaryWasRun. Resummarize all periods
+                //   from then to now
+                //
+                //   For the past 24 hours, find the oldest visit with the last viewing during the last hour
+                //
+                DateTime StartOfHour = (new DateTime(LastTimeSummaryWasRun.Year, LastTimeSummaryWasRun.Month, LastTimeSummaryWasRun.Day, LastTimeSummaryWasRun.Hour, 1, 1)).AddHours(-1); // (Int(24 * LastTimeSummaryWasRun) / 24) - PeriodStep
+                DateTime OldestDateAdded = StartOfHour;
+                cp.Db.SQLTimeout = 180;
+                using (CPCSBaseClass csData = cp.CSNew()) {
+                    if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisits", "DateAdded", "LastVisitTime>" + cp.Db.EncodeSQLDate(StartOfHour), "dateadded", "", 1))) {
+                        OldestDateAdded = csData.GetDate("DateAdded");
+                        if (OldestDateAdded < NextSummaryStartDate) {
+                            NextSummaryStartDate = OldestDateAdded;
+                            cp.Log.Info("Update hourly visit summary, found a visit with the last viewing during the past hour. It started [" + OldestDateAdded + "], before the last summary was run.");
+                        }
+                    }
+                }
+                DateTime PeriodStartDate = DateTime.Now.AddDays(-90);
+                double PeriodStep = 1;
+                int HoursPerDay = 0;
+                cp.Db.SQLTimeout = 180;
+                //
+                // -- search for day with missing visit summaries in the 90 days before yesterday
+                DateTime DateofMissingSummary = DateTime.MinValue;
+                for (double PeriodDatePtr = PeriodStartDate.ToOADate(); PeriodDatePtr <= OldestDateAdded.ToOADate(); PeriodDatePtr += PeriodStep) {
                     //
-                    // Set NextSummaryStartDate based on the last time we ran hourly summarization
+                    // Verify there are 24 hour records for every day back the past 90 days
                     //
-                    DateTime LastTimeSummaryWasRun = env.visitArchiveDate;
-                    cp.Db.SQLTimeout = 180;
                     using (CPCSBaseClass csData = cp.CSNew()) {
-                        if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisitSummary", "DateAdded", "(timeduration=1)and(Dateadded>" + cp.Db.EncodeSQLDate(env.visitArchiveDate) + ")", "id Desc", "", 1))) {
-                            LastTimeSummaryWasRun = csData.GetDate("DateAdded");
-                            cp.Log.Info("Update hourly visit summary, last time summary was run was [" + LastTimeSummaryWasRun + "]");
-                        }
-                        else {
-                            cp.Log.Info("Update hourly visit summary, no hourly summaries were found, set start to [" + LastTimeSummaryWasRun + "]");
+                        if (csData.OpenSQL("select count(id) as HoursPerDay from ccVisitSummary where TimeDuration=1 and DateNumber=" + HousekeepController.encodeInteger(PeriodDatePtr) + " group by DateNumber")) {
+                            HoursPerDay = csData.GetInteger("HoursPerDay");
                         }
                     }
-                    DateTime NextSummaryStartDate = LastTimeSummaryWasRun;
+                    if (HoursPerDay < 24) {
+                        DateofMissingSummary = DateTime.FromOADate(PeriodDatePtr);
+                        break;
+                    }
+                }
+                if ((DateofMissingSummary != DateTime.MinValue) && (DateofMissingSummary < NextSummaryStartDate)) {
+                    cp.Log.Info("Found a missing hourly period in the visit summary table [" + DateofMissingSummary + "], it only has [" + HoursPerDay + "] hourly summaries.");
+                    NextSummaryStartDate = DateofMissingSummary;
+                }
+                {
                     //
-                    // Each hourly entry includes visits that started during that hour, but we do not know when they finished (maybe during last hour)
-                    //   Find the oldest starttime of all the visits with endtimes after the LastTimeSummaryWasRun. Resummarize all periods
-                    //   from then to now
+                    // Now summarize all visits during all hourly periods between OldestDateAdded and the previous Hour
                     //
-                    //   For the past 24 hours, find the oldest visit with the last viewing during the last hour
+                    cp.Log.Info("Summaryize visits hourly, starting [" + NextSummaryStartDate + "]");
+                    PeriodStep = (double)1 / (double)24;
+                    string BuildVersion = cp.Site.GetText("BuildVersion");
+                    summarizePeriod(cp, env, NextSummaryStartDate, DateTime.Now, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                }
+                {
+                    string BuildVersion = cp.Site.GetText("BuildVersion");
                     //
-                    DateTime StartOfHour = (new DateTime(LastTimeSummaryWasRun.Year, LastTimeSummaryWasRun.Month, LastTimeSummaryWasRun.Day, LastTimeSummaryWasRun.Hour, 1, 1)).AddHours(-1); // (Int(24 * LastTimeSummaryWasRun) / 24) - PeriodStep
-                    DateTime OldestDateAdded = StartOfHour;
-                    cp.Db.SQLTimeout = 180;
-                    using (CPCSBaseClass csData = cp.CSNew()) {
-                        if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisits", "DateAdded", "LastVisitTime>" + cp.Db.EncodeSQLDate(StartOfHour), "dateadded", "", 1))) {
-                            OldestDateAdded = csData.GetDate("DateAdded");
-                            if (OldestDateAdded < NextSummaryStartDate) {
-                                NextSummaryStartDate = OldestDateAdded;
-                                cp.Log.Info("Update hourly visit summary, found a visit with the last viewing during the past hour. It started [" + OldestDateAdded + "], before the last summary was run.");
-                            }
-                        }
-                    }
-                    DateTime PeriodStartDate = DateTime.Now.AddDays(-90);
-                    double PeriodStep = 1;
-                    int HoursPerDay = 0;
-                    cp.Db.SQLTimeout = 180;
+                    // Find missing daily summaries, summarize that date
                     //
-                    // -- search for day with missing visit summaries in the 90 days before yesterday
-                    DateTime DateofMissingSummary = DateTime.MinValue;
-                    for (double PeriodDatePtr = PeriodStartDate.ToOADate(); PeriodDatePtr <= OldestDateAdded.ToOADate(); PeriodDatePtr += PeriodStep) {
-                        //
-                        // Verify there are 24 hour records for every day back the past 90 days
-                        //
-                        using (CPCSBaseClass csData = cp.CSNew()) {
-                            if (csData.OpenSQL("select count(id) as HoursPerDay from ccVisitSummary where TimeDuration=1 and DateNumber=" + HousekeepController.encodeInteger(PeriodDatePtr) + " group by DateNumber")) {
-                                HoursPerDay = csData.GetInteger("HoursPerDay");
-                            }
-                        }
-                        if (HoursPerDay < 24) {
-                            DateofMissingSummary = DateTime.FromOADate(PeriodDatePtr);
-                            break;
-                        }
-                    }
-                    if ((DateofMissingSummary != DateTime.MinValue) && (DateofMissingSummary < NextSummaryStartDate)) {
-                        cp.Log.Info("Found a missing hourly period in the visit summary table [" + DateofMissingSummary + "], it only has [" + HoursPerDay + "] hourly summaries.");
-                        NextSummaryStartDate = DateofMissingSummary;
-                    }
-                    {
-                        //
-                        // Now summarize all visits during all hourly periods between OldestDateAdded and the previous Hour
-                        //
-                        cp.Log.Info("Summaryize visits hourly, starting [" + NextSummaryStartDate + "]");
-                        PeriodStep = (double)1 / (double)24;
-                        string BuildVersion = cp.Site.GetText("BuildVersion");
-                        summarizePeriod(cp, env, NextSummaryStartDate, DateTime.Now, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
-                    }
-                    {
-                        string BuildVersion = cp.Site.GetText("BuildVersion");
-                        //
-                        // Find missing daily summaries, summarize that date
-                        //
-                        string SQL = HousekeepController.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber", "", 100000);
-                        using (CPCSBaseClass csData = cp.CSNew()) {
-                            csData.OpenSQL(SQL);
-                            DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
-                            while (datePtr <= env.yesterday) {
-                                if (!csData.OK()) {
-                                    //
-                                    // Out of data, start with this DatePtr
-                                    //
+                    string SQL = HousekeepController.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber", "", 100000);
 
-                                    VisitSummaryClass.summarizePeriod(cp, env, datePtr, datePtr, 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
-                                }
-                                else {
-                                    DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
-                                    if (datePtr < workingDate) {
-                                        //
-                                        // There are missing dates, update them
-                                        //
-                                        VisitSummaryClass.summarizePeriod(cp, env, datePtr, workingDate.AddDays(-1), 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
-                                    }
-                                }
-                                if (csData.OK()) {
-                                    //
-                                    // if there is more data, go to the next record
-                                    //
-                                    csData.GoNext();
-                                }
-                                datePtr = datePtr.AddDays(1).Date;
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        csData.OpenSQL(SQL);
+                        DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
+                        while (datePtr <= env.yesterday) {
+                            if (!csData.OK()) {
+                                //
+                                // Out of data, start with this DatePtr
+                                //
+                                VisitSummaryClass.summarizePeriod(cp, env, datePtr, datePtr, 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                             }
-                            csData.Close();
+                            else {
+                                DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
+                                if (datePtr < workingDate) {
+                                    //
+                                    // There are missing dates, update them
+                                    //
+                                    VisitSummaryClass.summarizePeriod(cp, env, datePtr, workingDate.AddDays(-1), 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                                }
+                            }
+                            if (csData.OK()) {
+                                //
+                                // if there is more data, go to the next record
+                                //
+                                csData.GoNext();
+                            }
+                            datePtr = datePtr.AddDays(1).Date;
                         }
+                        csData.Close();
                     }
-               //end if eith force or newhour }
+                }
+
+                //end if eith force or newhour }
             }
             catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
@@ -204,7 +205,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 PeriodStart = PeriodStart.Date.AddHours(StartTimeHoursSinceMidnight);
                 DateTime PeriodDatePtr = default;
                 PeriodDatePtr = PeriodStart;
-                while (PeriodDatePtr < EndTimeDate) {
+                while (PeriodDatePtr <= EndTimeDate) {
                     //
                     int DateNumber = HousekeepController.encodeInteger(PeriodDatePtr.AddHours(HourDuration / 2.0).ToOADate());
                     int TimeNumber = HousekeepController.encodeInteger(PeriodDatePtr.TimeOfDay.TotalHours);

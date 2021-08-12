@@ -32,7 +32,14 @@ Namespace Views
                     Dim DateStart As Date = DateEnd.AddDays(-DurationDays).Date
                     Dim dblDateStart As Double = DateStart.ToOADate()
                     Dim dblDateEnd As Double = DateEnd.ToOADate()
+                    ' Dim DateNumber As Integer = encodeInteger(DateStart.AddHours(24 / 2.0).ToOADate())
+                    '  Dim DateEndNumber As Integer = encodeInteger(DateEnd.AddHours(24 / 2.0).ToOADate())
+                    '  Dim dblDateStart As Double = DateNumber
+                    ' Dim dblDateEnd As Double = DateEndNumber
+
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
+
+
                     Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then
                         result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
@@ -45,6 +52,26 @@ Namespace Views
             End Try
             Return result
         End Function
+
+
+        Public Function encodeInteger(expression As Object) As Integer
+            If (expression Is Nothing) Then
+                Return 0
+            End If
+            Dim trialString As String = expression.ToString()
+            Dim trialInt As Integer = 0
+            If (Integer.TryParse(trialString, trialInt)) Then
+                Return trialInt
+            End If
+            Dim trialDbl As Double = 0
+            If (Double.TryParse(trialString, trialDbl)) Then
+                Return Convert.ToInt32(trialDbl)
+            End If
+            Dim trialBool As Boolean
+            Return 0
+        End Function
+
+
         ''
         ''====================================================================================================
         ''

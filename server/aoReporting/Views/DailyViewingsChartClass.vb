@@ -28,15 +28,11 @@ Namespace Views
                         DivName = "PageViewChart"
                     End If
                     Dim DateEnd As Date = Now.Date
-                    'CP.Site.ErrorReport(DateEnd.ToString())
 
                     Dim DateStart As Date = DateEnd.AddDays(-DurationDays).Date
-                    'CP.Site.ErrorReport(DateStart.ToString())
                     Dim dblDateStart As Double = DateStart.ToOADate()
                     Dim dblDateEnd As Double = DateEnd.ToOADate()
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
-
-                    ' CP.Site.ErrorReport(criteria)
 
 
                     Dim visitSummaryList As List(Of Models.viewingSummaryModel) = Models.viewingSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
