@@ -22,21 +22,18 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 int TimeoutSave = cp.Db.SQLTimeout;
                 cp.Db.SQLTimeout = 1800;
 
-
                 // -- hourly tasks
                 //
                 // -- summaries - must be first
-                // VisitSummaryClass.executeHourlyTasks(cp);
+                VisitSummaryClass.executeHourlyTasks(cp);
                 ViewingSummaryClass.executeHourlyTasks(cp);
+
                 // -- daily tasks
                 cp.Log.Info("executeDailyTasks");
                 //
                 // -- summary (must be first)
-                //  VisitSummaryClass.executeDailyTasks(cp, env);
+                VisitSummaryClass.executeDailyTasks(cp, env);
                 ViewingSummaryClass.executeDailyTasks(cp, env);
-
-
-
 
                 cp.Db.SQLTimeout = TimeoutSave;
                 return "";

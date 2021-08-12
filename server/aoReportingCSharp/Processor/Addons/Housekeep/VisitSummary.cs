@@ -27,7 +27,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
 
 
 
-        /*
+
         //
         //=========================================================================================
         /// <summary>
@@ -38,22 +38,23 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
         public static void executeDailyTasks(CPBaseClass cp, HouseKeepEnvironmentModel env) {
             try {
                 //
-                LogController.logInfo(core, "Housekeep, visitsummary");
+                cp.Log.Info("Housekeep, visitsummary");
                 //
-                bool newHour = (core.dateTimeNowMockable.Hour != env.lastCheckDateTime.Hour);
+                bool newHour = (DateTime.Now.Hour != env.lastCheckDateTime.Hour);
                 if (env.forceHousekeep || newHour) {
+                    cp.Site.ErrorReport("inside first if");
                     //
                     // Set NextSummaryStartDate based on the last time we ran hourly summarization
                     //
                     DateTime LastTimeSummaryWasRun = env.visitArchiveDate;
-                    core.db.sqlCommandTimeout = 180;
-                    using (var csData = new CsModel(core)) {
-                        if (csData.openSql(core.db.getSQLSelect("ccVisitSummary", "DateAdded", "(timeduration=1)and(Dateadded>" + DbController.encodeSQLDate(env.visitArchiveDate) + ")", "id Desc", "", 1))) {
-                            LastTimeSummaryWasRun = csData.getDate("DateAdded");
-                            LogController.logInfo(core, "Update hourly visit summary, last time summary was run was [" + LastTimeSummaryWasRun + "]");
+                    cp.Db.SQLTimeout = 180;
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisitSummary", "DateAdded", "(timeduration=1)and(Dateadded>" + cp.Db.EncodeSQLDate(env.visitArchiveDate) + ")", "id Desc", "", 1))) {
+                            LastTimeSummaryWasRun = csData.GetDate("DateAdded");
+                            cp.Log.Info("Update hourly visit summary, last time summary was run was [" + LastTimeSummaryWasRun + "]");
                         }
                         else {
-                            LogController.logInfo(core, "Update hourly visit summary, no hourly summaries were found, set start to [" + LastTimeSummaryWasRun + "]");
+                            cp.Log.Info("Update hourly visit summary, no hourly summaries were found, set start to [" + LastTimeSummaryWasRun + "]");
                         }
                     }
                     DateTime NextSummaryStartDate = LastTimeSummaryWasRun;
@@ -66,20 +67,20 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                     //
                     DateTime StartOfHour = (new DateTime(LastTimeSummaryWasRun.Year, LastTimeSummaryWasRun.Month, LastTimeSummaryWasRun.Day, LastTimeSummaryWasRun.Hour, 1, 1)).AddHours(-1); // (Int(24 * LastTimeSummaryWasRun) / 24) - PeriodStep
                     DateTime OldestDateAdded = StartOfHour;
-                    core.db.sqlCommandTimeout = 180;
-                    using (var csData = new CsModel(core)) {
-                        if (csData.openSql(core.db.getSQLSelect("ccVisits", "DateAdded", "LastVisitTime>" + DbController.encodeSQLDate(StartOfHour), "dateadded", "", 1))) {
-                            OldestDateAdded = csData.getDate("DateAdded");
+                    cp.Db.SQLTimeout = 180;
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        if (csData.OpenSQL(HousekeepController.getSQLSelect("ccVisits", "DateAdded", "LastVisitTime>" + cp.Db.EncodeSQLDate(StartOfHour), "dateadded", "", 1))) {
+                            OldestDateAdded = csData.GetDate("DateAdded");
                             if (OldestDateAdded < NextSummaryStartDate) {
                                 NextSummaryStartDate = OldestDateAdded;
-                                LogController.logInfo(core, "Update hourly visit summary, found a visit with the last viewing during the past hour. It started [" + OldestDateAdded + "], before the last summary was run.");
+                                cp.Log.Info("Update hourly visit summary, found a visit with the last viewing during the past hour. It started [" + OldestDateAdded + "], before the last summary was run.");
                             }
                         }
                     }
-                    DateTime PeriodStartDate = core.dateTimeNowMockable.Date.AddDays(-90);
+                    DateTime PeriodStartDate = DateTime.Now.AddDays(-90);
                     double PeriodStep = 1;
                     int HoursPerDay = 0;
-                    core.db.sqlCommandTimeout = 180;
+                    cp.Db.SQLTimeout = 180;
                     //
                     // -- search for day with missing visit summaries in the 90 days before yesterday
                     DateTime DateofMissingSummary = DateTime.MinValue;
@@ -87,9 +88,9 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                         //
                         // Verify there are 24 hour records for every day back the past 90 days
                         //
-                        using (var csData = new CsModel(core)) {
-                            if (csData.openSql("select count(id) as HoursPerDay from ccVisitSummary where TimeDuration=1 and DateNumber=" + encodeInteger(PeriodDatePtr) + " group by DateNumber")) {
-                                HoursPerDay = csData.getInteger("HoursPerDay");
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            if (csData.OpenSQL("select count(id) as HoursPerDay from ccVisitSummary where TimeDuration=1 and DateNumber=" + HousekeepController.encodeInteger(PeriodDatePtr) + " group by DateNumber")) {
+                                HoursPerDay = csData.GetInteger("HoursPerDay");
                             }
                         }
                         if (HoursPerDay < 24) {
@@ -98,56 +99,62 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                         }
                     }
                     if ((DateofMissingSummary != DateTime.MinValue) && (DateofMissingSummary < NextSummaryStartDate)) {
-                        LogController.logInfo(core, "Found a missing hourly period in the visit summary table [" + DateofMissingSummary + "], it only has [" + HoursPerDay + "] hourly summaries.");
+                        cp.Log.Info("Found a missing hourly period in the visit summary table [" + DateofMissingSummary + "], it only has [" + HoursPerDay + "] hourly summaries.");
                         NextSummaryStartDate = DateofMissingSummary;
                     }
                     {
+                        cp.Site.ErrorReport("inside first curly");
                         //
                         // Now summarize all visits during all hourly periods between OldestDateAdded and the previous Hour
                         //
-                        LogController.logInfo(core, "Summaryize visits hourly, starting [" + NextSummaryStartDate + "]");
+                        cp.Log.Info("Summaryize visits hourly, starting [" + NextSummaryStartDate + "]");
                         PeriodStep = (double)1 / (double)24;
-                        summarizePeriod(core, env, NextSummaryStartDate, core.dateTimeNowMockable, 1, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+                        string BuildVersion = cp.Site.GetText("BuildVersion");
+                        summarizePeriod(cp, env, NextSummaryStartDate, DateTime.Now, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                     }
                     {
+                        cp.Site.ErrorReport("inside second curly");
+                        string BuildVersion = cp.Site.GetText("BuildVersion");
                         //
                         // Find missing daily summaries, summarize that date
                         //
-                        string SQL = core.db.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber");
-                        using var csData = new CsModel(core);
-                        csData.openSql(SQL);
-                        DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
-                        while (datePtr <= env.yesterday) {
-                            if (!csData.ok()) {
-                                //
-                                // Out of data, start with this DatePtr
-                                //
-                                VisitSummaryClass.summarizePeriod(core, env, datePtr, datePtr, 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
-                            }
-                            else {
-                                DateTime workingDate = DateTime.MinValue.AddDays(csData.getInteger("DateNumber"));
-                                if (datePtr < workingDate) {
+                        string SQL = HousekeepController.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber", "", 100000);
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            csData.OpenSQL(SQL);
+                            DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
+                            while (datePtr <= env.yesterday) {
+                                if (!csData.OK()) {
                                     //
-                                    // There are missing dates, update them
+                                    // Out of data, start with this DatePtr
                                     //
-                                    VisitSummaryClass.summarizePeriod(core, env, datePtr, workingDate.AddDays(-1), 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+
+                                    VisitSummaryClass.summarizePeriod(cp, env, datePtr, datePtr, 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                                 }
+                                else {
+                                    DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
+                                    if (datePtr < workingDate) {
+                                        //
+                                        // There are missing dates, update them
+                                        //
+                                        VisitSummaryClass.summarizePeriod(cp, env, datePtr, workingDate.AddDays(-1), 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                                    }
+                                }
+                                if (csData.OK()) {
+                                    //
+                                    // if there is more data, go to the next record
+                                    //
+                                    csData.GoNext();
+                                }
+                                datePtr = datePtr.AddDays(1).Date;
                             }
-                            if (csData.ok()) {
-                                //
-                                // if there is more data, go to the next record
-                                //
-                                csData.goNext();
-                            }
-                            datePtr = datePtr.AddDays(1).Date;
+                            csData.Close();
                         }
-                        csData.close();
                     }
                 }
             }
             catch (Exception ex) {
-                LogController.logError(core, ex);
-                LogController.logAlarm(core, "Housekeep, exception, ex [" + ex + "]");
+                cp.Site.ErrorReport(ex);
+                cp.Site.LogAlarm("Housekeep, exception, ex [" + ex + "]");
                 throw;
             }
         }
@@ -187,281 +194,281 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
         //
         //=========================================================================================
         //
-        private static void summarizePeriod(CoreController core, HouseKeepEnvironmentModel env, DateTime StartTimeDate, DateTime EndTimeDate, int HourDuration, string BuildVersion, DateTime OldestVisitSummaryWeCareAbout) {
+        private static void summarizePeriod(CPBaseClass cp, HouseKeepEnvironmentModel env, DateTime StartTimeDate, DateTime EndTimeDate, int HourDuration, string BuildVersion, DateTime OldestVisitSummaryWeCareAbout) {
             try {
                 //
-                if (string.CompareOrdinal(BuildVersion, CoreController.codeVersion()) >= 0) {
-                    DateTime PeriodStart = default;
-                    PeriodStart = StartTimeDate;
-                    if (PeriodStart < OldestVisitSummaryWeCareAbout) {
-                        PeriodStart = OldestVisitSummaryWeCareAbout;
-                    }
-                    double StartTimeHoursSinceMidnight = PeriodStart.TimeOfDay.TotalHours;
-                    PeriodStart = PeriodStart.Date.AddHours(StartTimeHoursSinceMidnight);
-                    DateTime PeriodDatePtr = default;
-                    PeriodDatePtr = PeriodStart;
-                    while (PeriodDatePtr < EndTimeDate) {
-                        //
-                        int DateNumber = encodeInteger(PeriodDatePtr.AddHours(HourDuration / 2.0).ToOADate());
-                        int TimeNumber = encodeInteger(PeriodDatePtr.TimeOfDay.TotalHours);
-                        DateTime DateStart = default;
-                        DateStart = PeriodDatePtr.Date;
-                        DateTime DateEnd = default;
-                        DateEnd = PeriodDatePtr.AddHours(HourDuration).Date;
-                        //
-                        // No Cookie Visits
-                        //
-                        string SQL = "select count(v.id) as NoCookieVisits"
-                            + " from ccvisits v"
-                            + " where (v.CookieSupport<>1)"
-                            + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                            + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                            + "";
-                        int NoCookieVisits = 0;
-                        using (var csData = new CsModel(core)) {
-                            core.db.sqlCommandTimeout = 180;
-                            csData.openSql(SQL);
-                            if (csData.ok()) {
-                                NoCookieVisits = csData.getInteger("NoCookieVisits");
-                            }
+                //if (string.CompareOrdinal(BuildVersion, cp.SiteodeVersion()) >= 0) {
+                DateTime PeriodStart = default;
+                PeriodStart = StartTimeDate;
+                if (PeriodStart < OldestVisitSummaryWeCareAbout) {
+                    PeriodStart = OldestVisitSummaryWeCareAbout;
+                }
+                double StartTimeHoursSinceMidnight = PeriodStart.TimeOfDay.TotalHours;
+                PeriodStart = PeriodStart.Date.AddHours(StartTimeHoursSinceMidnight);
+                DateTime PeriodDatePtr = default;
+                PeriodDatePtr = PeriodStart;
+                while (PeriodDatePtr < EndTimeDate) {
+                    //
+                    int DateNumber = HousekeepController.encodeInteger(PeriodDatePtr.AddHours(HourDuration / 2.0).ToOADate());
+                    int TimeNumber = HousekeepController.encodeInteger(PeriodDatePtr.TimeOfDay.TotalHours);
+                    DateTime DateStart = default;
+                    DateStart = PeriodDatePtr.Date;
+                    DateTime DateEnd = default;
+                    DateEnd = PeriodDatePtr.AddHours(HourDuration).Date;
+                    //
+                    // No Cookie Visits
+                    //
+                    string SQL = "select count(v.id) as NoCookieVisits"
+                        + " from ccvisits v"
+                        + " where (v.CookieSupport<>1)"
+                        + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                        + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                        + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                        + "";
+                    int NoCookieVisits = 0;
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        cp.Db.SQLTimeout = 180;
+                        csData.OpenSQL(SQL);
+                        if (csData.OK()) {
+                            NoCookieVisits = csData.GetInteger("NoCookieVisits");
                         }
-                        //
-                        // Total Visits
-                        //
-                        SQL = "select count(v.id) as VisitCnt ,Sum(v.PageVisits) as HitCnt ,sum(v.TimetoLastHit) as TimeOnSite"
+                    }
+                    //
+                    // Total Visits
+                    //
+                    SQL = "select count(v.id) as VisitCnt ,Sum(v.PageVisits) as HitCnt ,sum(v.TimetoLastHit) as TimeOnSite"
+                        + " from ccvisits v"
+                        + " where (v.CookieSupport<>0)"
+                        + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                        + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                        + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                        + "";
+                    //
+                    int VisitCnt = 0;
+                    int HitCnt = 0;
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        cp.Db.SQLTimeout = 180;
+                        csData.OpenSQL(SQL);
+                        if (csData.OK()) {
+                            VisitCnt = csData.GetInteger("VisitCnt");
+                            HitCnt = csData.GetInteger("HitCnt");
+                            double TimeOnSite = csData.GetNumber("TimeOnSite");
+                        }
+                    }
+                    //
+                    // -- Visits by new visitors
+                    int NewVisitorVisits = 0;
+                    int SinglePageVisits = 0;
+                    int AuthenticatedVisits = 0;
+                    int MobileVisits = 0;
+                    int BotVisits = 0;
+                    double AveTimeOnSite = 0;
+                    if (VisitCnt > 0) {
+                        SQL = "select count(v.id) as NewVisitorVisits"
                             + " from ccvisits v"
                             + " where (v.CookieSupport<>0)"
-                            + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                            + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
                             + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(v.VisitorNew<>0)"
                             + "";
-                        //
-                        int VisitCnt = 0;
-                        int HitCnt = 0;
-                        using (var csData = new CsModel(core)) {
-                            core.db.sqlCommandTimeout = 180;
-                            csData.openSql(SQL);
-                            if (csData.ok()) {
-                                VisitCnt = csData.getInteger("VisitCnt");
-                                HitCnt = csData.getInteger("HitCnt");
-                                double TimeOnSite = csData.getNumber("TimeOnSite");
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                NewVisitorVisits = csData.GetInteger("NewVisitorVisits");
                             }
                         }
                         //
-                        // -- Visits by new visitors
-                        int NewVisitorVisits = 0;
-                        int SinglePageVisits = 0;
-                        int AuthenticatedVisits = 0;
-                        int MobileVisits = 0;
-                        int BotVisits = 0;
-                        double AveTimeOnSite = 0;
-                        if (VisitCnt > 0) {
-                            SQL = "select count(v.id) as NewVisitorVisits"
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(v.VisitorNew<>0)"
-                                + "";
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    NewVisitorVisits = csData.getInteger("NewVisitorVisits");
-                                }
-                            }
-                            //
-                            // Single Page Visits
-                            //
-                            SQL = "select count(v.id) as SinglePageVisits"
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(v.PageVisits=1)"
-                                + "";
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    SinglePageVisits = csData.getInteger("SinglePageVisits");
-                                }
-                            }
-                            //
-                            // Multipage Visits
-                            //
-                            SQL = "select count(v.id) as VisitCnt ,sum(v.PageVisits) as HitCnt ,sum(v.TimetoLastHit) as TimetoLastHitSum "
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(PageVisits>1)"
-                                + "";
-                            int MultiPageHitCnt = 0;
-                            int MultiPageVisitCnt = 0;
-                            double MultiPageTimetoLastHitSum = 0;
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    MultiPageVisitCnt = csData.getInteger("VisitCnt");
-                                    MultiPageHitCnt = csData.getInteger("HitCnt");
-                                    MultiPageTimetoLastHitSum = csData.getNumber("TimetoLastHitSum");
-                                }
-                            }
-                            //
-                            // Authenticated Visits
-                            //
-                            SQL = "select count(v.id) as AuthenticatedVisits "
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(VisitAuthenticated<>0)"
-                                + "";
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    AuthenticatedVisits = csData.getInteger("AuthenticatedVisits");
-                                }
-                            }
-                            // 
-                            //
-                            // Mobile Visits
-                            //
-                            SQL = "select count(v.id) as cnt "
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(Mobile<>0)"
-                                + "";
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    MobileVisits = csData.getInteger("cnt");
-                                }
-                            }
-                            //
-                            // Bot Visits
-                            //
-                            SQL = "select count(v.id) as cnt "
-                                + " from ccvisits v"
-                                + " where (v.CookieSupport<>0)"
-                                + " and(v.dateadded>=" + DbController.encodeSQLDate(DateStart) + ")"
-                                + " and (v.dateadded<" + DbController.encodeSQLDate(DateEnd) + ")"
-                                + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
-                                + " and(Bot<>0)"
-                                + "";
-                            using (var csData = new CsModel(core)) {
-                                core.db.sqlCommandTimeout = 180;
-                                csData.openSql(SQL);
-                                if (csData.ok()) {
-                                    BotVisits = csData.getInteger("cnt");
-                                }
-                            }
-                            //
-                            if ((MultiPageHitCnt > MultiPageVisitCnt) && (HitCnt > 0)) {
-                                int AveReadTime = encodeInteger(MultiPageTimetoLastHitSum / (MultiPageHitCnt - MultiPageVisitCnt));
-                                double TotalTimeOnSite = MultiPageTimetoLastHitSum + (AveReadTime * VisitCnt);
-                                AveTimeOnSite = TotalTimeOnSite / VisitCnt;
+                        // Single Page Visits
+                        //
+                        SQL = "select count(v.id) as SinglePageVisits"
+                            + " from ccvisits v"
+                            + " where (v.CookieSupport<>0)"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(v.PageVisits=1)"
+                            + "";
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                SinglePageVisits = csData.GetInteger("SinglePageVisits");
                             }
                         }
                         //
-                        // Add or update the Visit Summary Record
+                        // Multipage Visits
                         //
-                        using (var csData = new CsModel(core)) {
-                            core.db.sqlCommandTimeout = 180;
-                            csData.open("Visit Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")");
-                            if (!csData.ok()) {
-                                csData.close();
-                                csData.insert("Visit Summary");
-                            }
-                            //
-                            if (csData.ok()) {
-                                csData.set("name", HourDuration + " hr summary for " + DateTime.FromOADate(DateNumber).ToShortDateString() + " " + TimeNumber + ":00");
-                                csData.set("DateNumber", DateNumber);
-                                csData.set("TimeNumber", TimeNumber);
-                                csData.set("Visits", VisitCnt);
-                                csData.set("PagesViewed", HitCnt);
-                                csData.set("TimeDuration", HourDuration);
-                                csData.set("NewVisitorVisits", NewVisitorVisits);
-                                csData.set("SinglePageVisits", SinglePageVisits);
-                                csData.set("AuthenticatedVisits", AuthenticatedVisits);
-                                csData.set("NoCookieVisits", NoCookieVisits);
-                                csData.set("AveTimeOnSite", AveTimeOnSite);
-                                {
-                                    csData.set("MobileVisits", MobileVisits);
-                                    csData.set("BotVisits", BotVisits);
-                                }
+                        SQL = "select count(v.id) as VisitCnt ,sum(v.PageVisits) as HitCnt ,sum(v.TimetoLastHit) as TimetoLastHitSum "
+                            + " from ccvisits v"
+                            + " where (v.CookieSupport<>0)"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(PageVisits>1)"
+                            + "";
+                        int MultiPageHitCnt = 0;
+                        int MultiPageVisitCnt = 0;
+                        double MultiPageTimetoLastHitSum = 0;
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                MultiPageVisitCnt = csData.GetInteger("VisitCnt");
+                                MultiPageHitCnt = csData.GetInteger("HitCnt");
+                                MultiPageTimetoLastHitSum = csData.GetNumber("TimetoLastHitSum");
                             }
                         }
-                        PeriodDatePtr = PeriodDatePtr.AddHours(HourDuration);
+                        //
+                        // Authenticated Visits
+                        //
+                        SQL = "select count(v.id) as AuthenticatedVisits "
+                            + " from ccvisits v"
+                            + " where (v.CookieSupport<>0)"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(VisitAuthenticated<>0)"
+                            + "";
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                AuthenticatedVisits = csData.GetInteger("AuthenticatedVisits");
+                            }
+                        }
+                        // 
+                        //
+                        // Mobile Visits
+                        //
+                        SQL = "select count(v.id) as cnt "
+                            + " from ccvisits v"
+                            + " where (v.CookieSupport<>0)"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(Mobile<>0)"
+                            + "";
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                MobileVisits = csData.GetInteger("cnt");
+                            }
+                        }
+                        //
+                        // Bot Visits
+                        //
+                        SQL = "select count(v.id) as cnt "
+                            + " from ccvisits v"
+                            + " where (v.CookieSupport<>0)"
+                            + " and(v.dateadded>=" + cp.Db.EncodeSQLDate(DateStart) + ")"
+                            + " and (v.dateadded<" + cp.Db.EncodeSQLDate(DateEnd) + ")"
+                            + " and((v.ExcludeFromAnalytics is null)or(v.ExcludeFromAnalytics=0))"
+                            + " and(Bot<>0)"
+                            + "";
+                        using (CPCSBaseClass csData = cp.CSNew()) {
+                            cp.Db.SQLTimeout = 180;
+                            csData.OpenSQL(SQL);
+                            if (csData.OK()) {
+                                BotVisits = csData.GetInteger("cnt");
+                            }
+                        }
+                        //
+                        if ((MultiPageHitCnt > MultiPageVisitCnt) && (HitCnt > 0)) {
+                            int AveReadTime = HousekeepController.encodeInteger(MultiPageTimetoLastHitSum / (MultiPageHitCnt - MultiPageVisitCnt));
+                            double TotalTimeOnSite = MultiPageTimetoLastHitSum + (AveReadTime * VisitCnt);
+                            AveTimeOnSite = TotalTimeOnSite / VisitCnt;
+                        }
                     }
-                    {
+                    //
+                    // Add or update the Visit Summary Record
+                    //
+                    using (CPCSBaseClass csData = cp.CSNew()) {
+                        cp.Db.SQLTimeout = 180;
+                        csData.Open("Visit Summary", "(timeduration=" + HourDuration + ")and(DateNumber=" + DateNumber + ")and(TimeNumber=" + TimeNumber + ")");
+                        if (!csData.OK()) {
+                            csData.Close();
+                            csData.Insert("Visit Summary");
+                        }
                         //
-                        // Delete any daily visit summary duplicates during this period(keep the first)
-                        //
-                        string SQL = "delete from ccvisitsummary"
-                            + " where id in ("
-                            + " select d.id from ccvisitsummary d,ccvisitsummary f"
-                            + " where f.datenumber=d.datenumber"
-                            + " and f.datenumber>" + env.oldestVisitSummaryWeCareAbout.ToOADate() + " and f.datenumber<" + env.yesterday.ToOADate() + " and f.TimeDuration=24"
-                            + " and d.TimeDuration=24"
-                            + " and f.id<d.id"
-                            + ")";
-                        core.db.sqlCommandTimeout = 180;
-                        core.db.executeNonQuery(SQL);
-                        ////
-                        //// Find missing daily summaries, summarize that date
-                        ////
-                        //SQL = core.db.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber");
-                        //using (var csData = new CsModel(core)) {
-                        //    csData.openSql(SQL);
-                        //    DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
-                        //    while (datePtr <= env.yesterday) {
-                        //        if (!csData.ok()) {
-                        //            //
-                        //            // Out of data, start with this DatePtr
-                        //            //
-                        //            VisitSummaryClass.summarizePeriod(core, env, datePtr, datePtr, 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
-                        //        } else {
-                        //            DateTime workingDate = DateTime.MinValue.AddDays(csData.getInteger("DateNumber"));
-                        //            if (datePtr < workingDate) {
-                        //                //
-                        //                // There are missing dates, update them
-                        //                //
-                        //                VisitSummaryClass.summarizePeriod(core, env, datePtr, workingDate.AddDays(-1), 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
-                        //            }
-                        //        }
-                        //        if (csData.ok()) {
-                        //            //
-                        //            // if there is more data, go to the next record
-                        //            //
-                        //            csData.goNext();
-                        //        }
-                        //        datePtr = datePtr.AddDays(1).Date;
-                        //    }
-                        //    csData.close();
-                        //}
+                        if (csData.OK()) {
+                            csData.SetField("name", HourDuration + " hr summary for " + DateTime.FromOADate(DateNumber).ToShortDateString() + " " + TimeNumber + ":00");
+                            csData.SetField("DateNumber", DateNumber);
+                            csData.SetField("TimeNumber", TimeNumber);
+                            csData.SetField("Visits", VisitCnt);
+                            csData.SetField("PagesViewed", HitCnt);
+                            csData.SetField("TimeDuration", HourDuration);
+                            csData.SetField("NewVisitorVisits", NewVisitorVisits);
+                            csData.SetField("SinglePageVisits", SinglePageVisits);
+                            csData.SetField("AuthenticatedVisits", AuthenticatedVisits);
+                            csData.SetField("NoCookieVisits", NoCookieVisits);
+                            csData.SetField("AveTimeOnSite", AveTimeOnSite);
+                            {
+                                csData.SetField("MobileVisits", MobileVisits);
+                                csData.SetField("BotVisits", BotVisits);
+                            }
+                        }
                     }
+                    PeriodDatePtr = PeriodDatePtr.AddHours(HourDuration);
                 }
+                {
+                    //
+                    // Delete any daily visit summary duplicates during this period(keep the first)
+                    //
+                    string SQL = "delete from ccvisitsummary"
+                        + " where id in ("
+                        + " select d.id from ccvisitsummary d,ccvisitsummary f"
+                        + " where f.datenumber=d.datenumber"
+                        + " and f.datenumber>" + env.oldestVisitSummaryWeCareAbout.ToOADate() + " and f.datenumber<" + env.yesterday.ToOADate() + " and f.TimeDuration=24"
+                        + " and d.TimeDuration=24"
+                        + " and f.id<d.id"
+                        + ")";
+                    cp.Db.SQLTimeout = 180;
+                    cp.Db.ExecuteNonQuery(SQL);
+                    ////
+                    //// Find missing daily summaries, summarize that date
+                    ////
+                    //SQL = core.db.getSQLSelect("ccVisitSummary", "DateNumber", "TimeDuration=24 and DateNumber>=" + env.oldestVisitSummaryWeCareAbout.Date.ToOADate(), "DateNumber,TimeNumber");
+                    //  using (CPCSBaseClass csData = cp.CSNew()) {
+                    //    csData.OpenSQL(SQL);
+                    //    DateTime datePtr = env.oldestVisitSummaryWeCareAbout;
+                    //    while (datePtr <= env.yesterday) {
+                    //        if (!csData.ok()) {
+                    //            //
+                    //            // Out of data, start with this DatePtr
+                    //            //
+                    //            VisitSummaryClass.summarizePeriod(core, env, datePtr, datePtr, 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+                    //        } else {
+                    //            DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
+                    //            if (datePtr < workingDate) {
+                    //                //
+                    //                // There are missing dates, update them
+                    //                //
+                    //                VisitSummaryClass.summarizePeriod(core, env, datePtr, workingDate.AddDays(-1), 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+                    //            }
+                    //        }
+                    //        if (csData.ok()) {
+                    //            //
+                    //            // if there is more data, go to the next record
+                    //            //
+                    //            csData.goNext();
+                    //        }
+                    //        datePtr = datePtr.AddDays(1).Date;
+                    //    }
+                    //    csData.close();
+                    //}
+                }
+                //end code version if}
                 //
                 return;
             }
             catch (Exception ex) {
-                LogController.logError(core, ex);
+                cp.Site.ErrorReport(ex);
             }
         }
-        */
+
 
     }
 }
