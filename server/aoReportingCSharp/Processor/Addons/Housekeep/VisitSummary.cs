@@ -40,9 +40,8 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 //
                 cp.Log.Info("Housekeep, visitsummary");
                 //
-                bool newHour = (DateTime.Now.Hour != env.lastCheckDateTime.Hour);
-                if (env.forceHousekeep || newHour) {
-                    cp.Site.ErrorReport("inside first if");
+                //bool newHour = (DateTime.Now.Hour != env.lastCheckDateTime.Hour);
+                //if (env.forceHousekeep || newHour) {
                     //
                     // Set NextSummaryStartDate based on the last time we ran hourly summarization
                     //
@@ -103,7 +102,6 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                         NextSummaryStartDate = DateofMissingSummary;
                     }
                     {
-                        cp.Site.ErrorReport("inside first curly");
                         //
                         // Now summarize all visits during all hourly periods between OldestDateAdded and the previous Hour
                         //
@@ -113,7 +111,6 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                         summarizePeriod(cp, env, NextSummaryStartDate, DateTime.Now, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                     }
                     {
-                        cp.Site.ErrorReport("inside second curly");
                         string BuildVersion = cp.Site.GetText("BuildVersion");
                         //
                         // Find missing daily summaries, summarize that date
@@ -150,7 +147,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                             csData.Close();
                         }
                     }
-                }
+               //end if eith force or newhour }
             }
             catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
