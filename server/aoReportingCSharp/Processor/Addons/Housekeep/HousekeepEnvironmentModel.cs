@@ -20,24 +20,18 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 return cp.Doc.GetBoolean("force");
             }
         }
-        /*
         //
         //====================================================================================================
         /// <summary>
-        /// returns true if daily has not run today, and it is after the house-keep-hour
+        /// the last time housekeep was checked
         /// </summary>
-        public bool runDailyTasks {
-            get {
-                return ((cp.dateTimeNowMockable.Date > lastCheckDateTime.Date) && (serverHousekeepHour < core.dateTimeNowMockable.Hour));
-            }
-        }
-        */
+        // public DateTime lastCheckDateTime { get { return cp.Site.GetDate("housekeep, last check", DateTime.Now); } }
         //
         //====================================================================================================
         /// <summary>
-        /// the last time housekeep was run
+        /// the last time housekeep was ran
         /// </summary>
-        public DateTime lastCheckDateTime { get { return cp.Site.GetDate("housekeep, last check", DateTime.Now); } }
+         public DateTime lastRunDateTime { get { return cp.Site.GetDate("housekeep, last run", DateTime.Now); } }
         //
         //====================================================================================================
         /// <summary>
@@ -50,12 +44,6 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
         /// day before current mockable date
         /// </summary>
         public DateTime yesterday { get { return DateTime.Now.AddDays(-1).Date; } }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// 90 days ago
-        /// </summary>
-        public DateTime aLittleWhileAgo { get { return DateTime.Now.AddDays(-90).Date; } }
         //
         //====================================================================================================
         /// <summary>
@@ -99,50 +87,11 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 return DateTime.Now.AddDays(-archiveAgeDays).Date;
             }
         }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// how long we keep guest records
-        /// </summary>
-        public int guestArchiveAgeDays {
+        public bool runDailyTasks {
             get {
-                //
-                // -- Get GuestArchiveAgeDays
-                int guestArchiveAgeDays = cp.Site.GetInteger("ArchivePeopleAgeDays", 2);
-                if (guestArchiveAgeDays < 2) {
-                    guestArchiveAgeDays = 2;
-                    cp.Site.SetProperty("ArchivePeopleAgeDays", guestArchiveAgeDays);
-                }
-                return guestArchiveAgeDays;
+                return ((DateTime.Now > lastRunDateTime.Date) && (serverHousekeepHour < DateTime.Now.Hour));
             }
         }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// how many days the email drop and email log data are kept
-        /// </summary>
-        public int emailDropArchiveAgeDays {
-            get {
-                //
-                // -- Get EmailDropArchiveAgeDays
-                int emailDropArchiveAgeDays = cp.Site.GetInteger("ArchiveEmailDropAgeDays", 90);
-                if (emailDropArchiveAgeDays < 2) {
-                    emailDropArchiveAgeDays = 2;
-                    cp.Site.SetProperty("ArchiveEmailDropAgeDays", emailDropArchiveAgeDays);
-                }
-                if (emailDropArchiveAgeDays > 365) {
-                    emailDropArchiveAgeDays = 365;
-                    cp.Site.SetProperty("ArchiveEmailDropAgeDays", emailDropArchiveAgeDays);
-                }
-                return emailDropArchiveAgeDays;
-            }
-        }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// how long to keep no-cookie visits
-        /// </summary>
-        public bool archiveDeleteNoCookie { get { return cp.Site.GetBoolean("ArchiveDeleteNoCookie", true); } }
         //
         //====================================================================================================
         /// <summary>

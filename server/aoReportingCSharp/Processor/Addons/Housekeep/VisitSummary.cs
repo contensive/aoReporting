@@ -40,7 +40,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 //
                 cp.Log.Info("Housekeep, visitsummary");
                 //
-                //bool newHour = (DateTime.Now.Hour != env.lastCheckDateTime.Hour);
+                //bool newHour = (DateTime.Now.Hour != env.lastRunDateTime.Hour);
                 //if (env.forceHousekeep || newHour) {
                 //
                 // Set NextSummaryStartDate based on the last time we ran hourly summarization
@@ -108,7 +108,9 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                     cp.Log.Info("Summaryize visits hourly, starting [" + NextSummaryStartDate + "]");
                     PeriodStep = (double)1 / (double)24;
                     string BuildVersion = cp.Site.GetText("BuildVersion");
-                    summarizePeriod(cp, env, NextSummaryStartDate, DateTime.Now, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                    //make sure it is only checking up to the last finished hour (this prevents the record for 5pm being added at 5pm when it should be added after 6pm)
+                    DateTime endOfHour = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 1, 1)).AddHours(-1);
+                    summarizePeriod(cp, env, NextSummaryStartDate, endOfHour, 1, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                 }
                 {
                     string BuildVersion = cp.Site.GetText("BuildVersion");
@@ -148,7 +150,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                     }
                 }
 
-                //end if eith force or newhour }
+                //}       //end if eith force or newhour
             }
             catch (Exception ex) {
                 cp.Site.ErrorReport(ex);

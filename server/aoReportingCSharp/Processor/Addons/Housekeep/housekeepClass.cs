@@ -34,6 +34,8 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 // -- summary (must be first)
                 VisitSummaryClass.executeDailyTasks(cp, env);
                 ViewingSummaryClass.executeDailyTasks(cp, env);
+                cp.Site.SetProperty("housekeep, last run", DateTime.Now);
+
 
                 cp.Db.SQLTimeout = TimeoutSave;
                 return "";

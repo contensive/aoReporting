@@ -41,7 +41,14 @@
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
-		<Styles></Styles>
+		<Styles><![CDATA[  
+			/*legacy styles8*/
+			.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
+			.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
+			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
+			.summaryCell{text-align:top;}
+			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
+  ]]></Styles>
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
 	</Addon>
