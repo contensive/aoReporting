@@ -35,11 +35,11 @@ Namespace Views
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
 
 
-                    Dim visitSummaryList As List(Of Models.viewingSummaryModel) = Models.viewingSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
+                    Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then
                         result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
                     Else
-                        result = Models.ChartViewModel.getViewingChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
+                        result = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
                     End If
                 End Using
             Catch ex As Exception
