@@ -1,8 +1,6 @@
-
 Option Strict On
 Option Explicit On
 
-Imports adminFramework
 Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
 
@@ -17,7 +15,6 @@ Namespace Views
         '
         Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
             Dim result As String = ""
-            Dim sw As New Stopwatch : sw.Start()
             Try
                 ' -- initialize application. If authentication needed and not login page, pass true
                 Using ac As New applicationController(CP, False)
@@ -29,7 +26,7 @@ Namespace Views
                         StartDate = EndDate.AddDays(-365).Date
                     End If
 
-                    'needs to include hidden addonguid so the old legacy way works
+                    'html for the date select. needs to include hidden addonguid so the old legacy way works
                     result = "<form><div class='afwBodyColor'><h3>Filters</h3><div class='abFilterRow'><input type='hidden' name='addonguid' id='addonguid' value='{" & constants.pageViewGuid & "}'>"
                     result &= "<label>From</label><input type='date' value='" & StartDate.ToString("yyyy-MM-dd") & "' name='filterFromDate' id='abFilterFromDate' class='abFilterDate' required></div> "
                     result &= "<div class='abFilterRow'><label>To</label><input type='date' name='filterToDate' id='abFilterToDate' class='abFilterDate' value='" & EndDate.ToString("yyyy-MM-dd") & "' required></div>"
@@ -44,7 +41,7 @@ Namespace Views
                     End If
                     Dim dblDateStart As Double = StartDate.ToOADate()
                     Dim dblDateEnd As Double = EndDate.ToOADate()
-
+                    'set the visit summary criteria
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
                     Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then

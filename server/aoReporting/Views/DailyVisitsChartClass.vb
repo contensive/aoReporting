@@ -19,10 +19,6 @@ Namespace Views
                     Dim Width As String = ac.cp.Doc.GetText("Width")
                     Dim Height As String = ac.cp.Doc.GetText("Height")
                     Dim durationHours As Integer = 24
-                    ' Dim Rate As String = ac.cp.Doc.GetText("Rate")
-                    ' If Rate.ToLower = "hourly" Then
-                    ' durationHours = 1
-                    ' End If
                     Dim DurationDays As Integer = ac.cp.Doc.GetInteger("Duration", 365)
                     Dim DivName As String = ac.cp.Doc.GetText("TargetDiv")
                     If DivName = "" Then
