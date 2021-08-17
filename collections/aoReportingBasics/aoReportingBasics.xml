@@ -527,6 +527,37 @@
 			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
 			.summaryCell{text-align:top;}
 			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
+
+			.abFilterRow input.abFilterDate
+			{
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+			.afwBodyColor 
+			{
+				clear: both;
+				color: #444;
+				background-color: #fff;
+				margin: 0;
+				padding: 0;
+				border-left: 1px solid rgba(0,0,0,.1);
+				border-right: 1px solid rgba(0,0,0,.1);
+				border-bottom: 1px solid rgba(0,0,0,.1);
+			}
+			.abFilterRow label
+			{
+				width: 40px;
+				display: inline-block;
+				margin: 0 0 0 10px;
+				text-align: right;
+				overflow: hidden;
+			}
+			.abFilterRow button
+			{
+				margin: 4px 4px 0 4px;
+				text-align: left;
+			}
+
   ]]></Styles>
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
