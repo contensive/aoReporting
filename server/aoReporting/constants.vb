@@ -127,5 +127,5 @@ Public Module constants
     Public Const rnSrcFeatureGuid As String = "srcFeatureGuid"
     Public Const rnDstFeatureGuid As String = "dstFeatureGuid"
     Public Const rnAccountId As String = "accountId"
-
+    Public Const pageViewGuid As String = "4AA883AA-21BC-4310-9E40-166B42D3C79C"
 End Module

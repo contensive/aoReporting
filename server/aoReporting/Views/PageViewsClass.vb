@@ -2,6 +2,7 @@
 Option Strict On
 Option Explicit On
 
+Imports adminFramework
 Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
 
@@ -21,27 +22,31 @@ Namespace Views
                 '
                 ' -- initialize application. If authentication needed and not login page, pass true
                 Using ac As New applicationController(CP, False)
-                    Dim StartDate As DateTime = ac.cp.Doc.GetDate("StartDate")
-                    Dim EndDate As DateTime = ac.cp.Doc.GetDate("EndDate")
+                    Dim StartDate As DateTime = ac.cp.Doc.GetDate("filterFromDate")
+                    Dim EndDate As DateTime = ac.cp.Doc.GetDate("filterToDate")
 
                     If (StartDate <= DateTime.MinValue) Or (EndDate <= DateTime.MinValue) Then
-                        ' result = "<div><h3 class='abFilterHead'>Filters</h3><div class='abFilterRow'><label for='' abfilterfromdate=''>From</label> "
-                        ' result &= "<input type='Text' value='' name='filterFromDate' id='abFilterFromDate' class='abFilterDate hasDatepicker' maxlength='100' size='20'><a href='#' id='abFilterFromDateClear'>X</a></div> "
-                        ' result &= "<div class='abFilterRow'><label for='' abfiltertodate=''>To</label><input type='Text' name='filterToDate' id='abFilterToDate' class='abFilterDate hasDatepicker' maxlength='100' size='20'> "
-                        ' result &= " <a href='#' id='abFilterToDateClear'>X</a></div></div> "
-                        Return result
+                        EndDate = Now.Date
+                        StartDate = EndDate.AddDays(-365).Date
                     End If
+
+
+                    result = "<form><div><h3 class='abFilterHead'>Filters</h3><div class='abFilterRow'> "
+                    result &= "<input type='hidden' name='addonguid' id='addonguid' value='{" & constants.pageViewGuid & "}'"
+                    result &= "<label for='' abfilterfromdate=''>From</label> "
+
+                    result &= "<input type='date' value='' name='filterFromDate' id='abFilterFromDate' class='abFilterDate' required></div> "
+                    result &= "<div class='abFilterRow'><label for='' abfiltertodate=''>To</label><input type='date' name='filterToDate' id='abFilterToDate' class='abFilterDate' required> "
+                    result &= "<div class='abFilterRow'>"
+                    result &= "<button type='submit'>Submit</button></div></form>"
+
+
 
 
 
                     Dim Width As String = ac.cp.Doc.GetText("Width")
                     Dim Height As String = ac.cp.Doc.GetText("Height")
                     Dim durationHours As Integer = 24
-                    ' Dim Rate As String = ac.cp.Doc.GetText("Rate")
-                    ' If Rate.ToLower = "hourly" Then
-                    ' durationHours = 1
-                    ' End If
-                    ' Dim DurationDays As Integer = ac.cp.Doc.GetInteger("Duration", 365)
                     Dim DivName As String = ac.cp.Doc.GetText("TargetDiv")
                     If DivName = "" Then
                         DivName = "PageViewChart"
@@ -54,9 +59,9 @@ Namespace Views
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
                     Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then
-                        result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
+                        result &= "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
                     Else
-                        result = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, True, Width, Height, (durationHours = 1))
+                        result &= Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, True, Width, Height, (durationHours = 1))
                     End If
                 End Using
             Catch ex As Exception

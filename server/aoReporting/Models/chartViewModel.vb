@@ -66,46 +66,48 @@ Namespace Models
                 result.Append("</script>" & vbCrLf & vbCrLf)
                 result.Append("<div id='" & Div & "' style='width: " & Width & "; height: " & Height & "; float:left; padding:0;'></div>")
 
+                If isVisitData Then
+                    'add the summary table
+                    ' new visits/total visits
+                    Dim newVisitors As Double = 0
+                    'authenticated vists / ttal visits
+                    Dim loginPercent As Double = 0
+                    'bounce rate is single page visits/total visits
+                    Dim bounceRate As Double = 0
+                    'pages/vistis
+                    Dim pagesPerVisit As Double = 0
 
-                'add the summary table
-                ' new visits/total visits
-                Dim newVisitors As Double = 0
-                'authenticated vists / ttal visits
-                Dim loginPercent As Double = 0
-                'bounce rate is single page visits/total visits
-                Dim bounceRate As Double = 0
-                'pages/vistis
-                Dim pagesPerVisit As Double = 0
-
-                If visits > 0 Then
-                    bounceRate = onePageVisitsTotal / visits
-                    bounceRate = bounceRate * 100
-                    bounceRate = Math.Round(bounceRate)
-                    'pages per visits
-                    pagesPerVisit = pageCount / visits
-                    pagesPerVisit = Math.Round(pagesPerVisit)
-                    'new visitors
-                    newVisitors = newVisitsTotal / visits
-                    newVisitors = newVisitors * 100
-                    newVisitors = Math.Round(newVisitors)
-                    'login percent
-                    loginPercent = authenticatedvisitTotal / visits
-                    loginPercent = loginPercent * 100
-                    loginPercent = Math.Round(loginPercent)
+                    If visits > 0 Then
+                        bounceRate = onePageVisitsTotal / visits
+                        bounceRate = bounceRate * 100
+                        bounceRate = Math.Round(bounceRate)
+                        'pages per visits
+                        pagesPerVisit = pageCount / visits
+                        pagesPerVisit = Math.Round(pagesPerVisit)
+                        'new visitors
+                        newVisitors = newVisitsTotal / visits
+                        newVisitors = newVisitors * 100
+                        newVisitors = Math.Round(newVisitors)
+                        'login percent
+                        loginPercent = authenticatedvisitTotal / visits
+                        loginPercent = loginPercent * 100
+                        loginPercent = Math.Round(loginPercent)
+                    End If
+                    'add html for summary table
+                    Dim summaryTable As String = "<div class='summaryContainer'><table border='0' width='100%' cellpadding='3' cellspacing='0'><tbody><tr>"
+                    summaryTable &= "<td class='summaryHeader' colspan='2' width='100%'>Summary</td></tr><tr><td class='summaryCell' width='50%'>"
+                    summaryTable &= "<span Class='summaryValue'>" + visits.ToString() + "</span> <span Class='summaryCaption'>Visits</span></a></td>"
+                    summaryTable &= "<td class='summaryCell' width='50%'>"
+                    summaryTable &= "<span Class='summaryValue'>" + bounceRate.ToString() + "%" + "</span> <span Class='summaryCaption'>Bounce Rate</span></a></td></tr><tr><td Class='summaryCell' width='50%'>"
+                    summaryTable &= "<span class='summaryValue'>" + pageCount.ToString() + "</span>"
+                    summaryTable &= " <span Class='summaryCaption'>Pages</span></a></td><td Class='summaryCell' width='50%'>"
+                    summaryTable &= "<span class='summaryValue'>" + pagesPerVisit.ToString() + "</span>"
+                    summaryTable &= " <span Class='summaryCaption'>Pages/Visit</span></a></td></tr><tr><td Class='summaryCell' width='50%'>"
+                    summaryTable &= "<span Class='summaryValue'>" + newVisitors.ToString() + "%" + "</span> <span Class='summaryCaption'>New Visitors</span></a></td><td Class='summaryCell' width='50%'><span Class='summaryValue'>" + loginPercent.ToString() + "%" + "</span> "
+                    summaryTable &= "<span Class='summaryCaption'>Log In</span></a></td></tr></tbody></table></div>"
+                    result.Append(summaryTable)
                 End If
-                'add html for summary table
-                Dim summaryTable As String = "<div class='summaryContainer'><table border='0' width='100%' cellpadding='3' cellspacing='0'><tbody><tr>"
-                summaryTable &= "<td class='summaryHeader' colspan='2' width='100%'>Summary</td></tr><tr><td class='summaryCell' width='50%'>"
-                summaryTable &= "<span Class='summaryValue'>" + visits.ToString() + "</span> <span Class='summaryCaption'>Visits</span></a></td>"
-                summaryTable &= "<td class='summaryCell' width='50%'>"
-                summaryTable &= "<span Class='summaryValue'>" + bounceRate.ToString() + "%" + "</span> <span Class='summaryCaption'>Bounce Rate</span></a></td></tr><tr><td Class='summaryCell' width='50%'>"
-                summaryTable &= "<span class='summaryValue'>" + pageCount.ToString() + "</span>"
-                summaryTable &= " <span Class='summaryCaption'>Pages</span></a></td><td Class='summaryCell' width='50%'>"
-                summaryTable &= "<span class='summaryValue'>" + pagesPerVisit.ToString() + "</span>"
-                summaryTable &= " <span Class='summaryCaption'>Pages/Visit</span></a></td></tr><tr><td Class='summaryCell' width='50%'>"
-                summaryTable &= "<span Class='summaryValue'>" + newVisitors.ToString() + "%" + "</span> <span Class='summaryCaption'>New Visitors</span></a></td><td Class='summaryCell' width='50%'><span Class='summaryValue'>" + loginPercent.ToString() + "%" + "</span> "
-                summaryTable &= "<span Class='summaryCaption'>Log In</span></a></td></tr></tbody></table></div>"
-                result.Append(summaryTable)
+
             Catch ex As Exception
                 ae.cp.Site.ErrorReport(ex)
             End Try
