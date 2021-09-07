@@ -19,10 +19,6 @@ Namespace Views
                     Dim Width As String = ac.cp.Doc.GetText("Width")
                     Dim Height As String = ac.cp.Doc.GetText("Height")
                     Dim durationHours As Integer = 24
-                    Dim Rate As String = ac.cp.Doc.GetText("Rate")
-                    If Rate.ToLower = "hourly" Then
-                        durationHours = 1
-                    End If
                     Dim DurationDays As Integer = ac.cp.Doc.GetInteger("Duration", 365)
                     Dim DivName As String = ac.cp.Doc.GetText("TargetDiv")
                     If DivName = "" Then
@@ -32,12 +28,13 @@ Namespace Views
                     Dim DateStart As Date = DateEnd.AddDays(-DurationDays).Date
                     Dim dblDateStart As Double = DateStart.ToOADate()
                     Dim dblDateEnd As Double = DateEnd.ToOADate()
+
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
                     Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then
                         result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
                     Else
-                        result = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
+                        result = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, True, Width, Height, (durationHours = 1))
                     End If
                 End Using
             Catch ex As Exception
@@ -63,6 +60,5 @@ Namespace Views
         '    Call Main.CloseCS(CS)
         '    GetContent = Stream
         'End Function
-
     End Class
 End Namespace

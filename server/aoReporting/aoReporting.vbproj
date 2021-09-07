@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="constants.vb" />
     <Compile Include="Controllers\applicationController.vb" />
+    <Compile Include="Models\viewingSummaryModel.vb" />
     <Compile Include="Views\EmailDropReportClass.vb" />
     <Compile Include="Views\EmailClickedReportClass.vb" />
     <Compile Include="Views\EmailOpenedReportClass.vb" />

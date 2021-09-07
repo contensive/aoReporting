@@ -1,5 +1,4 @@
-﻿
-Option Explicit On
+﻿Option Explicit On
 Option Strict On
 
 Imports System
@@ -8,48 +7,46 @@ Imports System.Text
 Imports Contensive.BaseClasses
 
 Namespace Models
-    Public Class visitSummaryModel
+    Public Class viewingSummaryModel
         Inherits baseModel
         Implements ICloneable
         '
         '====================================================================================================
         '-- const
-        Public Const contentName As String = "visit summary"
-        Public Const contentTableName As String = "ccvisitsummary"
+        Public Const contentName As String = "Page View Summary"
+        Public Const contentTableName As String = "ccViewingSummary"
         Private Shadows Const contentDataSource As String = "default"
         '
         '====================================================================================================
         ' -- instance properties
-        Public Property AuthenticatedVisits As Integer
-        Public Property AveTimeOnSite As Integer
-        Public Property BotVisits As Integer
         Public Property DateNumber As Integer
-        Public Property MobileVisits As Integer
-        Public Property NewVisitorVisits As Integer
-        Public Property NoCookieVisits As Integer
-        Public Property PagesViewed As Integer
-        Public Property SinglePageVisits As Integer
-        Public Property TimeDuration As Integer
         Public Property TimeNumber As Integer
-        Public Property Visits As Integer        '
+        Public Property TimeDuration As Integer
+        Public Property PageTitle As String
+        Public Property PageID As Integer
+        Public Property PageViews As Integer
+        Public Property AuthenticatedPageViews As Integer
+        Public Property MobilePageViews As Integer
+        Public Property BotPageViews As Integer
+        Public Property NoCookiePageViews As Integer
         '====================================================================================================
-        Public Overloads Shared Function add(cp As CPBaseClass) As visitSummaryModel
-            Return add(Of visitSummaryModel)(cp)
+        Public Overloads Shared Function add(cp As CPBaseClass) As viewingSummaryModel
+            Return add(Of viewingSummaryModel)(cp)
         End Function
         '
         '====================================================================================================
-        Public Overloads Shared Function create(cp As CPBaseClass, recordId As Integer) As visitSummaryModel
-            Return create(Of visitSummaryModel)(cp, recordId)
+        Public Overloads Shared Function create(cp As CPBaseClass, recordId As Integer) As viewingSummaryModel
+            Return create(Of viewingSummaryModel)(cp, recordId)
         End Function
         '
         '====================================================================================================
-        Public Overloads Shared Function create(cp As CPBaseClass, recordGuid As String) As visitSummaryModel
-            Return create(Of visitSummaryModel)(cp, recordGuid)
+        Public Overloads Shared Function create(cp As CPBaseClass, recordGuid As String) As viewingSummaryModel
+            Return create(Of viewingSummaryModel)(cp, recordGuid)
         End Function
         '
         '====================================================================================================
-        Public Overloads Shared Function createByName(cp As CPBaseClass, recordName As String) As visitSummaryModel
-            Return createByName(Of visitSummaryModel)(cp, recordName)
+        Public Overloads Shared Function createByName(cp As CPBaseClass, recordName As String) As viewingSummaryModel
+            Return createByName(Of viewingSummaryModel)(cp, recordName)
         End Function
         '
         '====================================================================================================
@@ -59,48 +56,48 @@ Namespace Models
         '
         '====================================================================================================
         Public Overloads Shared Sub delete(cp As CPBaseClass, recordId As Integer)
-            delete(Of visitSummaryModel)(cp, recordId)
+            delete(Of viewingSummaryModel)(cp, recordId)
         End Sub
         '
         '====================================================================================================
         Public Overloads Shared Sub delete(cp As CPBaseClass, ccGuid As String)
-            delete(Of visitSummaryModel)(cp, ccGuid)
+            delete(Of viewingSummaryModel)(cp, ccGuid)
         End Sub
         '
         '====================================================================================================
-        Public Overloads Shared Function createList(cp As CPBaseClass, sqlCriteria As String, Optional sqlOrderBy As String = "id") As List(Of visitSummaryModel)
-            Return createList(Of visitSummaryModel)(cp, sqlCriteria, sqlOrderBy)
+        Public Overloads Shared Function createList(cp As CPBaseClass, sqlCriteria As String, Optional sqlOrderBy As String = "id") As List(Of viewingSummaryModel)
+            Return createList(Of viewingSummaryModel)(cp, sqlCriteria, sqlOrderBy)
         End Function
         '
         '====================================================================================================
         Public Overloads Shared Function getRecordName(cp As CPBaseClass, recordId As Integer) As String
-            Return baseModel.getRecordName(Of visitSummaryModel)(cp, recordId)
+            Return baseModel.getRecordName(Of viewingSummaryModel)(cp, recordId)
         End Function
         '
         '====================================================================================================
         Public Overloads Shared Function getRecordName(cp As CPBaseClass, ccGuid As String) As String
-            Return baseModel.getRecordName(Of visitSummaryModel)(cp, ccGuid)
+            Return baseModel.getRecordName(Of viewingSummaryModel)(cp, ccGuid)
         End Function
         '
         '====================================================================================================
         Public Overloads Shared Function getRecordId(cp As CPBaseClass, ccGuid As String) As Integer
-            Return baseModel.getRecordId(Of visitSummaryModel)(cp, ccGuid)
+            Return baseModel.getRecordId(Of viewingSummaryModel)(cp, ccGuid)
         End Function
         '
         '====================================================================================================
         Public Overloads Shared Function getCount(cp As CPBaseClass, sqlCriteria As String) As Integer
-            Return baseModel.getCount(Of visitSummaryModel)(cp, sqlCriteria)
+            Return baseModel.getCount(Of viewingSummaryModel)(cp, sqlCriteria)
         End Function
         '
         '====================================================================================================
         Public Overloads Function getUploadPath(fieldName As String) As String
-            Return MyBase.getUploadPath(Of visitSummaryModel)(fieldName)
+            Return MyBase.getUploadPath(Of viewingSummaryModel)(fieldName)
         End Function
         '
         '====================================================================================================
         '
-        Public Function Clone(cp As CPBaseClass) As visitSummaryModel
-            Dim result As visitSummaryModel = DirectCast(Me.Clone(), visitSummaryModel)
+        Public Function Clone(cp As CPBaseClass) As viewingSummaryModel
+            Dim result As viewingSummaryModel = DirectCast(Me.Clone(), viewingSummaryModel)
             result.id = cp.Content.AddRecord(contentName)
             result.ccguid = cp.Utils.CreateGuid()
             result.save(cp)
@@ -115,3 +112,4 @@ Namespace Models
 
     End Class
 End Namespace
+

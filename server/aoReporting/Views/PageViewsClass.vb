@@ -1,4 +1,3 @@
-
 Option Strict On
 Option Explicit On
 
@@ -16,16 +15,40 @@ Namespace Views
         '
         Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
             Dim result As String = ""
-            Dim sw As New Stopwatch : sw.Start()
             Try
-                '
                 ' -- initialize application. If authentication needed and not login page, pass true
-                Using ae As New applicationController(CP, False)
-                    '
-                    ' -- your code
-                    result = "Hello World"
-                    If ae.packageErrorList.Count > 0 Then
-                        result = "Hey user, this happened - " & Join(ae.packageErrorList.ToArray, "<br>")
+                Using ac As New applicationController(CP, False)
+                    Dim StartDate As DateTime = ac.cp.Doc.GetDate("filterFromDate")
+                    Dim EndDate As DateTime = ac.cp.Doc.GetDate("filterToDate")
+                    'if no date values, then default to last year
+                    If (StartDate <= DateTime.MinValue) Or (EndDate <= DateTime.MinValue) Then
+                        EndDate = Now.Date
+                        StartDate = EndDate.AddDays(-365).Date
+                    End If
+
+                    'html for the date select. needs to include hidden addonguid so the old legacy way works
+                    result = "<form><div class='afwBodyColor'><h3>Filters</h3><div class='abFilterRow'><input type='hidden' name='addonguid' id='addonguid' value='{" & constants.pageViewGuid & "}'>"
+                    result &= "<label>From</label><input type='date' value='" & StartDate.ToString("yyyy-MM-dd") & "' name='filterFromDate' id='abFilterFromDate' class='abFilterDate' required></div> "
+                    result &= "<div class='abFilterRow'><label>To</label><input type='date' name='filterToDate' id='abFilterToDate' class='abFilterDate' value='" & EndDate.ToString("yyyy-MM-dd") & "' required></div>"
+                    result &= "<div class='abFilterRow'><label></label><button type='submit'>Submit</button></div><br></form>"
+
+                    Dim Width As String = ac.cp.Doc.GetText("Width")
+                    Dim Height As String = ac.cp.Doc.GetText("Height")
+                    Dim durationHours As Integer = 24
+                    Dim DivName As String = ac.cp.Doc.GetText("TargetDiv")
+                    If DivName = "" Then
+                        DivName = "PageViewChart"
+                    End If
+                    Dim dblDateStart As Double = StartDate.ToOADate()
+                    Dim dblDateEnd As Double = EndDate.ToOADate()
+                    'set the visit summary criteria
+                    Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
+                    Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
+                    If (visitSummaryList.Count = 0) Then
+                        result &= "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
+                    Else
+                        'legacy code uses isvisitdata=false
+                        result &= Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, False, Width, Height, (durationHours = 1))
                     End If
                 End Using
             Catch ex As Exception

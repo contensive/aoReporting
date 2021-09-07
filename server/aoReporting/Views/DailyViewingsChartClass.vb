@@ -28,10 +28,13 @@ Namespace Views
                         DivName = "PageViewChart"
                     End If
                     Dim DateEnd As Date = Now.Date
+
                     Dim DateStart As Date = DateEnd.AddDays(-DurationDays).Date
                     Dim dblDateStart As Double = DateStart.ToOADate()
                     Dim dblDateEnd As Double = DateEnd.ToOADate()
                     Dim criteria As String = "(TimeDuration=" & durationHours & ") AND (DateNumber>=" & dblDateStart & ") AND (DateNumber<" & dblDateEnd & ")"
+
+
                     Dim visitSummaryList As List(Of Models.visitSummaryModel) = Models.visitSummaryModel.createList(ac.cp, criteria, "TimeNumber desc")
                     If (visitSummaryList.Count = 0) Then
                         result = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
