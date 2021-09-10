@@ -15,7 +15,7 @@ set minorVersion=1
 set collectionName=aoReportingBasics
 set collectionPath=..\collections\aoReportingBasics\
 set solutionName=aoReporting.sln
-set binPath=..\server\aoReporting\bin\debug\
+set binPath=..\server\aoReportingCSharp\bin\debug\
 set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\
 set deploymentFolderRoot=C:\Deployments\aoReportingBasics\Dev\
 
