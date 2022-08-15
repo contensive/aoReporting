@@ -1,11 +1,8 @@
 
-Option Strict On
-Option Explicit On
-
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 
-Namespace Views
+Namespace Contensive.Reporting
 
     '
     Public Class DailyViewingClass
@@ -29,7 +26,7 @@ Namespace Views
             Try
                 '
                 ' -- initialize application. If authentication needed and not login page, pass true
-                Using ae As New applicationController(CP, False)
+                Using ae As New ApplicationModel(CP, False)
                     '
                     ' -- your code
                     result = "Hello World"

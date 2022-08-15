@@ -1,12 +1,7 @@
-﻿Option Explicit On
-Option Strict On
-
-Imports System
-Imports System.Collections.Generic
-Imports System.Text
+﻿
 Imports Contensive.BaseClasses
 
-Namespace Models
+Namespace Contensive.Reporting.Models
     Public Class viewingSummaryModel
         Inherits baseModel
         Implements ICloneable

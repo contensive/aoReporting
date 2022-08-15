@@ -1,17 +1,14 @@
 ﻿
-Option Explicit On
-Option Strict On
-
 Imports Contensive.BaseClasses
 
-Namespace Controllers
+Namespace Contensive.Reporting.Models
     '
     '====================================================================================================
     ''' <summary>
     ''' 
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class applicationController
+    Public Class ApplicationModel
         Implements IDisposable
         '
         ' privates passed in, do not dispose
@@ -71,8 +68,8 @@ Namespace Controllers
             Dim cs As CPCSBaseClass = cp.CSNew()
             Dim localSystemStatus As String = ""
             If (requiresAuthentication And Not cp.User.IsAuthenticated) Then
-                packageErrorList.Add(New packageErrorClass() With {.number = resultErrorEnum.errAuthentication, .description = "Authorization is required."})
-                cp.Response.SetStatus(httpErrorEnum.forbidden & " Forbidden")
+                packageErrorList.Add(New packageErrorClass() With {.number = ResultErrorEnum.errAuthentication, .description = "Authorization is required."})
+                cp.Response.SetStatus(HttpErrorEnum.forbidden & " Forbidden")
             End If
         End Sub
         '

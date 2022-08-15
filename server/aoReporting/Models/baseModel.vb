@@ -1,14 +1,8 @@
 ﻿
-Option Explicit On
-Option Strict On
-
-Imports System
-Imports System.Collections.Generic
-Imports System.Text
-Imports Contensive.BaseClasses
 Imports System.Reflection
+Imports Contensive.BaseClasses
 
-Namespace Models
+Namespace Contensive.Reporting.Models
     Public MustInherit Class baseModel
         '
         '====================================================================================================

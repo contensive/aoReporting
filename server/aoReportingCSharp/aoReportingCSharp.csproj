@@ -44,11 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Processor\Addons\Housekeep\housekeepClass.cs" />
-    <Compile Include="Processor\Addons\Housekeep\HousekeepController.cs" />
-    <Compile Include="Processor\Addons\Housekeep\HousekeepEnvironmentModel.cs" />
-    <Compile Include="Processor\Addons\Housekeep\ViewingSummaryClass.cs" />
-    <Compile Include="Processor\Addons\Housekeep\VisitSummary.cs" />
+    <Compile Include="Addons\HousekeepTask.cs" />
+    <Compile Include="Controllers\HousekeepController.cs" />
+    <Compile Include="Models\HousekeepEnvironmentModel.cs" />
+    <Compile Include="Models\ViewingSummaryModel.cs" />
+    <Compile Include="Models\VisitSummaryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

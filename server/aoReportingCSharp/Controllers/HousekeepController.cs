@@ -1,11 +1,7 @@
 ﻿using Contensive.BaseClasses;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
+namespace Contensive.Reporting.Controllers {
     public class  HousekeepController {
 
         //========================================================================

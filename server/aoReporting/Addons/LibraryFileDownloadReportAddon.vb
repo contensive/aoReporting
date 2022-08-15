@@ -1,16 +1,12 @@
 
-Option Strict On
-Option Explicit On
-
 Imports adminFramework
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
-Imports System.Web
+Imports Contensive.Reporting.Controllers
 
-Namespace Views
+Namespace Contensive.Reporting
 
     '
-    Public Class EmailDropReportClass
+    Public Class LibraryFileDownloadReportAddon
         Inherits AddonBaseClass
         '
         '=====================================================================================
@@ -85,28 +81,26 @@ Namespace Views
             Dim result As String = ""
             Dim hint As String = "1"
             Try
-                Dim rqs As String = cp.Utils.ModifyQueryString(frameRqs, rnDstFormId, dstFormId.ToString())
                 '
-                ' -- initialize report
+                Dim orderBy As String = ""
+                Dim rqs As String = cp.Utils.ModifyQueryString(frameRqs, rnDstFormId, dstFormId.ToString())
+                Dim qs As String = ""
+                Dim qsBase As String = ""
+                '
                 Dim report = New ReportListClass(cp) With {
-                    .title = "Email Drop Report",
-                    .name = "Email Drop Report",
-                    .guid = "{B4B660A5-E9D9-4FEC-A6A6-AD4EB557DBF9}",
+                    .title = "Library File Download Report",
+                    .name = "Library File Download Report",
+                    .guid = "{90F40ED5-17F5-4C2C-8D87-2FCF2B68B743}",
                     .refreshQueryString = rqs,
                     .addCsvDownloadCurrentPage = True,
                     .isOuterContainer = True
                 }
-                cp.Doc.AddHeadStyle(report.styleSheet)
-                '
-                ' -- add buttons
                 report.addFormButton(buttonCancel)
                 report.addFormButton(ButtonRefresh)
-                '
-                ' -- add src view
                 report.addFormHidden(rnSrcFormId, dstFormId.ToString())
                 '
                 ' -- filterDateFrom
-                Const userPropertyFromDate As String = "ReportEmailDrop-filterFromDate"
+                Const userPropertyFromDate As String = "ReportLibraryFileDownloadLog-filterFromDate"
                 Dim filterFromDate As Date
                 Dim filterFromDateString As String
                 Dim filterFromDateStringTest As String = cp.Doc.GetText("filterFromDate")
@@ -126,7 +120,7 @@ Namespace Views
                 End If
                 '
                 ' -- filterDateTo
-                Const userPropertyToDate As String = "ReportEmailDrop-filterToDate"
+                Const userPropertyToDate As String = "ReportLibraryFileDownloadLog-filterToDate"
                 Dim filterToDate As Date
                 Dim filterToDateString As String
                 Dim filterToDateStringTest As String = cp.Doc.GetText("filterToDate")
@@ -134,9 +128,9 @@ Namespace Views
                 If (Not String.IsNullOrEmpty(filterToDateStringTest)) Then
                     filterToDate = genericController.encodeMinDate(cp.Doc.GetDate("filterToDate"))
                 ElseIf (Not String.IsNullOrEmpty(userFilterToDateString)) Then
-                    filterFromDate = genericController.encodeMinDate(cp.Utils.EncodeDate(userFilterFromDateString))
+                    filterToDate = genericController.encodeMinDate(cp.User.GetDate("abFilterTopBuyerToDate"))
                 Else
-                    filterToDate = Today
+                    filterToDate = Today.AddDays(-30)
                 End If
                 cp.User.SetProperty(userPropertyToDate, filterToDate.ToString())
                 If filterToDate = Date.MinValue Then
@@ -146,7 +140,7 @@ Namespace Views
                 End If
                 '
                 ' -- create caption with filter text
-                Dim captionWithFilter As String = "This report summarizes data from the Email Log and Email Drops and includes emails sent from all Group Emails"
+                Dim captionWithFilter As String = "Library File Downloads"
                 If filterFromDateString <> "" And filterToDateString <> "" Then
                     captionWithFilter &= ", between " & filterFromDateString & " and " & filterToDateString & " inclusive"
                 ElseIf filterFromDateString <> "" Then
@@ -154,8 +148,8 @@ Namespace Views
                 ElseIf filterToDateString <> "" Then
                     captionWithFilter &= ", on or before " & filterToDateString
                 End If
-                captionWithFilter &= "."
-                report.description = captionWithFilter
+                '
+                captionWithFilter &= ". This report includes links created with the text editor, or created manually with /downloadLibraryFile?download={guid}. "
                 '
                 hint = "setup columns"
                 report.columnCaption = "Row"
@@ -163,32 +157,17 @@ Namespace Views
                 report.columnCellClass = "afwTextAlignCenter"
                 '
                 report.addColumn()
-                report.columnCaption = "Drop Date"
-                report.columnCaptionClass = "afwWidth200px afwTextAlignLeft"
-                report.columnCellClass = "afwTextAlignLeft"
+                report.columnCaption = "Count"
+                report.columnCaptionClass = "afwWidth100px afwTextAlignRight"
+                report.columnCellClass = "afwTextAlignRight"
                 '
                 report.addColumn()
-                report.columnCaption = "Email"
+                report.columnCaption = "Library File"
                 report.columnCaptionClass = "afwTextAlignLeft"
                 report.columnCellClass = "afwTextAlignLeft"
                 '
-                report.addColumn()
-                report.columnCaption = "Sent"
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                report.columnCellClass = "afwTextAlignRight"
-                '
-                report.addColumn()
-                report.columnCaption = "Opened"
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                report.columnCellClass = "afwTextAlignRight"
-                '
-                report.addColumn()
-                report.columnCaption = "Clicked"
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight"
-                report.columnCellClass = "afwTextAlignRight"
-                '
-                ' -- run query and fill rows
-                Dim sql As String = My.Resources.sqlReportEmailDrop
+                hint = "run query"
+                Dim sql As String = My.Resources.sqlReportLibraryFileDownload
                 If (filterFromDate = Date.MinValue) Then
                     sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(New Date(1990, 1, 1)))
                 Else
@@ -199,33 +178,31 @@ Namespace Views
                 Else
                     sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate))
                 End If
-                Using cs As CPCSBaseClass = cp.CSNew
-                    If (cs.OpenSQL(sql)) Then
-                        Dim rowPtr As Integer = 1
-                        Do
-                            Dim emaildropid As Integer = cs.GetInteger("dropid")
-                            Dim openedCount As String = If(cs.GetInteger("opened").Equals(0), "0", "<a href=""?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("opened").ToString() & "</a>")
-                            Dim clickedCount As String = If(cs.GetInteger("clicked").Equals(0), "0", "<a href=""?addonguid=%7B29271653-BDE3-4DC1-8058-D54E53F1D06B%7D&emaildropid=" & emaildropid.ToString() & """>" & cs.GetInteger("clicked").ToString() & "</a>")
-                            report.addRow()
-                            report.setCell(rowPtr.ToString())
-                            report.setCell(cs.GetDate("dropDate").ToString())
-                            report.setCell(cs.GetText("emailName"))
-                            report.setCell(cs.GetInteger("sent").ToString())
-                            report.setCell(openedCount)
-                            report.setCell(clickedCount)
-                            rowPtr += 1
-                            cs.GoNext()
-                        Loop While (cs.OK)
-                    End If
-                End Using
-                '
-                ' -- filters
+                Dim cs As CPCSBaseClass = cp.CSNew
+                cs.OpenSQL(sql)
+                qsBase = frameRqs
+                'qsBase = cp.Utils.ModifyQueryString(qsBase, rnDstFeatureGuid, "{FB35BD57-875C-44C6-84D9-541793BF9190}")
+                'qsBase = cp.Utils.ModifyQueryString(qsBase, rnDstFormId, formIdAccountDetails.ToString())
+                Dim rowPtr As Integer = 1
+                Do While (cs.OK)
+                    report.addRow()
+                    report.setCell(rowPtr.ToString())
+                    report.setCell(cs.GetInteger("cnt").ToString())
+                    report.setCell(cs.GetText("name"))
+                    rowPtr += 1
+                    cs.GoNext()
+                Loop
+                hint = "set filter text"
                 report.htmlLeftOfTable = "" _
                     & cr & "<h3 class=""abFilterHead"">Filters</h3>" _
                     & cr & "<div class=""abFilterRow""><label for""abFilterFromDate"">From</label>" & cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") & "<a href=""#"" id=""abFilterFromDateClear"">X</a></div>" _
                     & cr & "<div class=""abFilterRow""><label for""abFilterToDate"">To</label>" & cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") & "<a href=""#"" id=""abFilterToDateClear"">X</a></div>" _
                     & ""
-                result = cp.Html.div(report.getHtml(cp), "", "abReportEmailDrop")
+                hint = "output body"
+                report.description = captionWithFilter
+                result = report.getHtml(cp)
+                result = cp.Html.div(result, "", "abReportFileDownload")
+                cp.Doc.AddHeadStyle(report.styleSheet)
             Catch ex As Exception
                 cp.Site.ErrorReport(ex)
             End Try

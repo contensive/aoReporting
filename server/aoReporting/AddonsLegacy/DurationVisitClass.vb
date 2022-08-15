@@ -1,11 +1,9 @@
-Option Strict On
-Option Explicit On
 
 Imports System.Text
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 
-Namespace Views
+Namespace Contensive.Reporting
     '
     '====================================================================================================
     '
@@ -17,7 +15,7 @@ Namespace Views
             Dim result As New StringBuilder()
             Dim sw As New Stopwatch : sw.Start()
             Try
-                Using ac As New applicationController(CP, False)
+                Using ac As New ApplicationModel(CP, False)
                     Dim Width As String = ac.cp.Doc.GetText("Chart Width", "100%")
                     Dim Height As String = ac.cp.Doc.GetText("Chart Height", "400px")
                     Dim Rate As String = ac.cp.Doc.GetText("Rate", "hourly")
@@ -64,7 +62,7 @@ Namespace Views
         '
         '====================================================================================================
         '
-        Public Function getSummary2(ac As applicationController, visitSummaryList As List(Of Models.visitSummaryModel), IsHourlyChart As Boolean) As String
+        Public Function getSummary2(ac As ApplicationModel, visitSummaryList As List(Of Models.visitSummaryModel), IsHourlyChart As Boolean) As String
             Dim result As New StringBuilder
             Try
                 Dim Visits As Double

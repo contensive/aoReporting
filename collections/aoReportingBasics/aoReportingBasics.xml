@@ -3,44 +3,14 @@
 	<HelpLink></HelpLink>
 	<Help></Help>
 	<Addon name="Reporting Basics Install" guid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.OnInstallClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.OnInstallClass]]></DotNetClass>
 	</Addon>
 	<Addon name="Daily Visits Chart" guid="{AEA7D5D7-5105-4433-9728-41F021C47877}" type="Report">
-		<Copy></Copy>
-		<CopyText></CopyText>
-		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.DailyVisitsChartClass]]></DotNetClass>
-		<ArgumentList></ArgumentList>
-		<AsAjax>No</AsAjax>
-		<Filter>No</Filter>
-		<Help></Help>
-		<HelpLink></HelpLink>
+		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
-		<InIframe>No</InIframe>
 		<BlockEditTools>Yes</BlockEditTools>
-		<FormXML></FormXML>
-		<IsInline>No</IsInline>
-		<JavascriptInHead></JavascriptInHead>
-		<javascriptForceHead>No</javascriptForceHead>
-		<JSHeadScriptSrc></JSHeadScriptSrc>
-		<!-- deprecated --><JSBodyScriptSrc></JSBodyScriptSrc>
-		<!-- deprecated --><JavascriptBodyEnd></JavascriptBodyEnd>
-		<!-- deprecated --><JavascriptOnLoad></JavascriptOnLoad>
-		<Content>No</Content>
-		<Template>No</Template>
-		<Email>No</Email>
 		<Admin>yes</Admin>
-		<OnPageEndEvent>No</OnPageEndEvent>
-		<OnPageStartEvent>No</OnPageStartEvent>
-		<OnBodyStart>No</OnBodyStart>
-		<OnBodyEnd>No</OnBodyEnd>
-		<RemoteMethod>No</RemoteMethod>
-		<ProcessRunOnce>No</ProcessRunOnce>
-		<ProcessInterval>0</ProcessInterval>
-		<MetaDescription></MetaDescription>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
-		<PageTitle></PageTitle>
-		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[  
 			/*legacy styles8*/
 			.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
@@ -48,15 +18,13 @@
 			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
 			.summaryCell{text-align:top;}
 			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
-  ]]></Styles>
-		<styleslinkhref></styleslinkhref>
-		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
+  		]]></Styles>
 	</Addon>
 	<Addon name="Download Log Report" guid="{6B3D54CD-782A-4B47-903D-86CEDE4E50A5}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.LibraryFileDownloadReportClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.LibraryFileDownloadReportAddon]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
 		<Filter>No</Filter>
@@ -196,7 +164,7 @@
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
 	<Addon name="Email Drop Report" guid="{A10B5F49-3147-4E32-9DCF-76D65CCFF9F1}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailDropReportClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.EmailDropReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
@@ -305,7 +273,7 @@
 		]]></Styles>
 	</Addon>
 	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailOpenedReportClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.EmailOpenedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
@@ -392,7 +360,7 @@
 				]]></Styles>
 	</Addon>
 	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.EmailClickedReportClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.EmailClickedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
@@ -482,7 +450,7 @@
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Views.PageViewsClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsAddon]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 			Chart Height=400
 			Days to Display=365
@@ -558,7 +526,7 @@
 				text-align: left;
 			}
 
-  ]]></Styles>
+  		]]></Styles>
 		<styleslinkhref></styleslinkhref>
 		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
 	</Addon>
@@ -570,7 +538,7 @@
 		<Email>No</Email>
 		<RemoteMethod>No</RemoteMethod>
 		<BlockEditTools>Yes</BlockEditTools>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Processor.Addons.Housekeep.ReportingHouseKeepClass]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Processor.Addons.Housekeep.HousekeepTask]]></DotNetClass>
 		<ProcessInterval>60</ProcessInterval>
 		<ActiveXProgramID></ActiveXProgramID>
     </Addon> 

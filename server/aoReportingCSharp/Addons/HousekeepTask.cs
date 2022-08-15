@@ -1,11 +1,12 @@
 ﻿using Contensive.BaseClasses;
+using Contensive.Reporting.Models;
 using System;
 //
-namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
+namespace Contensive.Reporting {
     /// <summary>
     /// support for housekeeping functions for reporting
     /// </summary>
-    public class ReportingHouseKeepClass : AddonBaseClass {
+    public class HousekeepTask : AddonBaseClass {
         //
         //====================================================================================================
         /// <summary>
@@ -25,15 +26,15 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 // -- hourly tasks
                 //
                 // -- summaries - must be first
-                VisitSummaryClass.executeHourlyTasks(cp);
-                ViewingSummaryClass.executeHourlyTasks(cp);
+                VisitSummaryModel.executeHourlyTasks(cp);
+                ViewingSummaryModel.executeHourlyTasks(cp);
 
                 // -- daily tasks
                 cp.Log.Info("executeDailyTasks");
                 //
                 // -- summary (must be first)
-                VisitSummaryClass.executeDailyTasks(cp, env);
-                ViewingSummaryClass.executeDailyTasks(cp, env);
+                VisitSummaryModel.executeDailyTasks(cp, env);
+                ViewingSummaryModel.executeDailyTasks(cp, env);
                 cp.Site.SetProperty("housekeep, last run", DateTime.Now);
 
 
@@ -42,7 +43,6 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
             }
             catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
-                cp.Site.LogAlarm("Housekeep, exception, ex [" + ex + "]");
                 throw;
             }
         }

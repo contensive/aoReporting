@@ -1,16 +1,9 @@
 ﻿
+Imports adminFramework
+Imports Contensive.BaseClasses
 
-Option Strict On
-    Option Explicit On
-
-    Imports adminFramework
-    Imports Contensive.Addons.Reporting.Controllers
-    Imports Contensive.BaseClasses
-
-Namespace Views
-
-    '
-    Public Class EmailClickedReportClass
+Namespace Contensive.Reporting
+    Public Class EmailOpenedReportAddon
         Inherits AddonBaseClass
         '
         '=====================================================================================
@@ -91,9 +84,9 @@ Namespace Views
                 Dim qsBase As String = ""
                 '
                 Dim report = New ReportListClass(cp) With {
-                    .title = "Email Clicked Report",
-                    .name = "Email Clicked Report",
-                    .guid = "{29271653-BDE3-4DC1-8058-D54E53F1D06B}",
+                    .title = "Email Opened Report",
+                    .name = "Email Opened Report",
+                    .guid = "{F4EE3D38-E0A9-4C93-9906-809F524B9690}",
                     .refreshQueryString = rqs,
                     .addCsvDownloadCurrentPage = True,
                     .isOuterContainer = True
@@ -111,7 +104,7 @@ Namespace Views
                 report.columnCellClass = "afwTextAlignLeft"
                 '
                 report.addColumn()
-                report.columnCaption = "Clicked By"
+                report.columnCaption = "Opened By"
                 report.columnCaptionClass = "afwTextAlignLeft"
                 report.columnCellClass = "afwTextAlignLeft"
 
@@ -124,7 +117,7 @@ Namespace Views
                 End If
 
                 hint = "run query"
-                Dim sql As String = "select distinct m.name, m.email from ccEmailLog left join ccMembers m on m.id = ccemaillog.memberid where (logtype=3) and (m.name is not null) and ccemaillog.EmailDropID=" & emaildropid & " order by m.name asc"
+                Dim sql As String = "select distinct m.name, m.email from ccEmailLog left join ccMembers m on m.id = ccemaillog.memberid where (logtype=2) and (m.name is not null) and ccemaillog.EmailDropID=" & emaildropid & " order by m.name asc"
                 Dim cs As CPCSBaseClass = cp.CSNew
                 cs.OpenSQL(sql)
 
@@ -134,6 +127,11 @@ Namespace Views
                     report.addRow()
                     report.setCell(rowPtr.ToString())
                     report.setCell(emailName)
+                    'Dim toaddr As String = cs.GetText("toaddress")
+                    'toaddr = toaddr.Replace(">", " ")
+                    'toaddr = toaddr.Replace("<", "<br>Email:")
+                    'toaddr = toaddr.Replace("""", " ")
+                    'toaddr = toaddr.Insert(0, "Name:")
                     report.setCell("Name: " & cs.GetText("name") & "<br>" & "Email: " & cs.GetText("email"))
                     rowPtr += 1
                     cs.GoNext()

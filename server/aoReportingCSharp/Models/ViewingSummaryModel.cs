@@ -1,13 +1,13 @@
-﻿using Contensive.Addons.Reporting.Processor.Addons.Housekeep;
-using Contensive.BaseClasses;
+﻿using Contensive.BaseClasses;
+using Contensive.Reporting.Controllers;
 using System;
 using System.Xml;
 
-namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
+namespace Contensive.Reporting.Models {
     /// <summary>
     /// Housekeep this content
     /// </summary>
-    public static class ViewingSummaryClass {
+    public static class ViewingSummaryModel {
         //
         //====================================================================================================
         /// <summary>

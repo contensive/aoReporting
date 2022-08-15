@@ -1,14 +1,12 @@
-Option Strict On
-Option Explicit On
 
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 
-Namespace Views
+Namespace Contensive.Reporting
     '
     '====================================================================================================
     '
-    Public Class PageViewsClass
+    Public Class PageViewsAddon
         Inherits AddonBaseClass
         '
         '====================================================================================================
@@ -17,7 +15,7 @@ Namespace Views
             Dim result As String = ""
             Try
                 ' -- initialize application. If authentication needed and not login page, pass true
-                Using ac As New applicationController(CP, False)
+                Using ac As New ApplicationModel(CP, False)
                     Dim StartDate As DateTime = ac.cp.Doc.GetDate("filterFromDate")
                     Dim EndDate As DateTime = ac.cp.Doc.GetDate("filterToDate")
                     'if no date values, then default to last year
@@ -27,7 +25,7 @@ Namespace Views
                     End If
 
                     'html for the date select. needs to include hidden addonguid so the old legacy way works
-                    result = "<form><div class='afwBodyColor'><h3>Filters</h3><div class='abFilterRow'><input type='hidden' name='addonguid' id='addonguid' value='{" & constants.pageViewGuid & "}'>"
+                    result = "<form><div class='afwBodyColor'><h3>Filters</h3><div class='abFilterRow'><input type='hidden' name='addonguid' id='addonguid' value='{" & Constants.pageViewGuid & "}'>"
                     result &= "<label>From</label><input type='date' value='" & StartDate.ToString("yyyy-MM-dd") & "' name='filterFromDate' id='abFilterFromDate' class='abFilterDate' required></div> "
                     result &= "<div class='abFilterRow'><label>To</label><input type='date' name='filterToDate' id='abFilterToDate' class='abFilterDate' value='" & EndDate.ToString("yyyy-MM-dd") & "' required></div>"
                     result &= "<div class='abFilterRow'><label></label><button type='submit'>Submit</button></div><br></form>"

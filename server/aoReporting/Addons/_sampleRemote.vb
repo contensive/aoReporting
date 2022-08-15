@@ -1,11 +1,8 @@
 ﻿
-Option Explicit On
-Option Strict On
-
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 '
-Namespace Views
+Namespace Contensive.Reporting
     '
     Public Class getProjectListNoDetailsClass
         Inherits AddonBaseClass
@@ -18,24 +15,24 @@ Namespace Views
             Try
                 '
                 ' -- initialize application. If authentication needed and not login page, pass true
-                Using ae As New applicationController(cp, True)
+                Using ae As New ApplicationModel(cp, True)
                     '
                     ' -- optionally add a timer to report how long this section took
-                    ae.packageProfileList.Add(New applicationController.packageProfileClass() With {.name = "applicationControllerConstructor", .time = sw.ElapsedMilliseconds})
+                    ae.packageProfileList.Add(New ApplicationModel.packageProfileClass() With {.name = "ApplicationModelConstructor", .time = sw.ElapsedMilliseconds})
                     If ae.packageErrorList.Count = 0 Then
                         '
                         ' -- create sample data
                         Dim personList As List(Of Models.personModel) = Models.personModel.createList(cp, "")
                         '
                         ' -- add sample data to a node
-                        ae.packageNodeList.Add(New applicationController.packageNodeClass With {
+                        ae.packageNodeList.Add(New ApplicationModel.packageNodeClass With {
                             .dataFor = "nameOfThisDataForRemoteToRecognize",
                             .data = personList
                         })
                     End If
                     '
                     ' -- optionally add a timer to report how long this section took
-                    ae.packageProfileList.Add(New applicationController.packageProfileClass() With {.name = "getProjectListNoDetailsClass", .time = sw.ElapsedMilliseconds})
+                    ae.packageProfileList.Add(New ApplicationModel.packageProfileClass() With {.name = "getProjectListNoDetailsClass", .time = sw.ElapsedMilliseconds})
                     result = ae.getSerializedPackage()
                 End Using
             Catch ex As Exception

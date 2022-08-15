@@ -9,14 +9,13 @@ rem
 rem Setup deployment folder
 rem
 
-set appName=app200509
 set majorVersion=5
 set minorVersion=1
 set collectionName=aoReportingBasics
 set collectionPath=..\collections\aoReportingBasics\
 set solutionName=aoReporting.sln
 set binPath=..\server\aoReportingCSharp\bin\debug\
-set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\
+set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
 set deploymentFolderRoot=C:\Deployments\aoReportingBasics\Dev\
 
 set deploymentNumber=%1

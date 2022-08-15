@@ -1,26 +1,22 @@
 
-Option Strict On
-Option Explicit On
-
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 
-Namespace Views
+Namespace Contensive.Reporting
     '
     '====================================================================================================
     '
-    Public Class WeeklyViewingsClass
+    Public Class MonthlyVisitChartClass
         Inherits AddonBaseClass
         '
-        '====================================================================================================
-        '
+        '=====================================================================================
         Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
             Dim result As String = ""
             Dim sw As New Stopwatch : sw.Start()
             Try
                 '
                 ' -- initialize application. If authentication needed and not login page, pass true
-                Using ae As New applicationController(CP, False)
+                Using ae As New ApplicationModel(CP, False)
                     '
                     ' -- your code
                     result = "Hello World"
@@ -42,14 +38,13 @@ Namespace Views
         '    Dim dblDate As Double
         '    Dim cmn As New CommonClass
         '    dblDate = CDbl(Date)
-        '    CS = Main.OpenCSContent("Visit Summary", "(TimeDuration=1) AND (DateNumber>=" & dblDate - 7 & ") AND (DateNumber<=" & dblDate & ")", "TimeNumber desc", , , , "DateNumber,TimeNumber,PagesViewed")
+        '    CS = Main.OpenCSContent("Visit Summary", "(TimeDuration=24) AND (DateNumber>=" & dblDate - 90 & ") AND (DateNumber<=" & dblDate & ")", , , , , "DateNumber,TimeNumber,Visits")
         '    If Main.CSOK(CS) Then
-        '        Stream = cmn.GetChart(Main, CS, "weekly-visits", False, "100%", "400px")
+        '        Stream = cmn.GetChart(Main, CS, "monthly-visits", True, "100%", "400px", False)
         '    Else
         '        Stream = "<span class=""ccError"">There is currently no data collected to display this chart. Please check back later.</span>"
         '    End If
         '    Call Main.CloseCS(CS)
-        '    GetContent = Stream
         'End Function
     End Class
 End Namespace

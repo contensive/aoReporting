@@ -1,14 +1,10 @@
 
-Option Strict On
-Option Explicit On
-
-Imports Contensive.Addons.Reporting.Controllers
 Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Controllers
+Imports Contensive.Reporting.Models
 
-Namespace Views
-
-    '
-    Public Class addonClass
+Namespace Contensive.Reporting
+    Public Class SampleAddon
         Inherits AddonBaseClass
         '
         ' - use NuGet to add Contentive.clib reference
@@ -24,23 +20,19 @@ Namespace Views
         ''' <param name="CP"></param>
         ''' <returns></returns>
         Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
-            Dim result As String = ""
-            Dim sw As New Stopwatch : sw.Start()
             Try
-                '
-                ' -- initialize application. If authentication needed and not login page, pass true
-                Using ae As New applicationController(CP, False)
+                Using ae As New ApplicationModel(CP, False)
                     '
                     ' -- your code
-                    result = "Hello World"
                     If ae.packageErrorList.Count > 0 Then
-                        result = "Hey user, this happened - " & Join(ae.packageErrorList.ToArray, "<br>")
+                        Return "Hey user, this happened - " & Join(ae.packageErrorList.ToArray, "<br>")
                     End If
+                    Return "Hello World"
                 End Using
             Catch ex As Exception
                 CP.Site.ErrorReport(ex)
+                Throw
             End Try
-            Return result
         End Function
     End Class
 End Namespace

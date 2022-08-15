@@ -1,8 +1,5 @@
 ﻿
-Option Explicit On
-Option Strict On
-
-Public Module constants
+Public Module Constants
     '
     ' -- sample
     Public Const Version As Integer = 1
@@ -19,7 +16,7 @@ Public Module constants
     Public Const LogInDesc As String = "LOG IN - visits where someone logged in with a username/password within the charted time period."
     '
     ' -- errors for resultErrList
-    Public Enum resultErrorEnum
+    Public Enum ResultErrorEnum
         errPermission = 50
         errDuplicate = 100
         errVerification = 110
@@ -36,7 +33,7 @@ Public Module constants
     End Enum
     '
     ' -- http errors
-    Public Enum httpErrorEnum
+    Public Enum HttpErrorEnum
         badRequest = 400
         unauthorized = 401
         paymentRequired = 402

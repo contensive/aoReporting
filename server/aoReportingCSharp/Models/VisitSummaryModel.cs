@@ -1,11 +1,12 @@
 ﻿using Contensive.BaseClasses;
+using Contensive.Reporting.Controllers;
 using System;
 
-namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
+namespace Contensive.Reporting.Models {
     /// <summary>
     /// Housekeep this content
     /// </summary>
-    public static class VisitSummaryClass {
+    public static class VisitSummaryModel {
         //
         //====================================================================================================
         /// <summary>
@@ -24,10 +25,6 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                 throw;
             }
         }
-
-
-
-
         //
         //=========================================================================================
         /// <summary>
@@ -127,7 +124,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                                 //
                                 // Out of data, start with this DatePtr
                                 //
-                                VisitSummaryClass.summarizePeriod(cp, env, datePtr, datePtr, 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                                VisitSummaryModel.summarizePeriod(cp, env, datePtr, datePtr, 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                             }
                             else {
                                 DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
@@ -135,7 +132,7 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                                     //
                                     // There are missing dates, update them
                                     //
-                                    VisitSummaryClass.summarizePeriod(cp, env, datePtr, workingDate.AddDays(-1), 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
+                                    VisitSummaryModel.summarizePeriod(cp, env, datePtr, workingDate.AddDays(-1), 24, BuildVersion, env.oldestVisitSummaryWeCareAbout);
                                 }
                             }
                             if (csData.OK()) {
@@ -439,14 +436,14 @@ namespace Contensive.Addons.Reporting.Processor.Addons.Housekeep {
                     //            //
                     //            // Out of data, start with this DatePtr
                     //            //
-                    //            VisitSummaryClass.summarizePeriod(core, env, datePtr, datePtr, 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+                    //            VisitSummaryModel.summarizePeriod(core, env, datePtr, datePtr, 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
                     //        } else {
                     //            DateTime workingDate = DateTime.MinValue.AddDays(csData.GetInteger("DateNumber"));
                     //            if (datePtr < workingDate) {
                     //                //
                     //                // There are missing dates, update them
                     //                //
-                    //                VisitSummaryClass.summarizePeriod(core, env, datePtr, workingDate.AddDays(-1), 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
+                    //                VisitSummaryModel.summarizePeriod(core, env, datePtr, workingDate.AddDays(-1), 24, core.siteProperties.dataBuildVersion, env.oldestVisitSummaryWeCareAbout);
                     //            }
                     //        }
                     //        if (csData.ok()) {

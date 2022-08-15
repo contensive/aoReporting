@@ -1,15 +1,9 @@
 ﻿
-Option Explicit On
-Option Strict On
+Imports Contensive.BaseClasses
+Imports Contensive.Reporting.Models
 
-'Imports System.Collections.Generic
-'Imports System.Text
-'Imports Contensive.BaseClasses
-'Imports Contensive.Addons.Reporting.Models
-'Imports Contensive.Addons.Reporting.Views
-'Imports Contensive.Addons.Reporting.Controllers
 
-Namespace Controllers
+Namespace Contensive.Reporting.Controllers
     Public NotInheritable Class genericController
         Private Sub New()
         End Sub
