@@ -538,7 +538,7 @@
 		<Email>No</Email>
 		<RemoteMethod>No</RemoteMethod>
 		<BlockEditTools>Yes</BlockEditTools>
-		<DotNetClass><![CDATA[Contensive.Addons.Reporting.Processor.Addons.Housekeep.HousekeepTask]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.HousekeepTask]]></DotNetClass>
 		<ProcessInterval>60</ProcessInterval>
 		<ActiveXProgramID></ActiveXProgramID>
     </Addon> 
