@@ -107,17 +107,10 @@ Namespace Contensive.Reporting
                 report.columnCaption = "Opened By"
                 report.columnCaptionClass = "afwTextAlignLeft"
                 report.columnCellClass = "afwTextAlignLeft"
-
-
-                Dim emailName As String = ""
-                Dim emailNameSql As String = "select e.name from ccEmailDrops left join ccemail e on e.id = ccEmaildrops.EmailID where ccemaildrops.id=" & emaildropid
-                Dim csName As CPCSBaseClass = cp.CSNew()
-                If csName.OpenSQL(emailNameSql) Then
-                    emailName = csName.GetText("name")
-                End If
-
+                '
                 hint = "run query"
-                Dim sql As String = "select distinct m.name, m.email from ccEmailLog left join ccMembers m on m.id = ccemaillog.memberid where (logtype=2) and (m.name is not null) and ccemaillog.EmailDropID=" & emaildropid & " order by m.name asc"
+                Dim sqlcriteria As String = If(emaildropid = 0, "", " and l.EmailDropID=" & emaildropid & "")
+                Dim sql As String = $"select distinct m.name, m.email, d.name as dropName from ccEmailLog l left join ccMembers m on m.id=l.memberid left join ccemaildrops d on d.id=l.emailDropId where (logtype=2) and (m.name is not null) {sqlcriteria} order by m.name asc"
                 Dim cs As CPCSBaseClass = cp.CSNew
                 cs.OpenSQL(sql)
 
@@ -126,18 +119,19 @@ Namespace Contensive.Reporting
                 Do While (cs.OK)
                     report.addRow()
                     report.setCell(rowPtr.ToString())
-                    report.setCell(emailName)
-                    'Dim toaddr As String = cs.GetText("toaddress")
-                    'toaddr = toaddr.Replace(">", " ")
-                    'toaddr = toaddr.Replace("<", "<br>Email:")
-                    'toaddr = toaddr.Replace("""", " ")
-                    'toaddr = toaddr.Insert(0, "Name:")
+                    report.setCell(cs.GetText("dropName"))
                     report.setCell("Name: " & cs.GetText("name") & "<br>" & "Email: " & cs.GetText("email"))
                     rowPtr += 1
                     cs.GoNext()
                 Loop
                 cs.Close()
-                report.description = ""
+                '
+                ' -- filters
+                report.htmlLeftOfTable = "" _
+                    & cr & "<h3 class=""abFilterHead"">Filters</h3>" _
+                    & cr & "<div class=""abFilterRow""><div class=""form-group""><label for""abFilterEmailDropId"">Email Drop</label>" & cp.Html5.SelectContent("emailDropId", emaildropid, "Email Drops", "", "All Email Drops", "form-control", "abFilterEmailDripId") & "</div></div>" _
+                    & ""
+                report.description = "Emails opened from an email drop."
                 result = report.getHtml(cp)
                 result = cp.Html.div(result, "", "abReportEmailDrop")
                 cp.Doc.AddHeadStyle(report.styleSheet)

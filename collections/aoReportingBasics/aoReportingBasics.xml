@@ -232,44 +232,6 @@
 				text-align: right;
 				overflow: hidden;
 			}
-			.abFilterHead 
-			{
-			}
-			.abFilterCaption
-			{
-			}
-			.abFilterRow input.abFilterDate
-			{
-				width: 80px;
-				margin: 4px 4px 0 4px;
-				text-align: left;
-			}
-			.abFilterRow input.abFilterNumber
-			{
-				width: 90px;
-				margin: 4px 4px 0 4px;
-				text-align: right;
-			}
-			.abFilterRow input.abFilterText
-			{
-				width: 123px;
-				margin: 4px 4px 0 10px;
-			}
-			.abFilterRow select
-			{
-				width: 140px;
-				margin: 4px 4px 0 10px;
-			}
-
-			.abFilterRow label
-			{
-				width: 30px;
-				display: inline-block;
-				margin: 0 0 0 10px;
-				text-align: right;
-				overflow: hidden;
-			}
-
 		]]></Styles>
 	</Addon>
 	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}" type="Report">
@@ -277,174 +239,28 @@
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
-		<JavascriptInHead></JavascriptInHead>
-		<Styles><![CDATA[
-		/*
-		* Filters
-		*/
-		.abFilterHead 
-		{
-		}
-		.abFilterCaption
-		{
-		}
-		.abFilterRow input.abFilterDate
-		{
-			width: 80px;
-			margin: 4px 4px 0 4px;
-			text-align: left;
-		}
-		.abFilterRow input.abFilterNumber
-		{
-			width: 90px;
-			margin: 4px 4px 0 4px;
-			text-align: right;
-		}
-		.abFilterRow input.abFilterText
-		{
-			width: 123px;
-			margin: 4px 4px 0 10px;
-		}
-		.abFilterRow select
-		{
-			width: 140px;
-			margin: 4px 4px 0 10px;
-		}
-
-		.abFilterRow label
-		{
-			width: 30px;
-			display: inline-block;
-			margin: 0 0 0 10px;
-			text-align: right;
-			overflow: hidden;
-		}
-		.abFilterHead 
-		{
-		}
-		.abFilterCaption
-		{
-		}
-		.abFilterRow input.abFilterDate
-		{
-			width: 80px;
-			margin: 4px 4px 0 4px;
-			text-align: left;
-		}
-		.abFilterRow input.abFilterNumber
-		{
-			width: 90px;
-			margin: 4px 4px 0 4px;
-			text-align: right;
-		}
-		.abFilterRow input.abFilterText
-		{
-			width: 123px;
-			margin: 4px 4px 0 10px;
-		}
-		.abFilterRow select
-		{
-			width: 140px;
-			margin: 4px 4px 0 10px;
-		}
-
-		.abFilterRow label
-		{
-			width: 30px;
-			display: inline-block;
-			margin: 0 0 0 10px;
-			text-align: right;
-			overflow: hidden;
-		}
-
-				]]></Styles>
+		<JavascriptInHead><![CDATA[
+			jQuery(document).ready(function(){
+				jQuery("body").on("change","#abFilterEmailDripId", function(){
+					jQuery(this).closest("form").submit();
+				});
+			});
+		]]></JavascriptInHead>
+		<Styles></Styles>
 	</Addon>
 	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailClickedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
-		<JavascriptInHead></JavascriptInHead>
-		<Styles><![CDATA[
-		/*
-		* Filters
-		*/
-		.abFilterHead 
-		{
-		}
-		.abFilterCaption
-		{
-		}
-		.abFilterRow input.abFilterDate
-		{
-			width: 80px;
-			margin: 4px 4px 0 4px;
-			text-align: left;
-		}
-		.abFilterRow input.abFilterNumber
-		{
-			width: 90px;
-			margin: 4px 4px 0 4px;
-			text-align: right;
-		}
-		.abFilterRow input.abFilterText
-		{
-			width: 123px;
-			margin: 4px 4px 0 10px;
-		}
-		.abFilterRow select
-		{
-			width: 140px;
-			margin: 4px 4px 0 10px;
-		}
-
-		.abFilterRow label
-		{
-			width: 30px;
-			display: inline-block;
-			margin: 0 0 0 10px;
-			text-align: right;
-			overflow: hidden;
-		}
-		.abFilterHead 
-		{
-		}
-		.abFilterCaption
-		{
-		}
-		.abFilterRow input.abFilterDate
-		{
-			width: 80px;
-			margin: 4px 4px 0 4px;
-			text-align: left;
-		}
-		.abFilterRow input.abFilterNumber
-		{
-			width: 90px;
-			margin: 4px 4px 0 4px;
-			text-align: right;
-		}
-		.abFilterRow input.abFilterText
-		{
-			width: 123px;
-			margin: 4px 4px 0 10px;
-		}
-		.abFilterRow select
-		{
-			width: 140px;
-			margin: 4px 4px 0 10px;
-		}
-
-		.abFilterRow label
-		{
-			width: 30px;
-			display: inline-block;
-			margin: 0 0 0 10px;
-			text-align: right;
-			overflow: hidden;
-		}
-
-				]]></Styles>
+		<JavascriptInHead><![CDATA[
+			jQuery(document).ready(function(){
+				jQuery("body").on("change","#abFilterEmailDripId", function(){
+					jQuery(this).closest("form").submit();
+				});
+			});
+		]]></JavascriptInHead>
+		<Styles></Styles>
 	</Addon>
 	<Addon name="Page Views Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
 		<Copy></Copy>
