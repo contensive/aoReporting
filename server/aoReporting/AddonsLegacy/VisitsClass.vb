@@ -1,9 +1,9 @@
 
 Imports Contensive.BaseClasses
-Imports Contensive.Reporting.Models
+Imports Contensive.ReportingVb.Models
 
 
-Namespace Contensive.Reporting
+Namespace Contensive.ReportingVb
     '
     Public Class VisitsClass
         Inherits AddonBaseClass

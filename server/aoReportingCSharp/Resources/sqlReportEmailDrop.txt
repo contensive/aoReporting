@@ -1,0 +1,11 @@
+﻿
+select d.id as dropId, d.name as dropName, e.id as emailId, e.name as emailName, d.DateAdded as dropDate
+,(select count(distinct memberid) from ccemaillog where ((logtype=1)or(logtype=6))and(EmailDropID=d.id)) as Sent
+,(select count(distinct memberid) from ccemaillog where (logtype=2)and(EmailDropID=d.id)) as Opened
+,(select count(distinct memberid) from ccemaillog where (logtype=3)and(EmailDropID=d.id)) as Clicked
+ from ccemaildrops d 
+ left join ccemail e on e.id=d.EmailID
+ where (d.dateadded < {dateTo})
+ and (d.dateadded > {dateFrom})
+ and (e.id is not null)
+ order by d.id desc

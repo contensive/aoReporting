@@ -1,7 +1,7 @@
 ﻿
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Reporting.Models
+Namespace Contensive.ReportingVb.Models
     Public Class viewingSummaryModel
         Inherits baseModel
         Implements ICloneable

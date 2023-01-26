@@ -1,9 +1,9 @@
 ﻿
 Imports Contensive.BaseClasses
-Imports Contensive.Reporting.Models
+Imports Contensive.ReportingVb.Models
 
 
-Namespace Contensive.Reporting.Controllers
+Namespace Contensive.ReportingVb.Controllers
     Public NotInheritable Class genericController
         Private Sub New()
         End Sub

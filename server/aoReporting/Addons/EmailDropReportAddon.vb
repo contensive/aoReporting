@@ -1,9 +1,9 @@
 
-Imports adminFramework
+Imports Contensive.Addons.PortalFramework
 Imports Contensive.BaseClasses
-Imports Contensive.Reporting.Controllers
+Imports Contensive.ReportingVb.Controllers
 
-Namespace Contensive.Reporting
+Namespace Contensive.ReportingVb
 
     '
     Public Class EmailDropReportAddon
@@ -19,7 +19,7 @@ Namespace Contensive.Reporting
                 Dim thisFormid As Integer = formIdDefault
                 ' -- the Refresh Query String orinally sent to the page
                 ' -- this query string will refresh the entire page
-                Dim frameRqs As String = CP.Doc.RefreshQueryString()
+                Dim frameRqs As String = CP.Doc.RefreshQueryString
                 ' Dim frameRqs As String = CP.Doc.GetText(rnFrameRqs)
                 ' -- dst form is the one to be presented next, can be forced if src form is missing
                 Dim dstFormId As Integer = CP.Doc.GetInteger("dstFormId")
@@ -84,10 +84,8 @@ Namespace Contensive.Reporting
                 Dim rqs As String = cp.Utils.ModifyQueryString(frameRqs, rnDstFormId, dstFormId.ToString())
                 '
                 ' -- initialize report
-                Dim report = New ReportListClass(cp) With {
+                Dim report = New ReportListClass() With {
                     .title = "Email Drop Report",
-                    .name = "Email Drop Report",
-                    .guid = "{B4B660A5-E9D9-4FEC-A6A6-AD4EB557DBF9}",
                     .refreshQueryString = rqs,
                     .addCsvDownloadCurrentPage = True,
                     .isOuterContainer = True

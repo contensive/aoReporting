@@ -1,8 +1,8 @@
 ﻿
-Imports adminFramework
+Imports Contensive.Addons.PortalFramework
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Reporting
+Namespace Contensive.ReportingVb
     Public Class EmailOpenedReportAddon
         Inherits AddonBaseClass
         '
@@ -16,7 +16,7 @@ Namespace Contensive.Reporting
                 Dim thisFormid As Integer = formIdDefault
                 ' -- the Refresh Query String orinally sent to the page
                 ' -- this query string will refresh the entire page
-                Dim frameRqs As String = CP.Doc.RefreshQueryString()
+                Dim frameRqs As String = CP.Doc.RefreshQueryString
                 ' Dim frameRqs As String = CP.Doc.GetText(rnFrameRqs)
                 ' -- dst form is the one to be presented next, can be forced if src form is missing
                 Dim dstFormId As Integer = CP.Doc.GetInteger("dstFormId")
@@ -83,10 +83,8 @@ Namespace Contensive.Reporting
                 Dim qs As String = ""
                 Dim qsBase As String = ""
                 '
-                Dim report = New ReportListClass(cp) With {
+                Dim report = New ReportListClass() With {
                     .title = "Email Opened Report",
-                    .name = "Email Opened Report",
-                    .guid = "{F4EE3D38-E0A9-4C93-9906-809F524B9690}",
                     .refreshQueryString = rqs,
                     .addCsvDownloadCurrentPage = True,
                     .isOuterContainer = True

@@ -2,7 +2,7 @@
 Imports System.Reflection
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Reporting.Models
+Namespace Contensive.ReportingVb.Models
     Public MustInherit Class baseModel
         '
         '====================================================================================================

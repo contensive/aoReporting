@@ -6,7 +6,7 @@ namespace Contensive.Reporting.Models {
     /// <summary>
     /// Housekeep this content
     /// </summary>
-    public static class VisitSummaryModel {
+    public class VisitSummaryModel : Contensive.Models.Db.VisitSummaryModel {
         //
         //====================================================================================================
         /// <summary>

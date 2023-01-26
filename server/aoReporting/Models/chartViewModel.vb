@@ -1,7 +1,7 @@
 ﻿
 Imports System.Text
 
-Namespace Contensive.Reporting.Models
+Namespace Contensive.ReportingVb.Models
     Public NotInheritable Class ChartViewModel
         '
         '====================================================================================================
