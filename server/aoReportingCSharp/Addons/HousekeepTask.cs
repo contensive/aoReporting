@@ -36,8 +36,6 @@ namespace Contensive.Reporting {
                 VisitSummaryModel.executeDailyTasks(cp, env);
                 ViewingSummaryModel.executeDailyTasks(cp, env);
                 cp.Site.SetProperty("housekeep, last run", DateTime.Now);
-
-
                 cp.Db.SQLTimeout = TimeoutSave;
                 return "";
             }

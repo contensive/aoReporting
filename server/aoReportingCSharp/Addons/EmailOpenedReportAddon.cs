@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
+﻿using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
-using Contensive.Addons.PortalFramework;
+using System;
 
 namespace Contensive.Reporting {
     public class EmailOpenedReportAddon : AddonBaseClass {
@@ -19,7 +8,6 @@ namespace Contensive.Reporting {
         // =====================================================================================
         // 
         public override object Execute(BaseClasses.CPBaseClass CP) {
-            string returnHtml = "";
             try {
                 DateTime rightNow = DateTime.Now;
                 // -- if report method includes multiple forms, this the form submitted
@@ -43,11 +31,11 @@ namespace Contensive.Reporting {
                     dstFormId = Constants.formIdDefault;
                 // 
                 // -- get the next form
-                returnHtml = getForm(CP, dstFormId, frameRqs, rightNow, emaildropid);
+                return getForm(CP, dstFormId, frameRqs, rightNow, emaildropid);
             } catch (Exception ex) {
                 CP.Site.ErrorReport(ex, "Exception in adminAccountsClass.execute()");
+                throw;
             }
-            return returnHtml;
         }
         // 
         // ====================================================================================================

@@ -116,6 +116,8 @@
         public const string buttonExportData = " Export Now ";
         public const string buttonAddItem = " Add Item ";
         public const string buttonRemoveFromAccount = "Remove From Account";
+        //
+        public const int  AdminFormQuickStats = 18;
         // 
         // -- if there are multiple forms to an addon, use these values to multiple between them
         public const int formIdDefault = 1;

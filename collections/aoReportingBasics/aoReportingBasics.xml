@@ -5,10 +5,30 @@
 	<Addon name="Reporting Basics Install" guid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
 		<DotNetClass><![CDATA[Contensive.Reporting.OnInstallClass]]></DotNetClass>
 	</Addon>
+	<Addon name="Current Activity Report" guid="{3BFA1A48-31BB-4D70-96A7-B06B53BBB183}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Reporting.CurrentActivityReportAddon]]></DotNetClass>
+		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
+	</Addon>
+	<Addon name="Daily Visits Report" guid="{D3D68B21-B861-4673-A4F8-8B11BB0032D9}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsReportAddon]]></DotNetClass>
+		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
+		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
+		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
+		<Styles><![CDATA[  
+			/*legacy styles8*/
+			.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
+			.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
+			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
+			.summaryCell{text-align:top;}
+			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
+  		]]></Styles>
+	</Addon>
 	<Addon name="Daily Visits Chart" guid="{AEA7D5D7-5105-4433-9728-41F021C47877}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
-		<BlockEditTools>Yes</BlockEditTools>
+		<BlockEditTools>no</BlockEditTools>
 		<Admin>yes</Admin>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
 		<Styles><![CDATA[  
@@ -262,11 +282,11 @@
 		]]></JavascriptInHead>
 		<Styles></Styles>
 	</Addon>
-	<Addon name="Page Views Chart" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
+	<Addon name="Page Views Report" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<ActiveXProgramID></ActiveXProgramID>
-		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsAddon]]></DotNetClass>
+		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsReportAddon]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 			Chart Height=400
 			Days to Display=365
