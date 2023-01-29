@@ -11,15 +11,14 @@ namespace Contensive.Reporting {
         // =====================================================================================
         public override object Execute(CPBaseClass CP) {
             try {
-                using (ApplicationModel ac = new ApplicationModel(CP, false)) {
-                    LayoutBuilderSimple asdf = new LayoutBuilderSimple {
-                        title = "Daily Visits Report",
-                        description = "",
-                        body = getChart(ac),
-                        isOuterContainer = true
-                    };
-                    return asdf.getHtml(ac.cp);
-                }
+                using ApplicationModel ac = new(CP, false);
+                LayoutBuilderSimple asdf = new() {
+                    title = "Daily Visits Report",
+                    description = "",
+                    body = getChart(ac),
+                    isOuterContainer = true
+                };
+                return asdf.getHtml(ac.cp);
             } catch (Exception ex) {
                 CP.Site.ErrorReport(ex);
                 throw;

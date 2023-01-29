@@ -15,18 +15,13 @@ namespace Contensive.Reporting {
         //====================================================================================================
         //
         public override object Execute(CPBaseClass cp) {
-            string result = null;
             try {
                 string sql = null;
                 string RowColor = null;
                 string Panel = null;
-                int VisitID = 0;
                 int VisitCount = 0;
                 double PageCount = 0;
-                StringBuilder Stream = new StringBuilder();
-
-
-
+                StringBuilder Stream = new();
                 //
                 // --- set column width
                 //
@@ -86,10 +81,12 @@ namespace Contensive.Reporting {
                 // ----- Visits currently online
                 //
                 {
+                    int personContentId = cp.Content.GetID("people");
+                    int visitContentId = cp.Content.GetID("visits");
                     Panel = "";
                     Stream.Append("<h2>Current Visits</h2>");
                     using (var csData = cp.CSNew()) {
-                        sql = "SELECT ccVisits.HTTP_REFERER as referer,ccVisits.remote_addr as Remote_Addr, ccVisits.LastVisitTime as LastVisitTime, ccVisits.PageVisits as PageVisits, ccMembers.Name as MemberName, ccVisits.ID as VisitID, ccMembers.ID as MemberID"
+                        sql = "SELECT ccVisits.HTTP_REFERER as referer,ccVisits.remote_addr as Remote_Addr, ccVisits.LastVisitTime as LastVisitTime, ccVisits.PageVisits as PageVisits, ccMembers.Name as MemberName, ccVisits.ID as visitID, ccMembers.ID as memberId"
                             + " FROM ccVisits LEFT JOIN ccMembers ON ccVisits.memberId = ccMembers.ID"
                             + " WHERE (((ccVisits.LastVisitTime)>" + cp.Db.EncodeSQLDate(DateTime.Now.AddHours(-1)) + "))"
                             + " ORDER BY ccVisits.LastVisitTime DESC;";
@@ -106,13 +103,14 @@ namespace Contensive.Reporting {
                             Panel += "</tr>";
                             RowColor = "ccPanelRowEven";
                             while (csData.OK()) {
-                                VisitID = csData.GetInteger("VisitID");
+                                int visitId = csData.GetInteger("VisitID");
+                                int personId = csData.GetInteger("memberId");
                                 Panel += "<tr class=\"" + RowColor + "\">";
-                                Panel += "<td align=\"left\">" + SpanClassAdminNormal + "<a target=\"_blank\" href=\"/" + cp.Utils.EncodeHTML("?" + rnAdminForm + "=" + 0 + "&rid=16&MemberID=" + csData.GetInteger("MemberID")) + "\">" + csData.GetText("MemberName") + "</A></span></td>";
+                                Panel += "<td align=\"left\">" + SpanClassAdminNormal + $"<a target=\"_blank\" href=\"?cid={personContentId}&af=4&id={personId}\">" + csData.GetText("MemberName") + "</A></span></td>";
                                 Panel += "<td align=\"left\">" + SpanClassAdminNormal + csData.GetText("Remote_Addr") + "</span></td>";
                                 Panel += "<td align=\"left\">" + SpanClassAdminNormal + csData.GetDate("LastVisitTime").ToString("") + "</span></td>";
-                                Panel += "<td align=\"right\">" + SpanClassAdminNormal + "<a target=\"_blank\" href=\"/" + "?" + rnAdminForm + "=" + 0 + "&rid=10&VisitID=" + VisitID + "\">" + csData.GetText("PageVisits") + "</A></span></td>";
-                                Panel += "<td align=\"right\">" + SpanClassAdminNormal + "<a target=\"_blank\" href=\"/" + "?" + rnAdminForm + "=" + 0 + "&rid=17&VisitID=" + VisitID + "\">" + VisitID + "</A></span></td>";
+                                Panel += "<td align=\"right\">" + SpanClassAdminNormal + $"<a target=\"_blank\" href=\"?addonguid=%7B0905279A-6EFB-4A10-96FE-90F243962F75%7D&visitid={visitId}\">{csData.GetText("PageVisits")}</A></span></td>";
+                                Panel += "<td align=\"right\">" + SpanClassAdminNormal + $"<a target=\"_blank\" href=\"?cid={visitContentId}&af=4&id={visitId}\">{visitId}</A></span></td>";
                                 Panel += "<td align=\"left\">" + SpanClassAdminNormal + "&nbsp;" + csData.GetText("referer") + "</span></td>";
                                 Panel += "</tr>";
                                 if (RowColor == "ccPanelRowEven") {
@@ -126,18 +124,15 @@ namespace Contensive.Reporting {
                         }
                         csData.Close();
                     }
-                    Stream.Append(getPanel(Panel, "ccPanel", "ccPanelShadow", "ccPanelHilite", "100%", 0));
+                    Stream.Append(getPanel(Panel, "ccPanel",  "100%", 0));
                 }
                 Stream.Append("</td></tr></table>");
-                //
-                result = cp.Html.Form(Stream.ToString());
-                //core.html.addTitle("Quick Stats", "Quick Stats");
                 //
                 // --- Start a form to make a refresh button
                 LayoutBuilderSimple layout = new() {
                     title = "Daily Visits Report",
                     description = "",
-                    body = result,
+                    body = cp.Html.Form(Stream.ToString()),
                     isOuterContainer = true,
                     includeBodyPadding = true,
                     includeBodyColor = true
@@ -148,7 +143,7 @@ namespace Contensive.Reporting {
                 //
                 // --- Indented part (Title Area plus page)
                 //
-                layout.title = "Real-Time Activity Report";
+                layout.title = "Current Activity Report";
                 return layout.getHtml(cp);
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
@@ -156,18 +151,9 @@ namespace Contensive.Reporting {
             }
         }
         //
-        public string getPanel(string content, string stylePanel, string styleHilite, string styleShadow, string width, int padding)
-            => getPanel(content, stylePanel, styleHilite, styleShadow, width, padding, 1);
-        public string getPanel(string content, string stylePanel, string styleHilite, string styleShadow, string width, int padding, int heightMin) {
-            string ContentPanelWidth = "";
-            string contentPanelWidthStyle = "";
-            if (false) { //if (width.isNumeric()) {
-                //ContentPanelWidth = (int.Parse(width) - 2).ToString();
-                //contentPanelWidthStyle = ContentPanelWidth + "px";
-            } else {
-                ContentPanelWidth = "100%";
-                contentPanelWidthStyle = ContentPanelWidth;
-            }
+        public string getPanel(string content, string stylePanel, string width, int padding) {
+            string ContentPanelWidth = "100%";
+            string contentPanelWidthStyle = ContentPanelWidth;
             //
             string s0 = ""
                 + "<td style=\"padding:" + padding + "px;vertical-align:top\" class=\"" + stylePanel + "\">"

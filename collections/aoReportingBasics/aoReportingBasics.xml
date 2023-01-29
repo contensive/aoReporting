@@ -10,8 +10,13 @@
 		<BlockEditTools>Yes</BlockEditTools>
 		<Admin>yes</Admin>
 	</Addon>
-	<Addon name="Daily Visits Report" guid="{D3D68B21-B861-4673-A4F8-8B11BB0032D9}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsReportAddon]]></DotNetClass>
+	<Addon name="Viewings Report" guid="{0905279A-6EFB-4A10-96FE-90F243962F75}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Reporting.ViewingsReportAddon]]></DotNetClass>
+		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
+	</Addon>
+	<Addon name="Daily Visits Chart Report" guid="{D3D68B21-B861-4673-A4F8-8B11BB0032D9}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartReportAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
 		<BlockEditTools>Yes</BlockEditTools>
 		<Admin>yes</Admin>
@@ -29,7 +34,7 @@
 		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
 		<BlockEditTools>no</BlockEditTools>
-		<Admin>yes</Admin>
+		<Admin>no</Admin>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
 		<Styles><![CDATA[  
 			/*legacy styles8*/

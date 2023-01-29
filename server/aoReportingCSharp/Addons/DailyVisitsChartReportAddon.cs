@@ -5,7 +5,7 @@ using System;
 
 namespace Contensive.Reporting {
     // 
-    public class DailyVisitsReportAddon : AddonBaseClass {
+    public class DailyVisitsChartReportAddon : AddonBaseClass {
         // 
         // =====================================================================================
         public override object Execute(CPBaseClass CP) {

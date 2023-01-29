@@ -51,8 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Addons\ViewingsReportAddon.cs" />
     <Compile Include="Addons\CurrentActivityReportAddon.cs" />
-    <Compile Include="Addons\DailyVisitsReportAddon.cs" />
+    <Compile Include="Addons\DailyVisitsChartReportAddon.cs" />
     <Compile Include="Addons\HousekeepTask.cs" />
     <Compile Include="Controllers\HousekeepController.cs" />
     <Compile Include="Models\HousekeepEnvironmentModel.cs" />
