@@ -48,7 +48,6 @@
 	<Addon name="Download Log Report" guid="{6B3D54CD-782A-4B47-903D-86CEDE4E50A5}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID></ActiveXProgramID>
 		<DotNetClass><![CDATA[Contensive.Reporting.LibraryFileDownloadReportAddon]]></DotNetClass>
 		<ArgumentList></ArgumentList>
 		<AsAjax>No</AsAjax>
@@ -290,7 +289,6 @@
 	<Addon name="Page Views Report" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
 		<Copy></Copy>
 		<CopyText></CopyText>
-		<ActiveXProgramID></ActiveXProgramID>
 		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsReportAddon]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 			Chart Height=400
@@ -381,6 +379,5 @@
 		<BlockEditTools>Yes</BlockEditTools>
 		<DotNetClass><![CDATA[Contensive.Reporting.HousekeepTask]]></DotNetClass>
 		<ProcessInterval>60</ProcessInterval>
-		<ActiveXProgramID></ActiveXProgramID>
     </Addon> 
 </Collection>
