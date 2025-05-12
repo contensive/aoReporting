@@ -1,4 +1,3 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
 using Contensive.Reporting.Controllers;
 using System;
@@ -86,20 +85,17 @@ namespace Contensive.Reporting {
                 string rqs = cp.Utils.ModifyQueryString(frameRqs, Constants.rnDstFormId, dstFormId.ToString());
                 // 
                 // -- initialize report
-                var report = new ReportListClass() {
-                    title = "Email Drop Report",
-                    refreshQueryString = rqs,
-                    addCsvDownloadCurrentPage = true,
-                    isOuterContainer = true
-                };
-                cp.Doc.AddHeadStyle(report.styleSheet);
+                var layout = cp.AdminUI.CreateLayoutBuilderList();
+                layout.title = "Email Drop Report";
+                layout.addCsvDownloadCurrentPage = true;
+                layout.isOuterContainer = true;
                 // 
                 // -- add buttons
-                report.addFormButton(Constants.buttonCancel);
-                report.addFormButton(Constants.ButtonRefresh);
+                layout.addFormButton(Constants.buttonCancel);
+                layout.addFormButton(Constants.ButtonRefresh);
                 // 
                 // -- add src view
-                report.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
+                layout.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
                 // 
                 // -- filterDateFrom
                 const string userPropertyFromDate = "ReportEmailDrop-filterFromDate";
@@ -146,47 +142,51 @@ namespace Contensive.Reporting {
                 else if (filterToDateString != "")
                     captionWithFilter += ", on or before " + filterToDateString;
                 captionWithFilter += ".";
-                report.description = captionWithFilter;
+                layout.description = captionWithFilter;
                 // 
-                report.columnCaption = "Row";
-                report.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
-                report.columnCellClass = "afwTextAlignCenter";
+                layout.columnCaption = "Row";
+                layout.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
+                layout.columnCellClass = "afwTextAlignCenter";
                 // 
-                report.addColumn();
-                report.columnCaption = "Drop Date";
-                report.columnCaptionClass = "afwWidth200px afwTextAlignLeft";
-                report.columnCellClass = "afwTextAlignLeft";
+                layout.addColumn();
+                layout.columnCaption = "Drop Date";
+                layout.columnCaptionClass = "afwWidth200px afwTextAlignLeft";
+                layout.columnCellClass = "afwTextAlignLeft";
                 // 
-                report.addColumn();
-                report.columnCaption = "Email";
-                report.columnCaptionClass = "afwTextAlignLeft";
-                report.columnCellClass = "afwTextAlignLeft";
+                layout.addColumn();
+                layout.columnCaption = "Email";
+                layout.columnCaptionClass = "afwTextAlignLeft";
+                layout.columnCellClass = "afwTextAlignLeft";
                 // 
-                report.addColumn();
-                report.columnCaption = "Sent";
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight";
-                report.columnCellClass = "afwTextAlignRight";
+                layout.addColumn();
+                layout.columnCaption = "Sent";
+                layout.columnCaptionClass = "afwWidth50px afwTextAlignRight";
+                layout.columnCellClass = "afwTextAlignRight";
                 // 
-                report.addColumn();
-                report.columnCaption = "Opened";
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight";
-                report.columnCellClass = "afwTextAlignRight";
+                layout.addColumn();
+                layout.columnCaption = "Opened";
+                layout.columnCaptionClass = "afwWidth50px afwTextAlignRight";
+                layout.columnCellClass = "afwTextAlignRight";
                 // 
-                report.addColumn();
-                report.columnCaption = "Clicked";
-                report.columnCaptionClass = "afwWidth50px afwTextAlignRight";
-                report.columnCellClass = "afwTextAlignRight";
+                layout.addColumn();
+                layout.columnCaption = "Clicked";
+                layout.columnCaptionClass = "afwWidth50px afwTextAlignRight";
+                layout.columnCellClass = "afwTextAlignRight";
                 // 
                 // -- run query and fill rows
-                string sql = Properties.Resources.sqlReportEmailDrop;
-                if ((filterFromDate == DateTime.MinValue))
-                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(new DateTime(1990, 1, 1)));
-                else
-                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(filterFromDate));
-                if ((filterToDate == DateTime.MinValue))
-                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(DateTime.Now.AddDays(1)));
-                else
-                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate));
+                string sql = @$"
+                    select d.id as dropId, d.name as dropName, e.id as emailId, e.name as emailName, d.DateAdded as dropDate
+                    ,(select count(distinct memberid) from ccemaillog where ((logtype=1)or(logtype=6))and(EmailDropID=d.id)) as Sent
+                    ,(select count(distinct memberid) from ccemaillog where (logtype=2)and(EmailDropID=d.id)) as Opened
+                    ,(select count(distinct memberid) from ccemaillog where (logtype=3)and(EmailDropID=d.id)) as Clicked
+                     from ccemaildrops d 
+                     left join ccemail e on e.id=d.EmailID
+                     where (1=1)
+                        {(filterToDate == DateTime.MinValue ? "" : $"and (d.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})")}  
+                        {(filterFromDate == DateTime.MinValue ? "" : $"and (d.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})")}  
+                        and (e.id is not null)
+                     order by 
+                        d.id desc";
                 using (CPCSBaseClass cs = cp.CSNew()) {
                     if ((cs.OpenSQL(sql))) {
                         int rowPtr = 1;
@@ -194,13 +194,13 @@ namespace Contensive.Reporting {
                             int emaildropid = cs.GetInteger("dropid");
                             string openedCount = cs.GetInteger("opened").Equals(0) ? "0" : "<a href=\"?addonguid=%7BF4EE3D38-E0A9-4C93-9906-809F524B9690%7D&emaildropid=" + emaildropid.ToString() + "\">" + cs.GetInteger("opened").ToString() + "</a>";
                             string clickedCount = cs.GetInteger("clicked").Equals(0) ? "0" : "<a href=\"?addonguid=%7B29271653-BDE3-4DC1-8058-D54E53F1D06B%7D&emaildropid=" + emaildropid.ToString() + "\">" + cs.GetInteger("clicked").ToString() + "</a>";
-                            report.addRow();
-                            report.setCell(rowPtr.ToString());
-                            report.setCell(cs.GetDate("dropDate").ToString());
-                            report.setCell(cs.GetText("emailName"));
-                            report.setCell(cs.GetInteger("sent").ToString());
-                            report.setCell(openedCount);
-                            report.setCell(clickedCount);
+                            layout.addRow();
+                            layout.setCell(rowPtr.ToString());
+                            layout.setCell(cs.GetDate("dropDate").ToString());
+                            layout.setCell(cs.GetText("emailName"));
+                            layout.setCell(cs.GetInteger("sent").ToString());
+                            layout.setCell(openedCount);
+                            layout.setCell(clickedCount);
                             rowPtr += 1;
                             cs.GoNext();
                         }
@@ -209,12 +209,12 @@ namespace Contensive.Reporting {
                 }
                 // 
                 // -- filters
-                report.htmlLeftOfTable = ""
+                layout.htmlLeftOfBody = ""
                      + "<h3 class=\"abFilterHead\">Filters</h3>"
                      + "<div class=\"abFilterRow\"><label for\"abFilterFromDate\">From</label>" + cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") + "<a href=\"#\" id=\"abFilterFromDateClear\">X</a></div>"
                      + "<div class=\"abFilterRow\"><label for\"abFilterToDate\">To</label>" + cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") + "<a href=\"#\" id=\"abFilterToDateClear\">X</a></div>"
                     + "";
-                result = cp.Html.div(report.getHtml(cp), "", "abReportEmailDrop");
+                result = cp.Html.div(layout.getHtml(), "", "abReportEmailDrop");
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
             }

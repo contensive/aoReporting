@@ -1,4 +1,3 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
 using Contensive.Reporting.Models;
 using System;
@@ -11,16 +10,15 @@ namespace Contensive.Reporting {
         public override object Execute(CPBaseClass CP) {
             try {
                 using (ApplicationModel ac = new(CP, false)) {
-                    LayoutBuilderSimple layout = new() {
-                        title = "Daily Visits Report",
-                        description = "",
-                        body = (new DailyVisitsChartAddon()).getChart(ac),
-                        isOuterContainer = true,
-                        includeBodyPadding = true,
-                        includeBodyColor = true
-                    };
+                    var layout = CP.AdminUI.CreateLayoutBuilder();
+                    layout.title = "Daily Visits Report";
+                    layout.description = "";
+                    layout.body = (new DailyVisitsChartAddon()).getChart(ac);
+                    layout.isOuterContainer = true;
+                    layout.includeBodyPadding = true;
+                    layout.includeBodyColor = true;
                     layout.addFormButton(Constants.ButtonRefresh);
-                    return layout.getHtml(ac.cp);
+                    return layout.getHtml();
                 }
             } catch (Exception ex) {
                 CP.Site.ErrorReport(ex);

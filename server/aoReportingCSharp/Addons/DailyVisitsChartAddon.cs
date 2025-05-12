@@ -1,4 +1,3 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
 using Contensive.Reporting.Models;
 using System;
@@ -11,14 +10,13 @@ namespace Contensive.Reporting {
         // =====================================================================================
         public override object Execute(CPBaseClass CP) {
             try {
-                using ApplicationModel ac = new(CP, false);
-                LayoutBuilderSimple asdf = new() {
-                    title = "Daily Visits Report",
-                    description = "",
-                    body = getChart(ac),
-                    isOuterContainer = true
-                };
-                return asdf.getHtml(ac.cp);
+                using ApplicationModel ac = new(CP, true);
+                var layout = CP.AdminUI.CreateLayoutBuilder();
+                layout.title = "Daily Visits Report";
+                layout.description = "";
+                layout.body = getChart(ac);
+                layout.isOuterContainer = true;
+                return layout.getHtml();
             } catch (Exception ex) {
                 CP.Site.ErrorReport(ex);
                 throw;

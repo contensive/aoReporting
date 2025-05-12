@@ -1,5 +1,4 @@
-﻿using Contensive.Addons.PortalFramework;
-using Contensive.BaseClasses;
+﻿using Contensive.BaseClasses;
 using System;
 
 namespace Contensive.Reporting {
@@ -76,58 +75,51 @@ namespace Contensive.Reporting {
         internal string getForm(CPBaseClass cp, int dstFormId, string frameRqs, DateTime rightNow, int emaildropid) {
             string result = "";
             try {
+                var layout = cp.AdminUI.CreateLayoutBuilderList();
+                layout.title = "Email Opened Report";
+                layout.addCsvDownloadCurrentPage = true;
+                layout.isOuterContainer = true;
+                //
+                layout.addFormButton(Constants.buttonCancel);
                 // 
-                string rqs = cp.Utils.ModifyQueryString(frameRqs, Constants.rnDstFormId, dstFormId.ToString());
-                string qsBase = "";
+                layout.columnCaption = "Row";
+                layout.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
+                layout.columnCellClass = "afwTextAlignCenter";
                 // 
-                var report = new ReportListClass() {
-                    title = "Email Opened Report",
-                    refreshQueryString = rqs,
-                    addCsvDownloadCurrentPage = true,
-                    isOuterContainer = true
-                };
-                report.addFormButton(Constants.buttonCancel);
+                layout.addColumn();
+                layout.columnCaption = "Email";
+                layout.columnCaptionClass = "afwWidth100px afwTextAlignLeft";
+                layout.columnCellClass = "afwTextAlignLeft";
                 // 
-                report.columnCaption = "Row";
-                report.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
-                report.columnCellClass = "afwTextAlignCenter";
-                // 
-                report.addColumn();
-                report.columnCaption = "Email";
-                report.columnCaptionClass = "afwWidth100px afwTextAlignLeft";
-                report.columnCellClass = "afwTextAlignLeft";
-                // 
-                report.addColumn();
-                report.columnCaption = "Opened By";
-                report.columnCaptionClass = "afwTextAlignLeft";
-                report.columnCellClass = "afwTextAlignLeft";
+                layout.addColumn();
+                layout.columnCaption = "Opened By";
+                layout.columnCaptionClass = "afwTextAlignLeft";
+                layout.columnCellClass = "afwTextAlignLeft";
                 // 
                 string sqlcriteria = emaildropid == 0 ? "" : " and l.EmailDropID=" + emaildropid + "";
                 string sql = $"select distinct m.name, m.email, d.name as dropName from ccEmailLog l left join ccMembers m on m.id=l.memberid left join ccemaildrops d on d.id=l.emailDropId where (logtype=2) and (m.name is not null) {sqlcriteria} order by m.name asc";
                 CPCSBaseClass cs = cp.CSNew();
                 cs.OpenSQL(sql);
 
-                qsBase = frameRqs;
                 int rowPtr = 1;
                 while ((cs.OK())) {
-                    report.addRow();
-                    report.setCell(rowPtr.ToString());
-                    report.setCell(cs.GetText("dropName"));
-                    report.setCell("Name: " + cs.GetText("name") + "<br>" + "Email: " + cs.GetText("email"));
+                    layout.addRow();
+                    layout.setCell(rowPtr.ToString());
+                    layout.setCell(cs.GetText("dropName"));
+                    layout.setCell("Name: " + cs.GetText("name") + "<br>" + "Email: " + cs.GetText("email"));
                     rowPtr += 1;
                     cs.GoNext();
                 }
                 cs.Close();
                 // 
                 // -- filters
-                report.htmlLeftOfTable = ""
+                layout.htmlLeftOfBody = ""
                      + "<h3 class=\"abFilterHead\">Filters</h3>"
                      + "<div class=\"abFilterRow\"><div class=\"form-group\"><label for\"abFilterEmailDropId\">Email Drop</label>" + cp.Html5.SelectContent("emailDropId", emaildropid, "Email Drops", "", "All Email Drops", "form-control", "abFilterEmailDripId") + "</div></div>"
                     + "";
-                report.description = "Emails opened from an email drop.";
-                result = report.getHtml(cp);
+                layout.description = "Emails opened from an email drop.";
+                result = layout.getHtml();
                 result = cp.Html.div(result, "", "abReportEmailDrop");
-                cp.Doc.AddHeadStyle(report.styleSheet);
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
             }

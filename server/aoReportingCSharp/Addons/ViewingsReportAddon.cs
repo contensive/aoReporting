@@ -1,6 +1,4 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
-using Microsoft.VisualBasic;
 using System;
 
 namespace Contensive.Reporting {
@@ -13,14 +11,14 @@ namespace Contensive.Reporting {
         // 
         public override object Execute(BaseClasses.CPBaseClass cp) {
             try {
-                ReportListClass layoutBuilder = new() {
-                    title = "Viewings Report",
-                    // 
-                    columnCaption = "Row",
-                    columnCaptionClass = "afwWidth20px afwTextAlignCenter",
-                    columnCellClass = "",
-                    isOuterContainer = true,
-                };
+                var layoutBuilder = cp.AdminUI.CreateLayoutBuilderList();
+                layoutBuilder.title = "Viewings Report";
+                layoutBuilder.addCsvDownloadCurrentPage = true;
+                layoutBuilder.isOuterContainer = true;
+                //
+                layoutBuilder.columnCaption = "Row";
+                layoutBuilder.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
+                layoutBuilder.columnCellClass = "afwTextAlignCenter";
                 // 
                 layoutBuilder.addColumn();
                 layoutBuilder.columnCaption = "<input type=\"checkbox\" id=\"abSelectAccountAllNone\">";
@@ -112,7 +110,7 @@ namespace Contensive.Reporting {
                     }
                 }
                 // 
-                layoutBuilder.htmlLeftOfTable = ""
+                layoutBuilder.htmlLeftOfBody = ""
                     + "<h3 class=\"abFilterHead\">Filters</h3>"
                     + "<h4 class=\"abFilterCaption\">VisitId</h3>"
                     + "<div class=\"abFilterRow\">" + cp.Html.InputText("visitid", visitId.ToString(), 8, "abFilterText", "abFilterInvoice") + "<a href=\"#\" id=\"abFilterInvoiceClear\">X</a></div>"
@@ -127,7 +125,7 @@ namespace Contensive.Reporting {
                 cp.Doc.AddHeadJavascript("document.addEventListener(\"DOMContentLoaded\", function(event) {" + jqueryAddButtonEvent + "});");
                 cp.Doc.AddHeadStyle(" .abAccountListAlertCustom { background-color: " + cp.Site.GetText("abActivatedAlertsBackgroundColor", "#ffff00") + " !important; color: " + cp.Site.GetText("abActivatedAlertsFontColor", "#000000") + " !important; } ");
                 // 
-                return layoutBuilder.getHtml(cp);
+                return layoutBuilder.getHtml();
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
                 throw;

@@ -150,8 +150,8 @@ namespace Contensive.Reporting.Models {
                 // 
                 int Ptr = 0;
                 foreach (var visitSummary in visitSummaryList) {
-                    double DateNumber = Conversion.Int(visitSummary.dateNumber + 0.5);
-                    double TimeNumber = Conversion.Int(visitSummary.timeNumber + 0.5);
+                    double DateNumber = visitSummary.dateNumber;
+                    double TimeNumber = visitSummary.timeNumber;
                     double PlotValue = visitSummary.pagesViewed;
                     if (isVisitData)
                         PlotValue = visitSummary.visits;

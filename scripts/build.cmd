@@ -1,60 +1,72 @@
+rem echo off
 
-@echo off
-
-rem 
 rem Must be run from the projects git\project\scripts folder - everything is relative
-rem run >build [deploymentNumber]
-rem deploymentNumber is YYMMDD.build-number, like 190824.5
-rem
-rem Setup deployment folder
+rem run >build [versionNumber]
+rem versionNumber is YY.MM.DD.build-number, like 20.5.8.1
 rem
 
-set majorVersion=5
-set minorVersion=1
+c:
+cd \Git\aoReportingBasics\scripts
+
+set solutionName=aoReporting
 set collectionName=aoReportingBasics
 set collectionPath=..\collections\aoReportingBasics\
-set solutionName=aoReporting.sln
 set binPath=..\server\aoReportingCSharp\bin\debug\
+set deploymentFolder=C:\Deployments\aoReportingBasics\Dev\
 set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
-set deploymentFolderRoot=C:\Deployments\aoReportingBasics\Dev\
+set NuGetLocalPackagesFolder=C:\NuGetLocalPackages\
 
-set deploymentNumber=%1
+
 set year=%date:~12,4%
 set month=%date:~4,2%
+if %month% GEQ 10 goto monthOk
+set month=%date:~5,1%
+:monthOk
 set day=%date:~7,2%
-
-rem
-rem if deployment number not entered, set it to date.1
-rem
-IF [%deploymentNumber%] == [] (
-	echo No deployment folder provided on the command line, use current date
-	set deploymentTimeStamp=%year%%month%%day%
-)
+if %day% GEQ 10 goto dayOk
+set day=%date:~8,1%
+:dayOk
+set versionMajor=%year%
+set versionMinor=%month%
+set versionBuild=%day%
+set versionRevision=1
 rem
 rem if deployment folder exists, delete it and make directory
 rem
-
-set suffix=1
 :tryagain
-set deploymentNumber=%deploymentTimeStamp%.%suffix%
-if not exist "%deploymentFolderRoot%%deploymentNumber%" goto :makefolder
-set /a suffix=%suffix%+1
+set versionNumber=%versionMajor%.%versionMinor%.%versionBuild%.%versionRevision%
+if not exist "%deploymentFolder%%versionNumber%" goto :makefolder
+set /a versionRevision=%versionRevision%+1
 goto tryagain
 :makefolder
-md "%deploymentFolderRoot%%deploymentNumber%"
+md "%deploymentFolder%%versionNumber%"
+
+ 
+
+rem ==============================================================
+rem
+
+del %collectionPath%\*.dll
+del %collectionPath%\%collectionName%.zip
+
+ 
 
 rem ==============================================================
 rem
 echo build 
 rem
 cd ..\server
-"%msbuildLocation%msbuild.exe" %solutionName%
+
+dotnet build aoReportingCSharp/aoReporting.csproj --configuration Debug  /property:Version=%versionNumber% /property:AssemblyVersion=%versionNumber% /property:FileVersion=%versionNumber%
+:: "%msbuildLocation%msbuild.exe" %solutionName%
 if errorlevel 1 (
    echo failure building
    pause
    exit /b %errorlevel%
 )
 cd ..\scripts
+
+
 
 rem ==============================================================
 rem
@@ -73,5 +85,7 @@ c:
 cd %collectionPath%
 del "%collectionName%.zip" /Q
 "c:\program files\7-zip\7z.exe" a "%collectionName%.zip"
-xcopy "%collectionName%.zip" "%deploymentFolderRoot%%deploymentNumber%" /Y
+xcopy "%collectionName%.zip" "%deploymentFolder%%versionNumber%" /Y
 cd ..\..\scripts
+
+

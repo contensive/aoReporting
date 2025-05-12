@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{39F4B572-0757-41D1-89FE-B2DA9CB3D291}</ProjectGuid>
+    <ProjectGuid>{8BD03419-CB0F-0E20-0BA6-78A4FE24E631}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>
     </RootNamespace>
@@ -26,28 +26,28 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>aoReportingVb.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\aoReportingVb.xml</DocumentationFile>
     <NoWarn>42353,42354,42355</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>aoReportingVb.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\aoReportingVb.xml</DocumentationFile>
     <NoWarn>42353,42354,42355</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -68,6 +68,7 @@
     <AssemblyOriginatorKeyFile>key1.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web.Extensions" />
@@ -82,50 +83,29 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddonsLegacy\DurationVisitClass.vb" />
-    <Compile Include="constants.vb" />
-    <Compile Include="Models\ApplicationModel.vb" />
-    <Compile Include="Models\viewingSummaryModel.vb" />
-    <Compile Include="Addons\EmailDropReportAddon.vb" />
-    <Compile Include="Addons\EmailClickedReportAddon.vb" />
-    <Compile Include="Addons\EmailOpenedReportAddon.vb" />
-    <Compile Include="AddonsLegacy\xDailyViewingClass.vb" />
-    <Compile Include="Addons\DailyVisitsChartAddon.vb" />
-    <Compile Include="AddonsLegacy\DailyViewingsChartClass.vb" />
-    <Compile Include="AddonsLegacy\MonthlyViewingsChartClass.vb" />
-    <Compile Include="AddonsLegacy\MonthlyVisitChartClass.vb" />
-    <Compile Include="Addons\PageViewsAddon.vb" />
-    <Compile Include="AddonsLegacy\VisitsClass.vb" />
-    <Compile Include="AddonsLegacy\WeeklyClass.vb" />
-    <Compile Include="AddonsLegacy\WeeklyViewingsClass.vb" />
-    <Compile Include="Models\chartViewModel.vb" />
-    <Compile Include="Models\personModel.vb" />
-    <Compile Include="Addons\LibraryFileDownloadReportAddon.vb" />
-    <Compile Include="AddonsLegacy\OnInstallClass.vb" />
-    <Compile Include="Addons\_SampleAddon.vb" />
-    <Compile Include="Models\visitSummaryModel.vb" />
-    <Compile Include="My Project\AssemblyInfo.vb" />
-    <Compile Include="My Project\Application.Designer.vb">
+    <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
+    <Compile Include="constants.cs" />
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <Compile Include="My Project\Application.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
+    <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="My Project\Settings.Designer.vb">
+    <Compile Include="My Project\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Addons\_sampleRemote.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -135,29 +115,24 @@
     <None Include="key1.snk" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+      <LastGenOutput>Application.Designer.cs</LastGenOutput>
     </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\genericController.vb" />
+    <Compile Include="Controllers\genericController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\_blankModel.vb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\baseModel.vb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\modelData.txt" />
     <Content Include="Resources\sqlReportEmailDrop.txt" />
     <Content Include="Resources\sqlReportLibraryFileDownload.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Addons\" />
+    <Folder Include="Models\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +143,7 @@
       <Version>25.5.12.4</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

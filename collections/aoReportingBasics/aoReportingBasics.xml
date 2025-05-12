@@ -34,7 +34,7 @@
 		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
 		<BlockEditTools>no</BlockEditTools>
-		<Admin>no</Admin>
+		<Admin>yes</Admin>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
 		<Styles><![CDATA[  
 			/*legacy styles8*/
@@ -188,6 +188,7 @@
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
 	<Addon name="Email Drop Report" guid="{A10B5F49-3147-4E32-9DCF-76D65CCFF9F1}" type="Report">
+		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailDropReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
@@ -259,6 +260,7 @@
 		]]></Styles>
 	</Addon>
 	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}" type="Report">
+		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailOpenedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
@@ -273,6 +275,7 @@
 		<Styles></Styles>
 	</Addon>
 	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}" type="Report">
+		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailClickedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
@@ -287,6 +290,7 @@
 		<Styles></Styles>
 	</Addon>
 	<Addon name="Page Views Report" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
+		<Admin>yes</Admin>
 		<Copy></Copy>
 		<CopyText></CopyText>
 		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsReportAddon]]></DotNetClass>
@@ -314,7 +318,6 @@
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>
-		<Admin>Yes</Admin>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
@@ -371,7 +374,7 @@
 	</Addon>
 	<Addon name="Reporting Housekeep" guid="{21F6F6F2-A1CA-4F0E-870B-5A51FA4AE9CA}" type="Add-on">
 		<Category></Category>
-		<Admin>No</Admin>
+		<Admin>yes</Admin>
 		<Content>No</Content>
 		<Template>No</Template>
 		<Email>No</Email>

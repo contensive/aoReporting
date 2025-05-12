@@ -1,4 +1,3 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
 using Contensive.Reporting.Models;
 using System;
@@ -60,17 +59,20 @@ namespace Contensive.Reporting {
                         // legacy code uses isvisitdata=false
                         body = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, false, Width, Height, (durationHours == 1));
                     }
-                    LayoutBuilderSimple layout = new() {
-                        title = "Page Views Report",
-                        description = "",
-                        body = body,
-                        isOuterContainer = true,
-                        includeBodyPadding = true,
-                        includeBodyColor = true,
-                        htmlLeftOfTable = ""
-                    };
+                    //
+                    var layout = CP.AdminUI.CreateLayoutBuilder();
+                    layout.title = "Page Views Report";
+
+                    layout.description = "";
+                    layout.body = body;
+                    layout.isOuterContainer = true;
+                    layout.includeBodyPadding = true;
+                    layout.includeBodyColor = true;
+                    htmlLeftOfTable = "";
+                    //
                     layout.addFormButton(Constants.ButtonRefresh);
-                    return layout.getHtml(ac.cp);
+                    //
+                    return layout.getHtml();
                 }
             } catch (Exception ex) {
                 CP.Site.ErrorReport(ex);

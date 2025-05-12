@@ -1,7 +1,7 @@
 
 rem all paths are relative to the git scripts folder
 
-set appName=menucrm0210
+set appName=veronica
 
 call build.cmd
 

@@ -1,4 +1,3 @@
-using Contensive.Addons.PortalFramework;
 using Contensive.BaseClasses;
 using Contensive.Reporting.Controllers;
 using System;
@@ -87,15 +86,14 @@ namespace Contensive.Reporting {
                 string rqs = cp.Utils.ModifyQueryString(frameRqs, Constants.rnDstFormId, dstFormId.ToString());
                 string qsBase = "";
                 // 
-                var report = new ReportListClass() {
-                    title = "Library File Download Report",
-                    refreshQueryString = rqs,
-                    addCsvDownloadCurrentPage = true,
-                    isOuterContainer = true
-                };
-                report.addFormButton(Constants.buttonCancel);
-                report.addFormButton(Constants.ButtonRefresh);
-                report.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
+                var layout = cp.AdminUI.CreateLayoutBuilderList();
+                layout.title = "Library File Download Report";
+                layout.addCsvDownloadCurrentPage = true;
+                layout.isOuterContainer = true;
+
+                layout.addFormButton(Constants.buttonCancel);
+                layout.addFormButton(Constants.ButtonRefresh);
+                layout.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
                 // 
                 // -- filterDateFrom
                 const string userPropertyFromDate = "ReportLibraryFileDownloadLog-filterFromDate";
@@ -144,21 +142,31 @@ namespace Contensive.Reporting {
                 // 
                 captionWithFilter += ". This report includes links created with the text editor, or created manually with /downloadLibraryFile?download={guid}. ";
                 // 
-                report.columnCaption = "Row";
-                report.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
-                report.columnCellClass = "afwTextAlignCenter";
+                layout.columnCaption = "Row";
+                layout.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
+                layout.columnCellClass = "afwTextAlignCenter";
                 // 
-                report.addColumn();
-                report.columnCaption = "Count";
-                report.columnCaptionClass = "afwWidth100px afwTextAlignRight";
-                report.columnCellClass = "afwTextAlignRight";
+                layout.addColumn();
+                layout.columnCaption = "Count";
+                layout.columnCaptionClass = "afwWidth100px afwTextAlignRight";
+                layout.columnCellClass = "afwTextAlignRight";
                 // 
-                report.addColumn();
-                report.columnCaption = "Library File";
-                report.columnCaptionClass = "afwTextAlignLeft";
-                report.columnCellClass = "afwTextAlignLeft";
+                layout.addColumn();
+                layout.columnCaption = "Library File";
+                layout.columnCaptionClass = "afwTextAlignLeft";
+                layout.columnCellClass = "afwTextAlignLeft";
                 // 
-                string sql = Properties.Resources.sqlReportLibraryFileDownload;
+                string sql = $@"
+                    select f.name, count(*) as cnt
+                    from 
+                        cclibrarydownloadlog l 
+                        left join cclibraryfiles f on f.id=l.fileId
+                    where (1=1)
+                     where (1=1)
+                        {(filterToDate == DateTime.MinValue ? "" : $"and (l.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})")}  
+                        {(filterFromDate == DateTime.MinValue ? "" : $"and (l.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})")} 
+                    group by f.id, f.name
+                    order by cnt desc";
                 if ((filterFromDate == DateTime.MinValue))
                     sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(new DateTime(1990, 1, 1)));
                 else
@@ -174,22 +182,21 @@ namespace Contensive.Reporting {
                 // qsBase = cp.Utils.ModifyQueryString(qsBase, rnDstFormId, formIdAccountDetails.ToString())
                 int rowPtr = 1;
                 while ((cs.OK())) {
-                    report.addRow();
-                    report.setCell(rowPtr.ToString());
-                    report.setCell(cs.GetInteger("cnt").ToString());
-                    report.setCell(cs.GetText("name"));
+                    layout.addRow();
+                    layout.setCell(rowPtr.ToString());
+                    layout.setCell(cs.GetInteger("cnt").ToString());
+                    layout.setCell(cs.GetText("name"));
                     rowPtr += 1;
                     cs.GoNext();
                 }
-                report.htmlLeftOfTable = ""
+                layout.htmlLeftOfBody = ""
                      + "<h3 class=\"abFilterHead\">Filters</h3>"
                      + "<div class=\"abFilterRow\"><label for\"abFilterFromDate\">From</label>" + cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") + "<a href=\"#\" id=\"abFilterFromDateClear\">X</a></div>"
                      + "<div class=\"abFilterRow\"><label for\"abFilterToDate\">To</label>" + cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") + "<a href=\"#\" id=\"abFilterToDateClear\">X</a></div>"
                     + "";
-                report.description = captionWithFilter;
-                result = report.getHtml(cp);
+                layout.description = captionWithFilter;
+                result = layout.getHtml();
                 result = cp.Html.div(result, "", "abReportFileDownload");
-                cp.Doc.AddHeadStyle(report.styleSheet);
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
             }

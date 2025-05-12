@@ -1,9 +1,7 @@
 
+using Contensive.BaseClasses;
 using System;
 using System.Text;
-using Contensive.Addons.PortalFramework;
-using Contensive.BaseClasses;
-using Contensive.Reporting;
 
 namespace Contensive.Reporting {
     public class CurrentActivityReportAddon : AddonBaseClass {
@@ -124,19 +122,18 @@ namespace Contensive.Reporting {
                         }
                         csData.Close();
                     }
-                    Stream.Append(getPanel(Panel, "ccPanel",  "100%", 0));
+                    Stream.Append(getPanel(Panel, "ccPanel", "100%", 0));
                 }
                 Stream.Append("</td></tr></table>");
                 //
                 // --- Start a form to make a refresh button
-                LayoutBuilderSimple layout = new() {
-                    title = "Daily Visits Report",
-                    description = "",
-                    body = cp.Html.Form(Stream.ToString()),
-                    isOuterContainer = true,
-                    includeBodyPadding = true,
-                    includeBodyColor = true
-                };
+                var layout = cp.AdminUI.CreateLayoutBuilder();
+                layout.title = "Daily Visits Report";
+                layout.description = "";
+                layout.body = cp.Html.Form(Stream.ToString());
+                layout.isOuterContainer = true;
+                layout.includeBodyPadding = true;
+                layout.includeBodyColor = true;
                 layout.addFormButton(Constants.buttonCancel);
                 layout.addFormButton(Constants.ButtonRefresh);
                 layout.addFormHidden("asf", Constants.AdminFormQuickStats);
@@ -144,7 +141,7 @@ namespace Contensive.Reporting {
                 // --- Indented part (Title Area plus page)
                 //
                 layout.title = "Current Activity Report";
-                return layout.getHtml(cp);
+                return layout.getHtml();
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);
                 throw;

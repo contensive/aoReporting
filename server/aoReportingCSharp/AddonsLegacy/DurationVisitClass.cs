@@ -36,7 +36,7 @@ namespace Contensive.Reporting {
                     string cacheName = "DurationVisit-" + Width + "-" + Height + "-" + DivName + "-" + System.Convert.ToString(AllowHourly) + "-" + intRate + "-" + Duration;
                     string cacheValue = ac.cp.Cache.GetText(cacheName);
                     if ((string.IsNullOrEmpty(cacheValue))) {
-                        if (Information.IsDate(DateStart) & Information.IsDate(DateEnd)) {
+                        if (DateStart > DateTime.MinValue && DateEnd > DateTime.MinValue) {
                             int intDateStart = CP.Utils.EncodeInteger(DateStart.ToOADate());
                             int intDateEnd = CP.Utils.EncodeInteger(DateEnd.ToOADate());
                             string criteria = "(TimeDuration=" + intRate + ") AND (DateNumber>=" + intDateStart + ") AND (DateNumber<=" + intDateEnd + ")";
