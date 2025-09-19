@@ -5,11 +5,19 @@
 	<Addon name="Reporting Basics Install" guid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
 		<DotNetClass><![CDATA[Contensive.Reporting.OnInstallClass]]></DotNetClass>
 	</Addon>
+	<Addon name="Users Online Report" guid="{A5439430-ED28-4D72-A9ED-50FB36145955}" type="Report">
+		<DotNetClass><![CDATA[Contensive.Reporting.UsersOnlineReportAddon]]></DotNetClass>
+		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
+		<AliasList>Current Activity Report</AliasList>
+	</Addon>
+	<!-- 
 	<Addon name="Current Activity Report" guid="{3BFA1A48-31BB-4D70-96A7-B06B53BBB183}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.CurrentActivityReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
 		<Admin>yes</Admin>
 	</Addon>
+	-->
 	<Addon name="Viewings Report" guid="{0905279A-6EFB-4A10-96FE-90F243962F75}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.ViewingsReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>

@@ -10,7 +10,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Contensive.Reporting.Models;
-using Microsoft.VisualBasic;
+ using Microsoft.VisualBasic;
 
 namespace Contensive.Reporting.Models {
     public sealed class ChartViewModel {

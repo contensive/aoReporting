@@ -11,7 +11,7 @@ cd \Git\aoReportingBasics\scripts
 set solutionName=aoReporting
 set collectionName=aoReportingBasics
 set collectionPath=..\collections\aoReportingBasics\
-set binPath=..\server\aoReportingCSharp\bin\debug\
+set binPath=..\server\aoReportingCSharp\bin\Debug\net472\
 set deploymentFolder=C:\Deployments\aoReportingBasics\Dev\
 set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
 set NuGetLocalPackagesFolder=C:\NuGetLocalPackages\
