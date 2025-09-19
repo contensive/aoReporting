@@ -135,7 +135,7 @@ namespace Contensive.Reporting {
                 //
                 //
                 var layout = cp.AdminUI.CreateLayoutBuilder();
-                layout.title = "Users Online report";
+                layout.title = "Users Online Report";
                 layout.description = "";
                 layout.body = cp.Html5.Form(body.ToString());
                 ////
