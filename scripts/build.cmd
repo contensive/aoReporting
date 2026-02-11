@@ -11,7 +11,7 @@ cd \Git\aoReportingBasics\scripts
 set solutionName=aoReporting
 set collectionName=aoReportingBasics
 set collectionPath=..\collections\aoReportingBasics\
-set binPath=..\server\aoReportingCSharp\bin\Debug\net472\
+set binPath=..\server\aoReportingCSharp\bin\Debug\net48\
 set deploymentFolder=C:\Deployments\aoReportingBasics\Dev\
 set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
 set NuGetLocalPackagesFolder=C:\NuGetLocalPackages\
@@ -88,4 +88,4 @@ del "%collectionName%.zip" /Q
 xcopy "%collectionName%.zip" "%deploymentFolder%%versionNumber%" /Y
 cd ..\..\scripts
 
-
+pause

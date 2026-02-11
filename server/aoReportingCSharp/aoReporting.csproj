@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net472</TargetFramework>
+		<TargetFramework>net48</TargetFramework>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<RootNamespace></RootNamespace>
 		<SignAssembly>true</SignAssembly>
@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>AccountBilling</AssemblyName>
+		<AssemblyName>Reporting</AssemblyName>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -24,8 +24,8 @@
 		<NoWarn>1701;1702;1573;1591</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Contensive.CPBaseClass" Version="25.5.12.4" />
-	  <PackageReference Include="Contensive.DbModels" Version="25.5.12.4" />
+	  <PackageReference Include="Contensive.CPBaseClass" Version="25.10.4.2" />
+	  <PackageReference Include="Contensive.DbModels" Version="25.10.4.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Resources.Designer.cs">
