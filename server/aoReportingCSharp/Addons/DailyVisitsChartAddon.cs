@@ -12,7 +12,7 @@ namespace Contensive.Reporting {
             try {
                 using ApplicationModel ac = new(CP, true);
                 var layout = CP.AdminUI.CreateLayoutBuilder();
-                layout.title = "Daily Visits Report";
+                layout.title = "Daily Visits Chart";
                 layout.description = "";
                 layout.body = getChart(ac);
                 layout.isOuterContainer = true;

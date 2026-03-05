@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scripts/build.cmd:*)",
+      "Bash(scripts/build-veronica.cmd)"
+    ]
+  }
+}

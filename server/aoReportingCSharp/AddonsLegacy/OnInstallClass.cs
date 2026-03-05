@@ -24,7 +24,21 @@ namespace Contensive.Reporting {
                     // 
                     // -- delete the old harcoded email drop report
                     CP.Db.ExecuteNonQuery("delete from ccmenuentries where linkpage='?af=12&rid=28'");
-                    // 
+                    //
+                    // -- delete the old Current Activity Report addon
+                    using (CPCSBaseClass cs = CP.CSNew()) {
+                        if (cs.Open("add-ons", "name='Current Activity Report'")) {
+                            cs.Delete();
+                        }
+                    }
+                    //
+                    // -- delete the old Daily Visits Chart Report addon
+                    using (CPCSBaseClass cs = CP.CSNew()) {
+                        if (cs.Open("add-ons", "name='Daily Visits Chart Report'")) {
+                            cs.Delete();
+                        }
+                    }
+                    //
                     // -- reset the EmailDropReport
                     using (CPCSBaseClass cs = CP.CSNew()) {
                         int reportId = 0;

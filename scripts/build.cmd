@@ -6,13 +6,13 @@ rem versionNumber is YY.MM.DD.build-number, like 20.5.8.1
 rem
 
 c:
-cd \Git\aoReportingBasics\scripts
+cd \Git\aoReporting\scripts
 
 set solutionName=aoReporting
-set collectionName=aoReportingBasics
-set collectionPath=..\collections\aoReportingBasics\
+set collectionName=aoReporting
+set collectionPath=..\collections\aoReporting\
 set binPath=..\server\aoReportingCSharp\bin\Debug\net48\
-set deploymentFolder=C:\Deployments\aoReportingBasics\Dev\
+set deploymentFolder=C:\Deployments\aoReporting\Dev\
 set msbuildLocation=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
 set NuGetLocalPackagesFolder=C:\NuGetLocalPackages\
 
