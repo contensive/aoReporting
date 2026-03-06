@@ -88,4 +88,4 @@ del "%collectionName%.zip" /Q
 xcopy "%collectionName%.zip" "%deploymentFolder%%versionNumber%" /Y
 cd ..\..\scripts
 
-pause
+rem pause

@@ -1,5 +1,4 @@
 using Contensive.BaseClasses;
-using Contensive.Reporting.Controllers;
 using System;
 
 namespace Contensive.Reporting {
@@ -95,51 +94,28 @@ namespace Contensive.Reporting {
                 layout.addFormButton(Constants.ButtonRefresh);
                 layout.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
                 // 
-                // -- filterDateFrom
-                const string userPropertyFromDate = "ReportLibraryFileDownloadLog-filterFromDate";
-                DateTime filterFromDate;
-                string filterFromDateString;
-                string filterFromDateStringTest = cp.Doc.GetText("filterFromDate");
-                string userFilterFromDateString = cp.User.GetText(userPropertyFromDate);
-                if ((!string.IsNullOrEmpty(filterFromDateStringTest)))
-                    filterFromDate = GenericController.encodeMinDate(cp.Doc.GetDate("filterFromDate"));
-                else if ((!string.IsNullOrEmpty(userFilterFromDateString)))
-                    filterFromDate = GenericController.encodeMinDate(cp.Utils.EncodeDate(userFilterFromDateString));
-                else
-                    filterFromDate = DateTime.Today.AddDays(-30);
-                cp.User.SetProperty(userPropertyFromDate, filterFromDate.ToString());
-                if (filterFromDate == DateTime.MinValue)
-                    filterFromDateString = "";
-                else
-                    filterFromDateString = filterFromDate.ToShortDateString();
-                // 
-                // -- filterDateTo
-                const string userPropertyToDate = "ReportLibraryFileDownloadLog-filterToDate";
-                DateTime filterToDate;
-                string filterToDateString;
-                string filterToDateStringTest = cp.Doc.GetText("filterToDate");
-                string userFilterToDateString = cp.User.GetText(userPropertyToDate);
-                if ((!string.IsNullOrEmpty(filterToDateStringTest)))
-                    filterToDate = GenericController.encodeMinDate(cp.Doc.GetDate("filterToDate"));
-                else if ((!string.IsNullOrEmpty(userFilterToDateString)))
-                    filterToDate = GenericController.encodeMinDate(cp.User.GetDate("abFilterTopBuyerToDate"));
-                else
-                    filterToDate = DateTime.Today.AddDays(-30);
-                cp.User.SetProperty(userPropertyToDate, filterToDate.ToString());
-                if (filterToDate == DateTime.MinValue)
-                    filterToDateString = "";
-                else
-                    filterToDateString = filterToDate.ToShortDateString();
-                // 
+                // -- read filter values
+                const string viewName = "LibraryFileDownloadReport";
+                DateTime? filterFromDateNullable = layout.getFilterDate("filterFromDate", viewName);
+                DateTime? filterToDateNullable = layout.getFilterDate("filterToDate", viewName);
+                //
+                // -- default to last 30 days if no filter values
+                DateTime filterFromDate = filterFromDateNullable ?? DateTime.Today.AddDays(-30);
+                DateTime filterToDate = filterToDateNullable ?? DateTime.Today;
+                //
+                // -- add filter UI
+                layout.addFilterDateInput("From", "filterFromDate", filterFromDate);
+                layout.addFilterDateInput("To", "filterToDate", filterToDate);
+                //
                 // -- create caption with filter text
                 string captionWithFilter = "Library File Downloads";
-                if (filterFromDateString != "" & filterToDateString != "")
-                    captionWithFilter += ", between " + filterFromDateString + " and " + filterToDateString + " inclusive";
-                else if (filterFromDateString != "")
-                    captionWithFilter += ", on or after " + filterFromDateString;
-                else if (filterToDateString != "")
-                    captionWithFilter += ", on or before " + filterToDateString;
-                // 
+                if (filterFromDateNullable.HasValue && filterToDateNullable.HasValue)
+                    captionWithFilter += $", between {filterFromDate.ToShortDateString()} and {filterToDate.ToShortDateString()} inclusive";
+                else if (filterFromDateNullable.HasValue)
+                    captionWithFilter += $", on or after {filterFromDate.ToShortDateString()}";
+                else if (filterToDateNullable.HasValue)
+                    captionWithFilter += $", on or before {filterToDate.ToShortDateString()}";
+                //
                 captionWithFilter += ". This report includes links created with the text editor, or created manually with /downloadLibraryFile?download={guid}. ";
                 // 
                 layout.columnCaption = "Row";
@@ -158,23 +134,14 @@ namespace Contensive.Reporting {
                 // 
                 string sql = $@"
                     select f.name, count(*) as cnt
-                    from 
-                        cclibrarydownloadlog l 
+                    from
+                        cclibrarydownloadlog l
                         left join cclibraryfiles f on f.id=l.fileId
                     where (1=1)
-                     where (1=1)
-                        {(filterToDate == DateTime.MinValue ? "" : $"and (l.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})")}  
-                        {(filterFromDate == DateTime.MinValue ? "" : $"and (l.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})")} 
+                        and (l.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})
+                        and (l.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})
                     group by f.id, f.name
                     order by cnt desc";
-                if ((filterFromDate == DateTime.MinValue))
-                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(new DateTime(1990, 1, 1)));
-                else
-                    sql = sql.Replace("{dateFrom}", cp.Db.EncodeSQLDate(filterFromDate));
-                if ((filterToDate == DateTime.MinValue))
-                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(DateTime.Now.AddDays(1)));
-                else
-                    sql = sql.Replace("{dateTo}", cp.Db.EncodeSQLDate(filterToDate));
                 CPCSBaseClass cs = cp.CSNew();
                 cs.OpenSQL(sql);
                 qsBase = frameRqs;
@@ -189,11 +156,6 @@ namespace Contensive.Reporting {
                     rowPtr += 1;
                     cs.GoNext();
                 }
-                layout.htmlLeftOfBody = ""
-                     + "<h3 class=\"abFilterHead\">Filters</h3>"
-                     + "<div class=\"abFilterRow\"><label for\"abFilterFromDate\">From</label>" + cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") + "<a href=\"#\" id=\"abFilterFromDateClear\">X</a></div>"
-                     + "<div class=\"abFilterRow\"><label for\"abFilterToDate\">To</label>" + cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") + "<a href=\"#\" id=\"abFilterToDateClear\">X</a></div>"
-                    + "";
                 layout.description = captionWithFilter;
                 result = layout.getHtml();
                 result = cp.Html.div(result, "", "abReportFileDownload");

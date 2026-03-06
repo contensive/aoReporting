@@ -15,31 +15,26 @@ namespace Contensive.Reporting {
             try {
                 // -- initialize application. If authentication needed and not login page, pass true
                 using (ApplicationModel ac = new ApplicationModel(CP, false)) {
-                    DateTime StartDate = ac.cp.Doc.GetDate("filterFromDate");
-                    DateTime EndDate = ac.cp.Doc.GetDate("filterToDate");
-                    // if no date values, then default to last year
-                    if ((StartDate <= DateTime.MinValue) | (EndDate <= DateTime.MinValue)) {
-                        EndDate = DateTime.Now.Date;
-                        StartDate = EndDate.AddDays(-365).Date;
-                    }
-
-                    // html for the date select. needs to include hidden addonguid so the old legacy way works
-                    string htmlLeftOfTable = ""
-                        + ""
-                        + "<div class=\"\">"
-                        + "<h3>Filters</h3>"
-                        + "<div class=\"abFilterRow\">"
-                            + "<label>From</label><input type=\"date\" value=\"" + StartDate.ToString("yyyy-MM-dd") + "\" name=\"filterFromDate\" id=\"abFilterFromDate\" class=\"abFilterDate\" required>"
-                        + "</div>"
-                        + "<div class=\"abFilterRow\">"
-                            + "<label>To</label><input type=\"date\" name=\"filterToDate\" id=\"abFilterToDate\" class=\"abFilterDate\" value=\"" + EndDate.ToString("yyyy-MM-dd") + "\" required>"
-                        + "</div>"
-                        + "<div class=\"abFilterRow\">"
-                            + "<label></label><button type=\"submit\">Submit</button>"
-                        + "</div>"
-                        + "<input type=\"hidden\" name=\"addonguid\" id=\"addonguid\" value=\"{" + Constants.pageViewGuid + "}\">"
-                        + "";
-
+                    //
+                    var layout = CP.AdminUI.CreateLayoutBuilder();
+                    layout.title = "Page Views Report";
+                    layout.isOuterContainer = true;
+                    layout.includeBodyPadding = true;
+                    layout.includeBodyColor = true;
+                    //
+                    // -- read filter values
+                    const string viewName = "PageViewsReport";
+                    DateTime? filterFromDate = layout.getFilterDate("filterFromDate", viewName);
+                    DateTime? filterToDate = layout.getFilterDate("filterToDate", viewName);
+                    //
+                    // -- default to last year if no filter values
+                    DateTime StartDate = filterFromDate ?? DateTime.Now.Date.AddDays(-365);
+                    DateTime EndDate = filterToDate ?? DateTime.Now.Date;
+                    //
+                    // -- add filter UI
+                    layout.addFilterDateInput("From", "filterFromDate", StartDate);
+                    layout.addFilterDateInput("To", "filterToDate", EndDate);
+                    //
                     string Width = ac.cp.Doc.GetText("Width");
                     string Height = ac.cp.Doc.GetText("Height");
                     int durationHours = 24;
@@ -49,26 +44,18 @@ namespace Contensive.Reporting {
                     double dblDateStart = StartDate.ToOADate();
                     double dblDateEnd = EndDate.ToOADate();
                     // set the visit summary criteria
-                    string criteria = "(TimeDuration=" + durationHours + ") AND (DateNumber>=" + dblDateStart + ") AND (DateNumber<" + dblDateEnd + ")";
+                    string criteria = $"(TimeDuration={durationHours}) AND (DateNumber>={dblDateStart}) AND (DateNumber<{dblDateEnd})";
                     List<Models.VisitSummaryModel> visitSummaryList = Models.VisitSummaryModel.createList<VisitSummaryModel>(ac.cp, criteria, "TimeNumber desc");
                     //
-                    string body = "";
+                    string body;
                     if ((visitSummaryList.Count == 0)) {
                         body = "<span class=\"ccError\">There is currently no data collected to display this chart. Please check back later.</span>";
                     } else {
-                        // legacy code uses isvisitdata=false
                         body = Models.ChartViewModel.getChart(ac, visitSummaryList, DivName, false, Width, Height, (durationHours == 1));
                     }
                     //
-                    var layout = CP.AdminUI.CreateLayoutBuilder();
-                    layout.title = "Page Views Report";
-
                     layout.description = "";
-                    layout.body = body;
-                    layout.isOuterContainer = true;
-                    layout.includeBodyPadding = true;
-                    layout.includeBodyColor = true;
-                    htmlLeftOfTable = "";
+                    layout.body = $"<div style=\"min-height:400px\">{body}</div>";
                     //
                     layout.addFormButton(Constants.ButtonRefresh);
                     //

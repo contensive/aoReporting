@@ -83,22 +83,30 @@ namespace Contensive.Reporting {
                 layout.isOuterContainer = true;
                 //
                 layout.addFormButton(Constants.buttonCancel);
-                // 
+                //
+                // -- read filter values
+                const string viewName = "EmailClickedReport";
+                int filterEmailDropId = layout.getFilterInteger("emailDropId", viewName);
+                if (filterEmailDropId == 0) filterEmailDropId = emaildropid;
+                //
+                // -- add filter UI
+                layout.addFilterSelectContent("Email Drop", "emailDropId", filterEmailDropId, "Email Drops", "", "All Email Drops");
+                //
                 layout.columnCaption = "Row";
                 layout.columnCaptionClass = "afwWidth20px afwTextAlignCenter";
                 layout.columnCellClass = "afwTextAlignCenter";
-                // 
+                //
                 layout.addColumn();
                 layout.columnCaption = "Email";
                 layout.columnCaptionClass = "afwWidth100px afwTextAlignLeft";
                 layout.columnCellClass = "afwTextAlignLeft";
-                // 
+                //
                 layout.addColumn();
                 layout.columnCaption = "Clicked By";
                 layout.columnCaptionClass = "afwTextAlignLeft";
                 layout.columnCellClass = "afwTextAlignLeft";
-                // 
-                string sqlcriteria = emaildropid == 0 ? "" : " and l.EmailDropID=" + emaildropid + "";
+                //
+                string sqlcriteria = filterEmailDropId == 0 ? "" : $" and l.EmailDropID={filterEmailDropId}";
                 string sql = $"select distinct m.name, m.email, d.name as dropName from ccEmailLog l left join ccMembers m on m.id=l.memberid left join ccemaildrops d on d.id=l.emailDropId where (logtype=3) and (m.name is not null) {sqlcriteria} order by m.name asc";
                 CPCSBaseClass cs = cp.CSNew();
                 cs.OpenSQL(sql);
@@ -108,19 +116,13 @@ namespace Contensive.Reporting {
                     layout.addRow();
                     layout.setCell(rowPtr.ToString());
                     layout.setCell(cs.GetText("dropName"));
-                    layout.setCell("Name: " + cs.GetText("name") + "<br>" + "Email: " + cs.GetText("email"));
+                    layout.setCell($"Name: {cs.GetText("name")}<br>Email: {cs.GetText("email")}");
                     rowPtr += 1;
                     cs.GoNext();
                 }
                 cs.Close();
-                // 
-                // -- filters
-                layout.htmlLeftOfBody = ""
-                     + "<h3 class=\"abFilterHead\">Filters</h3>"
-                     + "<div class=\"abFilterRow\"><div class=\"form-group\"><label for\"abFilterEmailDropId\">Email Drop</label>" + cp.Html5.SelectContent("emailDropId", emaildropid, "Email Drops", "", "All Email Drops", "form-control", "abFilterEmailDripId") + "</div></div>"
-                    + "";
+                //
                 layout.description = "Emails clicked from an email drop.";
-
                 result = layout.getHtml();
                 result = cp.Html.div(result, "", "abReportEmailDrop");
             } catch (Exception ex) {

@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **aoReporting** is a reporting addon library for the **Contensive CMS platform**. It compiles to `Reporting.dll` and provides various site analytics reports (page views, visits, users online, email tracking, etc.).
 
 It is built on the Contensive Architecture documented here:
-- [Contensive Architecture](https://github.com/contensive/Contensive5/blob/master/patterns/contensive-architecture.md)
+- [Contensive Architecture](https://raw.githubusercontent.com/contensive/Contensive5/refs/heads/master/patterns/contensive-architecture.md)
 
 - **Language**: C#
 - **Framework**: .NET Framework 4.8 (net48)

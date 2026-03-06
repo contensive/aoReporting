@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(scripts/build.cmd:*)",
-      "Bash(scripts/build-veronica.cmd)"
+      "Bash(scripts/build-veronica.cmd)",
+      "Bash(C:/Git/aoReporting/scripts/build-veronica.cmd)",
+      "Bash(grep:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(dotnet build:*)",
+      "WebSearch",
+      "WebFetch(domain:support.contensive.com)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }

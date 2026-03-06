@@ -1,5 +1,4 @@
 using Contensive.BaseClasses;
-using Contensive.Reporting.Controllers;
 using System;
 
 namespace Contensive.Reporting {
@@ -97,50 +96,27 @@ namespace Contensive.Reporting {
                 // -- add src view
                 layout.addFormHidden(Constants.rnSrcFormId, dstFormId.ToString());
                 // 
-                // -- filterDateFrom
-                const string userPropertyFromDate = "ReportEmailDrop-filterFromDate";
-                DateTime filterFromDate;
-                string filterFromDateString;
-                string filterFromDateStringTest = cp.Doc.GetText("filterFromDate");
-                string userFilterFromDateString = cp.User.GetText(userPropertyFromDate);
-                if ((!string.IsNullOrEmpty(filterFromDateStringTest)))
-                    filterFromDate = GenericController.encodeMinDate(cp.Doc.GetDate("filterFromDate"));
-                else if ((!string.IsNullOrEmpty(userFilterFromDateString)))
-                    filterFromDate = GenericController.encodeMinDate(cp.Utils.EncodeDate(userFilterFromDateString));
-                else
-                    filterFromDate = DateTime.Today.AddDays(-30);
-                cp.User.SetProperty(userPropertyFromDate, filterFromDate.ToString());
-                if (filterFromDate == DateTime.MinValue)
-                    filterFromDateString = "";
-                else
-                    filterFromDateString = filterFromDate.ToShortDateString();
-                // 
-                // -- filterDateTo
-                const string userPropertyToDate = "ReportEmailDrop-filterToDate";
-                DateTime filterToDate = new();
-                string filterToDateString;
-                string filterToDateStringTest = cp.Doc.GetText("filterToDate");
-                string userFilterToDateString = cp.User.GetText(userPropertyToDate);
-                if ((!string.IsNullOrEmpty(filterToDateStringTest)))
-                    filterToDate = GenericController.encodeMinDate(cp.Doc.GetDate("filterToDate"));
-                else if ((!string.IsNullOrEmpty(userFilterToDateString)))
-                    filterFromDate = GenericController.encodeMinDate(cp.Utils.EncodeDate(userFilterFromDateString));
-                else
-                    filterToDate = DateTime.Today;
-                cp.User.SetProperty(userPropertyToDate, filterToDate.ToString());
-                if (filterToDate == DateTime.MinValue)
-                    filterToDateString = "";
-                else
-                    filterToDateString = filterToDate.ToShortDateString();
-                // 
+                // -- read filter values
+                const string viewName = "EmailDropReport";
+                DateTime? filterFromDateNullable = layout.getFilterDate("filterFromDate", viewName);
+                DateTime? filterToDateNullable = layout.getFilterDate("filterToDate", viewName);
+                //
+                // -- default to last 30 days if no filter values
+                DateTime filterFromDate = filterFromDateNullable ?? DateTime.Today.AddDays(-30);
+                DateTime filterToDate = filterToDateNullable ?? DateTime.Today;
+                //
+                // -- add filter UI
+                layout.addFilterDateInput("From", "filterFromDate", filterFromDate);
+                layout.addFilterDateInput("To", "filterToDate", filterToDate);
+                //
                 // -- create caption with filter text
                 string captionWithFilter = "This report summarizes data from the Email Log and Email Drops and includes emails sent from all Group Emails";
-                if (filterFromDateString != "" & filterToDateString != "")
-                    captionWithFilter += ", between " + filterFromDateString + " and " + filterToDateString + " inclusive";
-                else if (filterFromDateString != "")
-                    captionWithFilter += ", on or after " + filterFromDateString;
-                else if (filterToDateString != "")
-                    captionWithFilter += ", on or before " + filterToDateString;
+                if (filterFromDateNullable.HasValue && filterToDateNullable.HasValue)
+                    captionWithFilter += $", between {filterFromDate.ToShortDateString()} and {filterToDate.ToShortDateString()} inclusive";
+                else if (filterFromDateNullable.HasValue)
+                    captionWithFilter += $", on or after {filterFromDate.ToShortDateString()}";
+                else if (filterToDateNullable.HasValue)
+                    captionWithFilter += $", on or before {filterToDate.ToShortDateString()}";
                 captionWithFilter += ".";
                 layout.description = captionWithFilter;
                 // 
@@ -182,8 +158,8 @@ namespace Contensive.Reporting {
                      from ccemaildrops d 
                      left join ccemail e on e.id=d.EmailID
                      where (1=1)
-                        {(filterToDate == DateTime.MinValue ? "" : $"and (d.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})")}  
-                        {(filterFromDate == DateTime.MinValue ? "" : $"and (d.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})")}  
+                        and (d.dateadded < {cp.Db.EncodeSQLDate(filterToDate)})
+                        and (d.dateadded > {cp.Db.EncodeSQLDate(filterFromDate)})
                         and (e.id is not null)
                      order by 
                         d.id desc";
@@ -207,13 +183,6 @@ namespace Contensive.Reporting {
                         while ((cs.OK()));
                     }
                 }
-                // 
-                // -- filters
-                layout.htmlLeftOfBody = ""
-                     + "<h3 class=\"abFilterHead\">Filters</h3>"
-                     + "<div class=\"abFilterRow\"><label for\"abFilterFromDate\">From</label>" + cp.Html.InputText("filterFromDate", filterFromDateString, 100, "abFilterDate", "abFilterFromDate") + "<a href=\"#\" id=\"abFilterFromDateClear\">X</a></div>"
-                     + "<div class=\"abFilterRow\"><label for\"abFilterToDate\">To</label>" + cp.Html.InputText("filterToDate", filterToDateString, 100, "abFilterDate", "abFilterToDate") + "<a href=\"#\" id=\"abFilterToDateClear\">X</a></div>"
-                    + "";
                 result = cp.Html.div(layout.getHtml(), "", "abReportEmailDrop");
             } catch (Exception ex) {
                 cp.Site.ErrorReport(ex);

@@ -114,7 +114,7 @@ namespace Contensive.Reporting {
                                 Panel += "<td align=\"left\"><a target=\"_blank\" href=\"/" +  cp.Utils.EncodeHTML(cp.GetAppConfig().adminRoute + "?" + "af" + "=" + AdminFormReports + "&rid=16&MemberID=" + csData.GetInteger("MemberID")) + "\">" + csData.GetText("MemberName") + "</A></td>";
                                 Panel += "<td align=\"left\">" + csData.GetText("Remote_Addr") + "</td>";
                                 Panel += "<td align=\"left\">" + csData.GetDate("LastVisitTime").ToString("") + "</td>";
-                                Panel += "<td align=\"right\">" + csData.GetText("PageVisits") + "</td>";
+                                Panel += $"<td align=\"right\"><a href=\"?addonguid={{0905279A-6EFB-4A10-96FE-90F243962F75}}&visitid={VisitID}\">{csData.GetText("PageVisits")}</a></td>";
                                 Panel += "<td align=\"right\">" + VisitID + "</td>";
                                 Panel += "<td align=\"left\">&nbsp;" + csData.GetText("referer") + "</td>";
                                 Panel += "</tr>";

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Collection name="Reporting" guid="{d5b7ba7f-6b78-4625-8b23-232ac6574130}" system="No" updatable="Yes" blockNavigatorNode="No" onInstallAddonGuid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
-	<HelpLink></HelpLink>
-	<Help></Help>
 	<Addon name="Reporting Install" guid="{545E9DBC-FBB4-49FE-9CB3-484644B9EA05}">
 		<DotNetClass><![CDATA[Contensive.Reporting.OnInstallClass]]></DotNetClass>
 	</Addon>
@@ -11,13 +9,6 @@
 		<Admin>yes</Admin>
 		<AliasList>Current Activity Report</AliasList>
 	</Addon>
-	<!-- 
-	<Addon name="Current Activity Report" guid="{3BFA1A48-31BB-4D70-96A7-B06B53BBB183}" type="Report">
-		<DotNetClass><![CDATA[Contensive.Reporting.CurrentActivityReportAddon]]></DotNetClass>
-		<BlockEditTools>Yes</BlockEditTools>
-		<Admin>yes</Admin>
-	</Addon>
-	-->
 	<Addon name="Viewings Report" guid="{0905279A-6EFB-4A10-96FE-90F243962F75}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.ViewingsReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
@@ -26,37 +17,23 @@
 	<Addon name="Daily Visits Chart" guid="{AEA7D5D7-5105-4433-9728-41F021C47877}" type="Report">
 		<DotNetClass><![CDATA[Contensive.Reporting.DailyVisitsChartAddon]]></DotNetClass>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
-		<BlockEditTools>no</BlockEditTools>
 		<Admin>yes</Admin>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>]]></OtherHeadTags>
-		<Styles><![CDATA[  
-			/*legacy styles8*/
+		<Styles><![CDATA[
 			.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
 			.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
 			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
 			.summaryCell{text-align:top;}
 			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
-  		]]></Styles>
+		]]></Styles>
 	</Addon>
 	<Addon name="Download Log Report" guid="{6B3D54CD-782A-4B47-903D-86CEDE4E50A5}" type="Report">
-		<Copy></Copy>
-		<CopyText></CopyText>
 		<DotNetClass><![CDATA[Contensive.Reporting.LibraryFileDownloadReportAddon]]></DotNetClass>
-		<ArgumentList></ArgumentList>
-		<AsAjax>No</AsAjax>
-		<Filter>No</Filter>
-		<Help></Help>
-		<HelpLink></HelpLink>
-		<Icon Link="" width="0" height="0" sprites="0" />
-		<InIframe>No</InIframe>
 		<BlockEditTools>Yes</BlockEditTools>
-		<FormXML></FormXML>
+		<Admin>yes</Admin>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
-		<IsInline>No</IsInline>
 		<JavascriptInHead><![CDATA[jQuery(document).ready(function(){
-			//    
-			// date pickers
 			jQuery(function() {
 				jQuery( "#abFilterFromDate" ).datepicker({
 					changeMonth: true,
@@ -77,36 +54,7 @@
 			});
 		});
 		]]></JavascriptInHead>
-		<javascriptForceHead>No</javascriptForceHead>
-		<JSHeadScriptSrc></JSHeadScriptSrc>
-		<!-- deprecated --><JSBodyScriptSrc></JSBodyScriptSrc>
-		<!-- deprecated --><JavascriptBodyEnd></JavascriptBodyEnd>
-		<!-- deprecated --><JavascriptOnLoad></JavascriptOnLoad>
-		<Content>No</Content>
-		<Template>No</Template>
-		<Email>No</Email>
-		<Admin>yes</Admin>
-		<OnPageEndEvent>No</OnPageEndEvent>
-		<OnPageStartEvent>No</OnPageStartEvent>
-		<OnBodyStart>No</OnBodyStart>
-		<OnBodyEnd>No</OnBodyEnd>
-		<RemoteMethod>No</RemoteMethod>
-		<ProcessRunOnce>No</ProcessRunOnce>
-		<ProcessInterval>0</ProcessInterval>
-		<MetaDescription></MetaDescription>
-		<OtherHeadTags></OtherHeadTags>
-		<PageTitle></PageTitle>
-		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[
-			/*
-			* Filters
-			*/
-			.abFilterHead 
-			{
-			}
-			.abFilterCaption
-			{
-			}
 			.abFilterRow input.abFilterDate
 			{
 				width: 80px;
@@ -129,7 +77,6 @@
 				width: 140px;
 				margin: 4px 4px 0 10px;
 			}
-
 			.abFilterRow label
 			{
 				width: 30px;
@@ -138,87 +85,36 @@
 				text-align: right;
 				overflow: hidden;
 			}
-			.abFilterHead 
-			{
-			}
-			.abFilterCaption
-			{
-			}
-			.abFilterRow input.abFilterDate
-			{
-				width: 80px;
-				margin: 4px 4px 0 4px;
-				text-align: left;
-			}
-			.abFilterRow input.abFilterNumber
-			{
-				width: 90px;
-				margin: 4px 4px 0 4px;
-				text-align: right;
-			}
-			.abFilterRow input.abFilterText
-			{
-				width: 123px;
-				margin: 4px 4px 0 10px;
-			}
-			.abFilterRow select
-			{
-				width: 140px;
-				margin: 4px 4px 0 10px;
-			}
-
-			.abFilterRow label
-			{
-				width: 30px;
-				display: inline-block;
-				margin: 0 0 0 10px;
-				text-align: right;
-				overflow: hidden;
-			}
-
 		]]></Styles>
-		<styleslinkhref></styleslinkhref>
-		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
 	<Addon name="Email Drop Report" guid="{A10B5F49-3147-4E32-9DCF-76D65CCFF9F1}" type="Report">
-		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailDropReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<JavascriptInHead><![CDATA[jQuery(document).ready(function(){
-				//    
-				// date pickers
-				jQuery(function() {
-					jQuery( "#abFilterFromDate" ).datepicker({
-						changeMonth: true,
-						changeYear: true
-					});
-				});
-				jQuery(function() {
-					jQuery( "#abFilterToDate" ).datepicker({
-						changeMonth: true,
-						changeYear: true
-					});
-				});
-				jQuery("body").on("click","#abFilterFromDateClear", function(){
-					jQuery('#abFilterFromDate').val(" ");
-				});
-				jQuery("body").on("click","#abFilterToDateClear", function(){
-					jQuery('#abFilterToDate').val(" ");
+			jQuery(function() {
+				jQuery( "#abFilterFromDate" ).datepicker({
+					changeMonth: true,
+					changeYear: true
 				});
 			});
-			]]></JavascriptInHead>
+			jQuery(function() {
+				jQuery( "#abFilterToDate" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+			});
+			jQuery("body").on("click","#abFilterFromDateClear", function(){
+				jQuery('#abFilterFromDate').val(" ");
+			});
+			jQuery("body").on("click","#abFilterToDateClear", function(){
+				jQuery('#abFilterToDate').val(" ");
+			});
+		});
+		]]></JavascriptInHead>
 		<Styles><![CDATA[
-			/*
-			* Filters
-			*/
-			.abFilterHead 
-			{
-			}
-			.abFilterCaption
-			{
-			}
 			.abFilterRow input.abFilterDate
 			{
 				width: 80px;
@@ -241,7 +137,6 @@
 				width: 140px;
 				margin: 4px 4px 0 10px;
 			}
-
 			.abFilterRow label
 			{
 				width: 30px;
@@ -253,9 +148,9 @@
 		]]></Styles>
 	</Addon>
 	<Addon name="Email Opened Report" guid="{F4EE3D38-E0A9-4C93-9906-809F524B9690}" type="Report">
-		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailOpenedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<JavascriptInHead><![CDATA[
@@ -265,12 +160,11 @@
 				});
 			});
 		]]></JavascriptInHead>
-		<Styles></Styles>
 	</Addon>
 	<Addon name="Email Clicked Report" guid="{29271653-BDE3-4DC1-8058-D54E53F1D06B}" type="Report">
-		<Admin>yes</Admin>
 		<DotNetClass><![CDATA[Contensive.Reporting.EmailClickedReportAddon]]></DotNetClass>
 		<BlockEditTools>Yes</BlockEditTools>
+		<Admin>yes</Admin>
 		<IncludeAddon name="JQuery" guid="{9C882078-0DAC-48E3-AD4B-CF2AA230DF80}"/>
 		<IncludeAddon name="JQuery UI" guid="{840B9AEF-9470-4599-BD47-7EC0C9298614}"/>
 		<JavascriptInHead><![CDATA[
@@ -280,12 +174,8 @@
 				});
 			});
 		]]></JavascriptInHead>
-		<Styles></Styles>
 	</Addon>
 	<Addon name="Page Views Report" guid="{4AA883AA-21BC-4310-9E40-166B42D3C79C}" type="Report">
-		<Admin>yes</Admin>
-		<Copy></Copy>
-		<CopyText></CopyText>
 		<DotNetClass><![CDATA[Contensive.Reporting.PageViewsReportAddon]]></DotNetClass>
 		<ArgumentList><![CDATA[Chart Width=100%
 			Chart Height=400
@@ -293,50 +183,23 @@
 			Target Div=durationChart
 			Daily or Hourly=Daily[Daily|Hourly]
 			]]></ArgumentList>
-		<AsAjax>No</AsAjax>
-		<Filter>No</Filter>
-		<Help></Help>
-		<HelpLink></HelpLink>
 		<Icon Link="/upload/dashboard/iconGoogle.png" width="57" height="59" sprites="4" />
-		<InIframe>No</InIframe>
 		<BlockEditTools>yes</BlockEditTools>
-		<FormXML></FormXML>
-		<IsInline>No</IsInline>
-		<JavascriptInHead></JavascriptInHead>
-		<javascriptForceHead>No</javascriptForceHead>
-		<JSHeadScriptSrc></JSHeadScriptSrc>
-		<!-- deprecated --><JSBodyScriptSrc></JSBodyScriptSrc>
-		<!-- deprecated --><JavascriptBodyEnd></JavascriptBodyEnd>
-		<!-- deprecated --><JavascriptOnLoad></JavascriptOnLoad>
-		<Content>No</Content>
-		<Template>No</Template>
-		<Email>No</Email>
-		<OnPageEndEvent>No</OnPageEndEvent>
-		<OnPageStartEvent>No</OnPageStartEvent>
-		<OnBodyStart>No</OnBodyStart>
-		<OnBodyEnd>No</OnBodyEnd>
-		<RemoteMethod>No</RemoteMethod>
-		<ProcessRunOnce>No</ProcessRunOnce>
-		<ProcessInterval>0</ProcessInterval>
-		<MetaDescription></MetaDescription>
+		<Admin>yes</Admin>
 		<OtherHeadTags><![CDATA[<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-      ]]></OtherHeadTags>
-		<PageTitle></PageTitle>
-		<RemoteAssetLink></RemoteAssetLink>
-		<Styles><![CDATA[  
-			/*legacy styles8*/
+		]]></OtherHeadTags>
+		<Styles><![CDATA[
 			.summaryContainer{margin-top:10px; background-color:#FFFFFF; border:1px solid black;}
 			.summaryValue{font-weight:bold; color:#000000; font-size:16px;}
 			.summaryCaption{font-weight:bold; color:#0077CC; font-size:14px;}
 			.summaryCell{text-align:top;}
 			.summaryHeader{font-weight:bold; background-color:#0077CC; color:#FFFFFF;}
-
 			.abFilterRow input.abFilterDate
 			{
 				margin: 4px 4px 0 4px;
 				text-align: left;
 			}
-			.afwBodyColor 
+			.afwBodyColor
 			{
 				clear: both;
 				color: #444;
@@ -360,20 +223,12 @@
 				margin: 4px 4px 0 4px;
 				text-align: left;
 			}
-
-  		]]></Styles>
-		<styleslinkhref></styleslinkhref>
-		<Scripting Language="VBScript" EntryPoint="" Timeout="5000"/>
+		]]></Styles>
 	</Addon>
 	<Addon name="Reporting Housekeep" guid="{21F6F6F2-A1CA-4F0E-870B-5A51FA4AE9CA}" type="Add-on">
-		<Category></Category>
 		<Admin>yes</Admin>
-		<Content>No</Content>
-		<Template>No</Template>
-		<Email>No</Email>
-		<RemoteMethod>No</RemoteMethod>
 		<BlockEditTools>Yes</BlockEditTools>
 		<DotNetClass><![CDATA[Contensive.Reporting.HousekeepTask]]></DotNetClass>
 		<ProcessInterval>60</ProcessInterval>
-    </Addon> 
+	</Addon>
 </Collection>
