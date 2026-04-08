@@ -91,7 +91,7 @@ namespace Contensive.Reporting {
                 // -- paginated query
                 string sql = $"select * from ccviewings where {criteria} order by {orderBy} offset {offset} rows fetch next {pageSize} rows only";
                 //
-                int itemsCid = cp.Content.GetID("items");
+                int itemsCid = cp.Content.GetID("viewings");
                 string editItemHref = $"?af=4&cid={itemsCid}&id=";
                 //
                 int rowPtr = 0;
