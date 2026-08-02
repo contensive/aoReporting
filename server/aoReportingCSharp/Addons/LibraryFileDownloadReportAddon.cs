@@ -87,7 +87,7 @@ namespace Contensive.Reporting {
                 // 
                 var layout = cp.AdminUI.CreateLayoutBuilderList();
                 layout.title = "Library File Download Report";
-                layout.addCsvDownloadCurrentPage = true;
+                layout.allowDownloadButton = true;
                 layout.isOuterContainer = true;
 
                 layout.addFormButton(Constants.buttonCancel);

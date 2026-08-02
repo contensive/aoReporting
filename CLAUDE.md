@@ -10,8 +10,8 @@ It is built on the Contensive Architecture documented here:
 - [Contensive Architecture](https://raw.githubusercontent.com/contensive/Contensive5/refs/heads/master/patterns/contensive-architecture.md)
 
 - **Language**: C#
-- **Framework**: .NET Framework 4.8 (net48)
-- **Key dependencies**: `Contensive.CPBaseClass`, `Contensive.DbModels`, `Newtonsoft.Json`
+- **Framework**: .NET Standard 2.0 (netstandard2.0)
+- **Key dependencies**: `Contensive.CPBaseClass`, `Contensive.DbModels`
 
 ## Build
 

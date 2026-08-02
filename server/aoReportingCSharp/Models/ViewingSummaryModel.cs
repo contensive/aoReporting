@@ -13,7 +13,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// execute hourly tasks
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         public static void executeHourlyTasks(CPBaseClass cp) {
             try {
                 //
@@ -31,7 +31,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// execute Daily Tasks
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         /// <param name="env"></param>
         public static void executeDailyTasks(CPBaseClass cp, HouseKeepEnvironmentModel env) {
             try {
@@ -65,7 +65,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// Summarize the page views, excludes non-cookie visits, excludes administrator and developer visits, excludes authenticated users with ExcludeFromReporting
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         /// <param name="StartTimeDate"></param>
         /// <param name="EndTimeDate"></param>
         /// <param name="HourDuration"></param>

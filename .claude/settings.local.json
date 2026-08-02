@@ -9,7 +9,10 @@
       "Bash(dotnet build:*)",
       "WebSearch",
       "WebFetch(domain:support.contensive.com)",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "Bash(dotnet nuget search:*)",
+      "Bash(nuget list:*)",
+      "WebFetch(domain:www.nuget.org)"
     ]
   }
 }

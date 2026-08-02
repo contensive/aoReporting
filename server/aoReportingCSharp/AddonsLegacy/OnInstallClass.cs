@@ -39,6 +39,13 @@ namespace Contensive.Reporting {
                         }
                     }
                     //
+                    // -- delete the old Reporting Housekeep addon (moved to core platform)
+                    using (CPCSBaseClass cs = CP.CSNew()) {
+                        if (cs.Open("add-ons", "name='Reporting Housekeep'")) {
+                            cs.Delete();
+                        }
+                    }
+                    //
                     // -- reset the EmailDropReport
                     using (CPCSBaseClass cs = CP.CSNew()) {
                         int reportId = 0;

@@ -12,7 +12,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// execute hourly tasks
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         public static void executeHourlyTasks(CPBaseClass cp) {
             try {
                 //
@@ -30,7 +30,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// summarized visits hourly
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         /// <param name="env"></param>
         public static void executeDailyTasks(CPBaseClass cp, HouseKeepEnvironmentModel env) {
             try {

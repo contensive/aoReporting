@@ -20,11 +20,6 @@ namespace Contensive.Reporting.Models {
                 return cp.Doc.GetBoolean("force");
             }
         }
-        //
-        //====================================================================================================
-        /// <summary>
-        /// the last time housekeep was checked
-        /// </summary>
         // public DateTime lastCheckDateTime { get { return cp.Site.GetDate("housekeep, last check", DateTime.Now); } }
         //
         //====================================================================================================
@@ -97,7 +92,7 @@ namespace Contensive.Reporting.Models {
         /// <summary>
         /// constructor
         /// </summary>
-        /// <param name="core"></param>
+        /// <param name="cp"></param>
         public HouseKeepEnvironmentModel(CPBaseClass cp) {
             try {
                 this.cp = cp;
